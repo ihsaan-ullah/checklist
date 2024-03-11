@@ -1,0 +1,16 @@
+Question,Answer,Justification
+Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?,Yes,We have mentioned main claims in Section 1.
+"Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?",Yes,Yes we completely follow the code of Ethics by NeruIPS
+Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?,Yes,Impacts are discussed in Conclusion section.
+Does the paper discuss the limitations of the work performed by the authors?,Yes,Limitations are discussed in the conclusion section.
+"For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?",NA,We don't have any theoretical results
+Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?,Yes,All results are given in Experiments section
+"Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?",Yes,We have made available our code through a github repository mentioned in Section 1
+"Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?",Yes,Experimental setting is provided in Experiments section
+Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?,No,This does not apply to our work
+"For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?",Yes,We have mentioned these in Experiments section
+"Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?",NA,This does not apply to our work
+"Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?",NA,Not applicable to our work
+Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?,Yes,We have documented our code in our github repository
+"For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?",NA,No applicable to our work
+"Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?",NA,Our work does not have any connection with human subjects

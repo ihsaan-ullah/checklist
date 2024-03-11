@@ -1,0 +1,56 @@
+# NeurIPS 2024 - Authors self service yaml file
+# Created by: Ihsan Ullah
+# Created on: March 10, 2024
+
+version: 2
+title: NeurIPS 2024 - Authors Self Service
+description: NeurIPS 2024 - Authors Self Service
+image: logo.png
+registration_auto_approve: False   
+enable_detailed_results: True
+docker_image: ihsaanullah/fair_universe:latest
+
+
+terms: pages/terms.md
+pages:  
+  - title: Overview
+    file: pages/overview.md
+  - title: Terms
+    file: pages/terms.md
+  
+
+phases:
+  - index: 0
+    name: Checklist
+    description: Checklist Phase
+    start: 2024-03-15
+    end: 2024-04-15
+    tasks:
+      - 0
+
+
+tasks:
+  - index: 0
+    name: Check checklist 
+    description: Check checklist using LLMs
+    input_data: input_data/
+    reference_data: reference_data/  
+    scoring_program: scoring_program/
+    ingestion_program: ingestion_program/
+
+
+leaderboards:
+  - index: 0 
+    title: Results
+    key: main
+    submission_rule: "Force_Latest_Multiple"
+    columns:
+      - index: 0
+        title: Quantile Score
+        key: quantiles_score
+      - index: 1
+        title: Interval
+        key: interval
+      - index: 2
+        title: Coverage
+        key: coverage
