@@ -46,11 +46,8 @@ leaderboards:
     submission_rule: "Force_Latest_Multiple"
     columns:
       - index: 0
-        title: Quantile Score
-        key: quantiles_score
+        title: Completion Rate
+        key: completion_rate
       - index: 1
-        title: Interval
-        key: interval
-      - index: 2
-        title: Coverage
-        key: coverage
+        title: Correctness Rate
+        key: correctness_rate

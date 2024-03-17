@@ -3,12 +3,14 @@
 # ------------------------------------------
 
 import os
-import fitz 
 import re
+import fitz 
+import json
 import pandas as pd
 from datetime import datetime as dt
 import warnings
 import sys
+from openai import OpenAI
 warnings.filterwarnings("ignore")
 
 
@@ -99,30 +101,54 @@ class Ingestion():
     def get_paper_chunks(self, paper_text):
 
         try:
-            # Identify main paper section
-            main_paper_end_index = paper_text.find("NeurIPS Paper Checklist")
-            if main_paper_end_index == -1:
-                raise ValueError("Error: NeurIPS Paper Checklist not found")
+            # Identify main paper and appendices
+            paper_end_index = paper_text.find("NeurIPS Paper Checklist")
+            if paper_end_index == -1:
+                raise ValueError("[-] Error: NeurIPS Paper Checklist not found")
 
-            main_paper = paper_text[:main_paper_end_index]
+            paper = paper_text[:paper_end_index]
 
             # Identify checklist section
-            checklist_start_index = main_paper_end_index
+            checklist_start_index = paper_end_index
             checklist_end_index = paper_text.find("For initial submissions, do not include any information that would break anonymity, such as the institution conducting the review.") + len("For initial submissions, do not include any information that would break anonymity, such as the institution conducting the review.")
             if checklist_end_index == -1:
-                raise ValueError("Error: End of checklist not found")
+                raise ValueError("[-] Error: End of checklist not found")
 
             checklist = paper_text[checklist_start_index:checklist_end_index]
 
-            # Appendices section
-            appendices_start_index = checklist_end_index
-            appendices = paper_text[appendices_start_index:]
-
-            return main_paper, checklist, appendices
+            return paper, checklist
         except ValueError as ve:
             raise ve
         except Exception as e:
-            raise Exception(f"Error occurred while extracting paper chunks in the {'main paper' if not main_paper else 'checklist' if not checklist else 'appendices'} section: {e}")
+            raise Exception(f"[-] Error occurred while extracting paper chunks in the {'paper' if not paper else 'checklist'} section: {e}")
+
+    # def load_paper(self):
+
+    #     # -----
+    #     # Load PDF from submissions dir
+    #     # -----
+    #     print("[*] Loading PDF paper")
+    #     # get all files from submissions dir
+    #     files = os.listdir(self.submission_dir)
+    #     pdf_file = None
+    #     for filename in files:
+    #         if filename.endswith('.pdf'):
+    #             pdf_file = filename
+    #             break
+    #     if not pdf_file:
+    #         raise FileNotFoundError("[-] No PDF file found in the submission directory")
+
+    #     pdf_file_path = os.path.join(self.submission_dir, pdf_file)
+    #     print("[✔]")
+
+    #     # -----
+    #     # Load text from PDF
+    #     # -----
+    #     print("[*] Converting PDF to JSON")
+    #     paper_dict = scipdf.parse_pdf_to_dict(pdf_file_path, as_list=False)
+    #     print("[✔]")
+
+    #     print(paper_dict)
 
     def load_paper(self):
 
@@ -163,12 +189,13 @@ class Ingestion():
         # -----
         # Get paper chunks
         # -----
-        print("[*] Breaking down paper into main paper, checklist and appendices")
-        self.main_paper, self.checklist, self.appendices = self.get_paper_chunks(paper_text)
+        print("[*] Breaking down paper into paper and checklist")
+        self.paper, self.checklist = self.get_paper_chunks(paper_text)
         print("[✔]")
 
     def parse_checklist(self):
 
+        print("[*] Converting checklist to DataFrame")
         checklist_questions = [
             "Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?",
             "Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?",
@@ -187,7 +214,7 @@ class Ingestion():
             "Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?",            
         ]
 
-        self.checklist_df = pd.DataFrame(columns=['Question', 'Answer', 'Justification'])
+        self.checklist_df = pd.DataFrame(columns=['Question', 'Answer', 'Justification', 'Review', 'Correctness_Score'])
 
         try:
             for question in checklist_questions:
@@ -210,13 +237,78 @@ class Ingestion():
                 temp_df = pd.DataFrame([{'Question': question, 'Answer': answer, 'Justification': justification}])
                 self.checklist_df = pd.concat([self.checklist_df, temp_df], ignore_index=True)
 
-        except Exception as e:
-            raise ValueError(f"Error in extracting answers and justifications: {e}")
+            print("[✔]")
 
-    def save_checklist(self):
-        print("[*] Saving checklist dataframe")
-        result_file = os.path.join(self.output_dir, "checkist.csv")
-        self.checklist_df.to_csv(result_file, index=False)
+        except Exception as e:
+            raise ValueError(f"[-] Error in extracting answers and justifications: {e}")
+
+    def check_incomplete_questions(self):
+        print("[*] Checking incomplete answers")
+
+        # total answers
+        self.total_answers = len(self.checklist_df)
+
+        for index, row in self.checklist_df.iterrows():
+            if row["Answer"] in ["TODO", "Not Found"] or row["Justification"] in ["TODO", "Not Found"]:
+                print(f"\t [!] There seems to be a problem with your answer or justificaiton.\n\tQuestion: {row['Question']}\n\tAnswer: {row['Answer']}\n\tJustification: {row['Justification']}")
+        print("[✔]")
+
+    def get_LLM_feedback(self):
+
+        print("[*] Asking GPT to review the checklist")
+        client = OpenAI(
+            api_key="",
+        )
+
+        model = "gpt-4-turbo-preview"
+        max_tokens = 1024
+        temperature = 1
+        top_p = 1
+        n = 1
+
+        system_prompt = {
+            "role": "system",
+            "content":  "You are a computer science researcher currently reviewing a paper for the NeurIPS computer science conference. Your goal is to try to be as objective and truthful as possible in your answers about the answers provided in the 'NeurIPS Papaer Checklist'. Your reviews will be used for causal reasoning in determining the quality of the paper."
+        }
+
+        for index, row in self.checklist_df.iterrows():
+            q = row["Question"]
+            a = row["Answer"]
+            j = row["Justification"]
+
+            user_prompt = {
+                "role": "user",
+                "content": f"The following is content of the paper you are reviewing. {self.paper}\n\n\nBased on the content, please review the answer and justification for the following question and provide a brief explanation for answers you find inconsistent with the paper conten, also must return a score at the start of the response (Score: 0 if you do not agree with the answer, Score: 1 if you agree and find the answer correct):\n Question: {q}\n Answer: {a}\n Justification: {j}and justification of the answers."
+            }
+
+            messages = [system_prompt, user_prompt]
+            chat_completion = client.chat.completions.create(
+                model=model,
+                messages=messages,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                top_p=top_p,
+                n=n
+            )
+
+            gpt_review = chat_completion.choices[0].message.content
+
+            score_text_parts = gpt_review.split("Score: ")
+            # Extract score and text
+            score = int(score_text_parts[1].split("\n")[0])
+            text = score_text_parts[1].split("\n", 1)[1].strip()
+
+            self.checklist_df.loc[index, 'Review'] = text
+            self.checklist_df.loc[index, 'Correctness_Score'] = score
+
+            print(f"[+] Question {index+1}")
+
+        print("[✔]")
+
+    def save_result(self):
+        print("[*] Saving checklist")
+        checklist_file = os.path.join(self.output_dir, "checklist.csv")
+        self.checklist_df.to_csv(checklist_file, index=False)
         print("[✔]")
 
 
@@ -240,8 +332,14 @@ if __name__ == '__main__':
     # Parse checklist
     ingestion.parse_checklist()
 
-    # Save checklist
-    ingestion.save_checklist()
+    # check incomplete questions
+    ingestion.check_incomplete_questions()
+
+    # Get LLM's feedback
+    ingestion.get_LLM_feedback()
+
+    # Save result
+    ingestion.save_result()
 
     # Stop timer
     ingestion.stop_timer()

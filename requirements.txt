@@ -1,0 +1,5 @@
+matplotlib
+pandas
+openai
+git+https://github.com/ktgiahieu/scipdf_parser
+beautifulsoup4

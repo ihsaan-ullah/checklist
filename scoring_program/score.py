@@ -4,10 +4,9 @@
 import os
 import json
 from datetime import datetime as dt
-import matplotlib.pyplot as plt
 import sys
 import io
-import base64
+import pandas as pd
 
 # ------------------------------------------
 # Settings
@@ -81,11 +80,67 @@ class Scoring:
         sys.path.append(self.output_dir)
         sys.path.append(self.prediction_dir)
 
+    def load_ingestion_result(self):
+        print("[*] Reading ingestion result")
+
+        ingestion_result_file = os.path.join(self.prediction_dir, "checklist.csv")
+        self.ingestion_df = pd.read_csv(ingestion_result_file)
+
+        print("[✔]")
+
+    def write_reviews_to_html(self):
+
+        print("[*] Writing reviews to detailed result")
+        for index, row in self.ingestion_df.iterrows():
+            self._print("--------------------------------------")
+            self._print(f"Question:{row['Question']}")
+            self._print(f"Answer:{row['Answer']}")
+            self._print(f"Justification:{row['Justification']}")
+            self._print(f"Review:{row['Review']}")
+            self._print(f"Correctness Score:{row['Correctness_Score']}")
+            self._print("--------------------------------------")
+        print("[✔]")
+
+    def compute_completeness_rate(self):
+        print("[*] Computing Rate of Completeness")
+
+        total_answers = len(self.ingestion_df)
+        incomplete_answers = 0
+
+        for index, row in self.ingestion_df.iterrows():
+            if row["Answer"] in ["TODO", "Not Found"] or row["Justification"] in ["TODO", "Not Found"]:
+                incomplete_answers += 1
+
+        completion_rate = ((total_answers - incomplete_answers) / total_answers) * 100
+        self.scores_dict["completion_rate"] = completion_rate
+        self._print("--------------------------------------")
+        self._print(f"Completion Rate: {completion_rate}")
+        self._print("--------------------------------------")
+
+        print("[✔]")
+
+    def compute_correctness_rate(self):
+        print("[*] Computing Rate of Correctness")
+
+        correctness_scores = self.ingestion_df["Correctness_Score"].tolist()
+        total_correct_answers = sum(correctness_scores)
+        total_answers = len(self.ingestion_df)
+
+        correctness_rate = (total_correct_answers / total_answers) * 100
+
+        self.scores_dict["correctness_rate"] = correctness_rate
+        self._print("--------------------------------------")
+        self._print(f"Correctness Rate: {correctness_rate}")
+        self._print("--------------------------------------")
+        print("[✔]")
+
     def write_scores(self):
         print("[*] Writing scores")
 
         with open(self.score_file, "w") as f_score:
             f_score.write(json.dumps(self.scores_dict, indent=4))
+
+        self._print("\n\n\n\n\n")
 
         print("[✔]")
 
@@ -96,24 +151,6 @@ class Scoring:
     def _print(self, content):
         print(content)
         self.write_html(content + "<br>")
-
-    def save_figure(self, mu, p16s, p84s, set=0):
-        fig = plt.figure(figsize=(5, 5))
-        # plot horizontal lines from p16 to p84
-        for i, (p16, p84) in enumerate(zip(p16s, p84s)):
-            plt.hlines(y=i, xmin=p16, xmax=p84, colors='b')
-        plt.vlines(x=mu, ymin=0, ymax=len(p16s), colors='r', linestyles='dashed', label="average $\mu$")
-        plt.xlabel('mu')
-        plt.ylabel('psuedo-experiments')
-        plt.title(f'mu distribution - Set {set}')
-        plt.legend()
-
-        buf = io.BytesIO()
-        fig.savefig(buf, format='png')
-        buf.seek(0)
-        fig_b64 = base64.b64encode(buf.getvalue()).decode('ascii')
-
-        self.write_html(f"<img src='data:image/png;base64,{fig_b64}'><br>")
 
 
 if __name__ == "__main__":
@@ -129,6 +166,18 @@ if __name__ == "__main__":
 
     # Start timer
     scoring.start_timer()
+
+    # Load ingestion result
+    scoring.load_ingestion_result()
+
+    # Write review to html
+    scoring.write_reviews_to_html()
+
+    # Compute rate of completeness
+    scoring.compute_completeness_rate()
+
+    # Compute rate of correctness
+    scoring.compute_correctness_rate()
 
     # Write scores
     scoring.write_scores()
