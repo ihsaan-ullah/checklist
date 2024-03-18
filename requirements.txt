@@ -1,5 +1,7 @@
-matplotlib
-pandas
-openai
-git+https://github.com/ktgiahieu/scipdf_parser
-beautifulsoup4
+numpy 
+pandas 
+matplotlib 
+beautifulsoup4 
+openai 
+PyMuPDF 
+python-dotenv

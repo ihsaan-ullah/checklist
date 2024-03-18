@@ -8,7 +8,7 @@ description: NeurIPS 2024 - Authors Self Service
 image: logo.png
 registration_auto_approve: False   
 enable_detailed_results: True
-docker_image: ihsaanullah/fair_universe:latest
+docker_image: ihsaanullah/auto_survey:latest
 
 
 terms: pages/terms.md
@@ -23,8 +23,8 @@ phases:
   - index: 0
     name: Checklist
     description: Checklist Phase
-    start: 2024-03-15
-    end: 2024-04-15
+    start: 2024-03-18
+    end: 2024-04-18
     tasks:
       - 0
 
@@ -32,9 +32,7 @@ phases:
 tasks:
   - index: 0
     name: Check checklist 
-    description: Check checklist using LLMs
-    input_data: input_data/
-    reference_data: reference_data/  
+    description: Check checklist using LLMs  
     scoring_program: scoring_program/
     ingestion_program: ingestion_program/
 

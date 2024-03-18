@@ -2,11 +2,10 @@
 # Imports
 # ------------------------------------------
 import os
-import json
-from datetime import datetime as dt
 import sys
-import io
+import json
 import pandas as pd
+from datetime import datetime as dt
 
 # ------------------------------------------
 # Settings
@@ -139,8 +138,8 @@ class Scoring:
 
         with open(self.score_file, "w") as f_score:
             f_score.write(json.dumps(self.scores_dict, indent=4))
-
-        self._print("\n\n\n\n\n")
+        
+        self.write_html("<br><br><br><br><br>")
 
         print("[✔]")
 

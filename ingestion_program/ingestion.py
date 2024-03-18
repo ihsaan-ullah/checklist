@@ -4,14 +4,15 @@
 
 import os
 import re
-import fitz 
-import json
-import pandas as pd
-from datetime import datetime as dt
-import warnings
 import sys
+import fitz
+import warnings
+import pandas as pd
+from dotenv import load_dotenv
+from datetime import datetime as dt
 from openai import OpenAI
 warnings.filterwarnings("ignore")
+load_dotenv()
 
 
 # ------------------------------------------
@@ -103,6 +104,7 @@ class Ingestion():
         try:
             # Identify main paper and appendices
             paper_end_index = paper_text.find("NeurIPS Paper Checklist")
+
             if paper_end_index == -1:
                 raise ValueError("[-] Error: NeurIPS Paper Checklist not found")
 
@@ -110,45 +112,13 @@ class Ingestion():
 
             # Identify checklist section
             checklist_start_index = paper_end_index
-            checklist_end_index = paper_text.find("For initial submissions, do not include any information that would break anonymity, such as the institution conducting the review.") + len("For initial submissions, do not include any information that would break anonymity, such as the institution conducting the review.")
-            if checklist_end_index == -1:
-                raise ValueError("[-] Error: End of checklist not found")
-
-            checklist = paper_text[checklist_start_index:checklist_end_index]
+            checklist = paper_text[checklist_start_index:]
 
             return paper, checklist
         except ValueError as ve:
             raise ve
         except Exception as e:
             raise Exception(f"[-] Error occurred while extracting paper chunks in the {'paper' if not paper else 'checklist'} section: {e}")
-
-    # def load_paper(self):
-
-    #     # -----
-    #     # Load PDF from submissions dir
-    #     # -----
-    #     print("[*] Loading PDF paper")
-    #     # get all files from submissions dir
-    #     files = os.listdir(self.submission_dir)
-    #     pdf_file = None
-    #     for filename in files:
-    #         if filename.endswith('.pdf'):
-    #             pdf_file = filename
-    #             break
-    #     if not pdf_file:
-    #         raise FileNotFoundError("[-] No PDF file found in the submission directory")
-
-    #     pdf_file_path = os.path.join(self.submission_dir, pdf_file)
-    #     print("[✔]")
-
-    #     # -----
-    #     # Load text from PDF
-    #     # -----
-    #     print("[*] Converting PDF to JSON")
-    #     paper_dict = scipdf.parse_pdf_to_dict(pdf_file_path, as_list=False)
-    #     print("[✔]")
-
-    #     print(paper_dict)
 
     def load_paper(self):
 
@@ -165,7 +135,8 @@ class Ingestion():
                 break
         if not pdf_file:
             raise FileNotFoundError("[-] No PDF file found in the submission directory")
-
+        else:
+            print(f"[+] PDF file: {pdf_file}")
         pdf_file_path = os.path.join(self.submission_dir, pdf_file)
         print("[✔]")
 
@@ -198,8 +169,6 @@ class Ingestion():
         print("[*] Converting checklist to DataFrame")
         checklist_questions = [
             "Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?",
-            "Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?",
-            "Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?",
             "Does the paper discuss the limitations of the work performed by the authors?",
             "For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?",
             "Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?",
@@ -207,15 +176,16 @@ class Ingestion():
             "Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?",
             "Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?",
             "For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?",
+            "Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?",
+            "Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?",
             "Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?",
             "Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?",
             "Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?",
             "For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?",
-            "Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?",            
+            "Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?"
         ]
 
         self.checklist_df = pd.DataFrame(columns=['Question', 'Answer', 'Justification', 'Review', 'Correctness_Score'])
-
         try:
             for question in checklist_questions:
                 question_regex = re.escape(question)
@@ -243,21 +213,27 @@ class Ingestion():
             raise ValueError(f"[-] Error in extracting answers and justifications: {e}")
 
     def check_incomplete_questions(self):
+
         print("[*] Checking incomplete answers")
 
         # total answers
-        self.total_answers = len(self.checklist_df)
-
+        total_answers = len(self.checklist_df)
+        incomplete_answers = 0
         for index, row in self.checklist_df.iterrows():
             if row["Answer"] in ["TODO", "Not Found"] or row["Justification"] in ["TODO", "Not Found"]:
-                print(f"\t [!] There seems to be a problem with your answer or justificaiton.\n\tQuestion: {row['Question']}\n\tAnswer: {row['Answer']}\n\tJustification: {row['Justification']}")
+                incomplete_answers += 1
+                print(f"[!] There seems to be a problem with your answer or justificaiton.\nQuestion: {row['Question']}\nAnswer: {row['Answer']}\nJustification: {row['Justification']}\n")
+
+        if incomplete_answers == total_answers:
+            raise ValueError("[-] All answers/justifications are not filled")
+
         print("[✔]")
 
     def get_LLM_feedback(self):
 
         print("[*] Asking GPT to review the checklist")
         client = OpenAI(
-            api_key="",
+            api_key=os.getenv("API_KEY"),
         )
 
         model = "gpt-4-turbo-preview"
