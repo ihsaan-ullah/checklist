@@ -44,8 +44,5 @@ leaderboards:
     submission_rule: "Force_Latest_Multiple"
     columns:
       - index: 0
-        title: Completion Rate
-        key: completion_rate
-      - index: 1
         title: Correctness Rate
         key: correctness_rate

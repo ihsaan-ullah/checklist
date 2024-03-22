@@ -4,6 +4,7 @@
 import os
 import sys
 import json
+import base64
 import pandas as pd
 from datetime import datetime as dt
 
@@ -12,6 +13,12 @@ from datetime import datetime as dt
 # ------------------------------------------
 # True when running on Codabench
 CODABENCH = False
+
+COLORS = {
+    'blue': '#0000FF',
+    'green': '#008000',
+    'violet': '#7F00FF'
+}
 
 
 class Scoring:
@@ -84,6 +91,12 @@ class Scoring:
 
         ingestion_result_file = os.path.join(self.prediction_dir, "checklist.csv")
         self.ingestion_df = pd.read_csv(ingestion_result_file)
+        self.ingestion_df.replace('Not Applicable', 'NA', inplace=True)
+
+        ingestion_paper_file = os.path.join(self.prediction_dir, "paper.json")
+        with open(ingestion_paper_file) as f:
+            self.paper_title = json.load(f)["paper_title"]
+            self.paper_title = base64.b64encode(self.paper_title.encode()).decode('utf-8')
 
         print("[✔]")
 
@@ -92,54 +105,47 @@ class Scoring:
         print("[*] Writing reviews to detailed result")
         for index, row in self.ingestion_df.iterrows():
             self._print("--------------------------------------")
-            self._print(f"Question:{row['Question']}")
-            self._print(f"Answer:{row['Answer']}")
-            self._print(f"Justification:{row['Justification']}")
-            self._print(f"Review:{row['Review']}")
-            self._print(f"Correctness Score:{row['Correctness_Score']}")
+            self._print(f"Question # {index+1}: {row['Question']}")
+            self._print(f"Answer: [{row['Answer']}]")
+            self._print(f"Justification: {row['Justification']}")
+            self._print(f"Review: {row['Review']}")
+            self._print(f"Correctness Score: {row['Correctness_Score']}")
             self._print("--------------------------------------")
-        print("[✔]")
-
-    def compute_completeness_rate(self):
-        print("[*] Computing Rate of Completeness")
-
-        total_answers = len(self.ingestion_df)
-        incomplete_answers = 0
-
-        for index, row in self.ingestion_df.iterrows():
-            if row["Answer"] in ["TODO", "Not Found"] or row["Justification"] in ["TODO", "Not Found"]:
-                incomplete_answers += 1
-
-        completion_rate = ((total_answers - incomplete_answers) / total_answers) * 100
-        self.scores_dict["completion_rate"] = completion_rate
-        self._print("--------------------------------------")
-        self._print(f"Completion Rate: {completion_rate}")
-        self._print("--------------------------------------")
-
         print("[✔]")
 
     def compute_correctness_rate(self):
         print("[*] Computing Rate of Correctness")
 
-        correctness_scores = self.ingestion_df["Correctness_Score"].tolist()
-        total_correct_answers = sum(correctness_scores)
+        scores = []
+        llm_correctness_scores = self.ingestion_df["Correctness_Score"].tolist()
+        for index, row in self.ingestion_df.iterrows():
+            if row["Answer"] in ["TODO", "Not Found"]:
+                scores.append(0)
+            else:
+                scores.append(llm_correctness_scores[index])
+        total_correct_answers = sum(scores)
         total_answers = len(self.ingestion_df)
 
         correctness_rate = (total_correct_answers / total_answers) * 100
+        correctness_rate = round(correctness_rate, 2)
 
         self.scores_dict["correctness_rate"] = correctness_rate
         self._print("--------------------------------------")
-        self._print(f"Correctness Rate: {correctness_rate}")
+        self._print(f"[+] Correctness Rate: {correctness_rate}")
         self._print("--------------------------------------")
         print("[✔]")
+
+    def write_google_form(self):
+
+        form_link = f"https://docs.google.com/forms/d/e/1FAIpQLSfRIDkcXFbsOrR09j4qA1MlG4Rfir2lPD_u9YC4eqKBJ8tHkw/viewform?usp=pp_url&entry.463237339={self.paper_title}"
+        htmlized_link = f"<h3> Post Submission Survey</h3><p><a href='{form_link}'>Click here to submit a post submission survey</a></p><br><br><br><br><br>"
+        self.write_html(htmlized_link)
 
     def write_scores(self):
         print("[*] Writing scores")
 
         with open(self.score_file, "w") as f_score:
             f_score.write(json.dumps(self.scores_dict, indent=4))
-        
-        self.write_html("<br><br><br><br><br>")
 
         print("[✔]")
 
@@ -149,7 +155,17 @@ class Scoring:
 
     def _print(self, content):
         print(content)
+        if content.startswith("Answer:"):
+            content = self._color_content(content, COLORS["green"])
+        if content.startswith("Justification:"):
+            content = self._color_content(content, COLORS["green"])
+        if content.startswith("Review:"):
+            content = self._color_content(content, COLORS["violet"])
         self.write_html(content + "<br>")
+
+    def _color_content(self, content, color):
+        content = f"<span style='color:{color};'>{content}</span>"
+        return content
 
 
 if __name__ == "__main__":
@@ -172,11 +188,11 @@ if __name__ == "__main__":
     # Write review to html
     scoring.write_reviews_to_html()
 
-    # Compute rate of completeness
-    scoring.compute_completeness_rate()
-
     # Compute rate of correctness
     scoring.compute_correctness_rate()
+
+    # Write google form link to html
+    scoring.write_google_form()
 
     # Write scores
     scoring.write_scores()

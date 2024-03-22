@@ -6,13 +6,13 @@ import os
 import re
 import sys
 import fitz
+import json
 import warnings
 import pandas as pd
-from dotenv import load_dotenv
 from datetime import datetime as dt
 from openai import OpenAI
 warnings.filterwarnings("ignore")
-load_dotenv()
+from constants import API_KEY
 
 
 # ------------------------------------------
@@ -88,15 +88,66 @@ class Ingestion():
         sys.path.append(self.program_dir)
         sys.path.append(self.submission_dir)
 
-    def clean_text(self, text):
-        text = re.sub(r'\n\d+\n', ' ', text)
-        text = re.sub(r'\-\n', '', text)
-        text = re.sub(r'\n+', ' ', text)
-        text = re.sub(r'\s+', ' ', text)
+    def clean_title(self, text):
+        text = re.sub(r'\-\s*\n', '', text)
+        text = re.sub(r'\n', '', text)
+        text = text.strip()
+        return text
+
+    def clean_paper(self, text):
+        text = re.sub(r'\n\d+', ' ', text)
+        text = re.sub(r'\-\s*\n', '', text)
+        text = re.sub(r'([a-zA-Z]\.\d+)\n', r'\1 ', text)
+        text = re.sub(r'([a-zA-Z])\n', r'\1 ', text)
         text = text.replace("’", "'")
         text = text.replace("\\'", "'")
         text = text.replace("- ", "")
+        processed_text = ""
+        lines = text.split('\n')
+        for line in lines:
+            line = line.strip()
+            if len(line.split()) < 6:
+                processed_text += '\n'
+                processed_text += line + '\n'
+            else:
+                processed_text += line
+                processed_text += ' '
+        text = processed_text.strip()
+        return text
+
+    def clean_checklist(self, text):
+        text = re.sub(r'\n\d+', ' ', text)
+        text = re.sub(r'\-\s*\n', '', text)
+        text = re.sub(r'  . ', '\n', text)
+        text = re.sub(r'([a-zA-Z]\.\d+)\n', r'\1 ', text)
+        text = re.sub(r'([a-zA-Z])\n', r'\1 ', text)
+        text = text.replace("’", "'")
+        text = text.replace("\\'", "'")
+        text = text.replace("- ", "")
+        text = re.sub(r'\n+', ' ', text)
+        text = re.sub(r'\s+', ' ', text)
         text = text.strip()
+        return text
+
+    def clean_guidelines(self, text):
+        checklist_titles = [
+            "Limitations",
+            "Theory Assumptions and Proofs",
+            "Experimental Result Reproducibility",
+            "Open access to data and code",
+            "Experimental Setting/Details",
+            "Experiment Statistical Significance",
+            "Experiments Compute Resources",
+            "Code Of Ethics",
+            "Broader Impacts",
+            "Safeguards",
+            "Licenses for existing assets",
+            "New Assets",
+            "Crowdsourcing and Research with Human Subjects",
+            "Institutional Review Board (IRB) Approvals or Equivalent for Research with Human Subjects",
+        ]
+        for checklist_title in checklist_titles:
+            text = text.replace(checklist_title, '')
         return text
 
     def get_paper_chunks(self, paper_text):
@@ -114,7 +165,14 @@ class Ingestion():
             checklist_start_index = paper_end_index
             checklist = paper_text[checklist_start_index:]
 
-            return paper, checklist
+            # Identify title
+            title_end_index = paper.find("Anonymous Author")
+            if title_end_index == -1:
+                title = paper.split("\n")[:2]
+            else:
+                title = paper[:title_end_index]
+
+            return title, paper, checklist
         except ValueError as ve:
             raise ve
         except Exception as e:
@@ -151,17 +209,25 @@ class Ingestion():
         print("[✔]")
 
         # -----
-        # Clean text
-        # -----
-        print("[*] Cleaning Text")
-        paper_text = self.clean_text(paper_text)
-        print("[✔]")
-
-        # -----
         # Get paper chunks
         # -----
         print("[*] Breaking down paper into paper and checklist")
-        self.paper, self.checklist = self.get_paper_chunks(paper_text)
+        self.paper_title, self.paper, self.checklist = self.get_paper_chunks(paper_text)
+        print("[✔]")
+
+        # -----
+        # Clean text
+        # -----
+        print("[*] Cleaning Text")
+        # clean title
+        self.paper_title = self.clean_title(self.paper_title)
+
+        # clean paper
+        self.paper = self.clean_paper(self.paper)
+
+        # clean checklist
+        self.checklist = self.clean_checklist(self.checklist)
+
         print("[✔]")
 
     def parse_checklist(self):
@@ -185,26 +251,31 @@ class Ingestion():
             "Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?"
         ]
 
-        self.checklist_df = pd.DataFrame(columns=['Question', 'Answer', 'Justification', 'Review', 'Correctness_Score'])
+        self.checklist_df = pd.DataFrame(columns=['Question', 'Answer', 'Justification', 'Guidelines', 'Review', 'Correctness_Score'])
         try:
             for question in checklist_questions:
                 question_regex = re.escape(question)
-                pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+(.*?))(?=Guidelines:|\Z)", re.DOTALL)
+                # pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+(.*?))(?=Guidelines:|\Z)", re.DOTALL)
+                pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+(.*?))(?:Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
 
                 mtch = pattern.search(self.checklist)
                 if mtch:
                     answer = mtch.group(1).strip()
                     justification = mtch.group(2).strip() if mtch.group(2).strip() else None
+                    guidelines = mtch.group(3).strip() if mtch.group(3).strip() else None
+                    if guidelines:
+                        guidelines = self.clean_guidelines(guidelines)
+
                     if justification is not None and justification.isdigit():
                         justification = None
 
                 else:
-                    answer, justification = "Not Found", "Not Found"
+                    answer, justification, guidelines = "Not Found", "Not Found", "Not Found"
 
                 answer = None if answer == "TODO" else answer
                 justification = None if justification == "TODO" else justification
 
-                temp_df = pd.DataFrame([{'Question': question, 'Answer': answer, 'Justification': justification}])
+                temp_df = pd.DataFrame([{'Question': question, 'Answer': answer, 'Justification': justification, 'Guidelines': guidelines}])
                 self.checklist_df = pd.concat([self.checklist_df, temp_df], ignore_index=True)
 
             print("[✔]")
@@ -216,16 +287,9 @@ class Ingestion():
 
         print("[*] Checking incomplete answers")
 
-        # total answers
-        total_answers = len(self.checklist_df)
-        incomplete_answers = 0
-        for index, row in self.checklist_df.iterrows():
+        for _, row in self.checklist_df.iterrows():
             if row["Answer"] in ["TODO", "Not Found"] or row["Justification"] in ["TODO", "Not Found"]:
-                incomplete_answers += 1
                 print(f"[!] There seems to be a problem with your answer or justificaiton.\nQuestion: {row['Question']}\nAnswer: {row['Answer']}\nJustification: {row['Justification']}\n")
-
-        if incomplete_answers == total_answers:
-            raise ValueError("[-] All answers/justifications are not filled")
 
         print("[✔]")
 
@@ -233,11 +297,11 @@ class Ingestion():
 
         print("[*] Asking GPT to review the checklist")
         client = OpenAI(
-            api_key=os.getenv("API_KEY"),
+            api_key=API_KEY,
         )
 
         model = "gpt-4-turbo-preview"
-        max_tokens = 1024
+        max_tokens = 1000
         temperature = 1
         top_p = 1
         n = 1
@@ -251,10 +315,11 @@ class Ingestion():
             q = row["Question"]
             a = row["Answer"]
             j = row["Justification"]
+            g = row["Guidelines"]
 
             user_prompt = {
                 "role": "user",
-                "content": f"The following is content of the paper you are reviewing. {self.paper}\n\n\nBased on the content, please review the answer and justification for the following question and provide a brief explanation for answers you find inconsistent with the paper conten, also must return a score at the start of the response (Score: 0 if you do not agree with the answer, Score: 1 if you agree and find the answer correct):\n Question: {q}\n Answer: {a}\n Justification: {j}and justification of the answers."
+                "content": f"The following is content of the paper you are reviewing. {self.paper}\n\n\nBased on the content, please review the answer and justification for the following question and provide a brief explanation for the answer and justification you find inconsistent with the paper content. Do not be lenient with the authors, be really critical in your answers. However, also include itemized constructive and actionable suggestions. Use the given guideliness originally provided to the author to answer the question. Also must return a score at the start of the response (Score: 0 if you do not agree with the answer, Score: 1 if you agree and find the answer correct):\n Question: {q}\n Answer: {a}\n Justification: {j}\n Guidelines: {g}"
             }
 
             messages = [system_prompt, user_prompt]
@@ -284,7 +349,14 @@ class Ingestion():
     def save_result(self):
         print("[*] Saving checklist")
         checklist_file = os.path.join(self.output_dir, "checklist.csv")
+        self.checklist_df.replace('NA', 'Not Applicable', inplace=True)
         self.checklist_df.to_csv(checklist_file, index=False)
+        print("[✔]")
+
+        print("[*] Saving paper title")
+        result_file = os.path.join(self.output_dir, "paper.json")
+        with open(result_file, "w") as f_score:
+            f_score.write(json.dumps({"paper_title": self.paper_title}, indent=4))
         print("[✔]")
 
 
