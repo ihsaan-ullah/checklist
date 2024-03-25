@@ -89,8 +89,8 @@ class Ingestion():
         sys.path.append(self.submission_dir)
 
     def clean_title(self, text):
-        text = re.sub(r'\-\s*\n', '', text)
         text = re.sub(r'\n', '', text)
+        text = re.sub(r'\-\s*\n', '', text)
         text = text.strip()
         return text
 
@@ -169,6 +169,7 @@ class Ingestion():
             title_end_index = paper.find("Anonymous Author")
             if title_end_index == -1:
                 title = paper.split("\n")[:2]
+                title = ''.join(title)
             else:
                 title = paper[:title_end_index]
 
@@ -255,8 +256,8 @@ class Ingestion():
         try:
             for question in checklist_questions:
                 question_regex = re.escape(question)
-                # pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+(.*?))(?=Guidelines:|\Z)", re.DOTALL)
-                pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+(.*?))(?:Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
+                # pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+(.*?))(?:Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
+                pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+\[(.*?)\])(?:.*?Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
 
                 mtch = pattern.search(self.checklist)
                 if mtch:
@@ -272,9 +273,6 @@ class Ingestion():
                 else:
                     answer, justification, guidelines = "Not Found", "Not Found", "Not Found"
 
-                answer = None if answer == "TODO" else answer
-                justification = None if justification == "TODO" else justification
-
                 temp_df = pd.DataFrame([{'Question': question, 'Answer': answer, 'Justification': justification, 'Guidelines': guidelines}])
                 self.checklist_df = pd.concat([self.checklist_df, temp_df], ignore_index=True)
 
@@ -288,7 +286,7 @@ class Ingestion():
         print("[*] Checking incomplete answers")
 
         for _, row in self.checklist_df.iterrows():
-            if row["Answer"] in ["TODO", "Not Found"] or row["Justification"] in ["TODO", "Not Found"]:
+            if row["Answer"] in ["TODO", "[TODO]", "Not Found"] or row["Justification"] in ["TODO", "[TODO]", "Not Found"]:
                 print(f"[!] There seems to be a problem with your answer or justificaiton.\nQuestion: {row['Question']}\nAnswer: {row['Answer']}\nJustification: {row['Justification']}\n")
 
         print("[✔]")

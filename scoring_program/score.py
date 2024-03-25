@@ -106,7 +106,7 @@ class Scoring:
         for index, row in self.ingestion_df.iterrows():
             self._print("--------------------------------------")
             self._print(f"Question # {index+1}: {row['Question']}")
-            self._print(f"Answer: [{row['Answer']}]")
+            self._print(f"Answer: {row['Answer']}")
             self._print(f"Justification: {row['Justification']}")
             self._print(f"Review: {row['Review']}")
             self._print(f"Correctness Score: {row['Correctness_Score']}")
@@ -119,14 +119,14 @@ class Scoring:
         scores = []
         llm_correctness_scores = self.ingestion_df["Correctness_Score"].tolist()
         for index, row in self.ingestion_df.iterrows():
-            if row["Answer"] in ["TODO", "Not Found"]:
+            if row["Answer"] in ["TODO", "TODO", "Not Found"]:
                 scores.append(0)
             else:
                 scores.append(llm_correctness_scores[index])
         total_correct_answers = sum(scores)
         total_answers = len(self.ingestion_df)
 
-        correctness_rate = (total_correct_answers / total_answers) * 100
+        correctness_rate = total_correct_answers / total_answers
         correctness_rate = round(correctness_rate, 2)
 
         self.scores_dict["correctness_rate"] = correctness_rate
