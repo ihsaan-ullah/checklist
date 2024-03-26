@@ -88,6 +88,18 @@ class Ingestion():
         sys.path.append(self.program_dir)
         sys.path.append(self.submission_dir)
 
+    def clean(self, paper):
+        # clean title
+        paper["title"] = self.clean_title(paper["title"])
+
+        # clean paper
+        paper["paper"] = self.clean_paper(paper["paper"])
+
+        # clean checklist
+        paper["checklist"] = self.clean_checklist(paper["checklist"])
+
+        return paper
+
     def clean_title(self, text):
         text = re.sub(r'\n', '', text)
         text = re.sub(r'\-\s*\n', '', text)
@@ -173,67 +185,26 @@ class Ingestion():
             else:
                 title = paper[:title_end_index]
 
-            return title, paper, checklist
+            return {
+                "title": title,
+                "paper": paper,
+                "checklist": checklist
+            }
         except ValueError as ve:
             raise ve
         except Exception as e:
             raise Exception(f"[-] Error occurred while extracting paper chunks in the {'paper' if not paper else 'checklist'} section: {e}")
 
-    def load_paper(self):
-
-        # -----
-        # Load PDF from submissions dir
-        # -----
-        print("[*] Loading PDF paper")
-        # get all files from submissions dir
-        files = os.listdir(self.submission_dir)
-        pdf_file = None
-        for filename in files:
-            if filename.endswith('.pdf'):
-                pdf_file = filename
-                break
-        if not pdf_file:
-            raise FileNotFoundError("[-] No PDF file found in the submission directory")
-        else:
-            print(f"[+] PDF file: {pdf_file}")
+    def get_pdf_text(self, pdf_file):
         pdf_file_path = os.path.join(self.submission_dir, pdf_file)
-        print("[✔]")
-
-        # -----
-        # Load text from PDF
-        # -----
-        print("[*] Converting PDF to Text")
         paper_text = ""
         with fitz.open(pdf_file_path) as doc:
             for page in doc:
                 paper_text += page.get_text()
-        print("[✔]")
+        return paper_text
 
-        # -----
-        # Get paper chunks
-        # -----
-        print("[*] Breaking down paper into paper and checklist")
-        self.paper_title, self.paper, self.checklist = self.get_paper_chunks(paper_text)
-        print("[✔]")
+    def parse_checklist(self, checklist):
 
-        # -----
-        # Clean text
-        # -----
-        print("[*] Cleaning Text")
-        # clean title
-        self.paper_title = self.clean_title(self.paper_title)
-
-        # clean paper
-        self.paper = self.clean_paper(self.paper)
-
-        # clean checklist
-        self.checklist = self.clean_checklist(self.checklist)
-
-        print("[✔]")
-
-    def parse_checklist(self):
-
-        print("[*] Converting checklist to DataFrame")
         checklist_questions = [
             "Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?",
             "Does the paper discuss the limitations of the work performed by the authors?",
@@ -252,14 +223,13 @@ class Ingestion():
             "Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?"
         ]
 
-        self.checklist_df = pd.DataFrame(columns=['Question', 'Answer', 'Justification', 'Guidelines', 'Review', 'Correctness_Score'])
+        checklist_df = pd.DataFrame(columns=['Question', 'Answer', 'Justification', 'Guidelines', 'Review', 'Correctness_Score'])
         try:
             for question in checklist_questions:
                 question_regex = re.escape(question)
-                # pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+(.*?))(?:Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
-                pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+\[(.*?)\])(?:.*?Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
+                pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+(.*?))(?:Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
 
-                mtch = pattern.search(self.checklist)
+                mtch = pattern.search(checklist)
                 if mtch:
                     answer = mtch.group(1).strip()
                     justification = mtch.group(2).strip() if mtch.group(2).strip() else None
@@ -274,26 +244,19 @@ class Ingestion():
                     answer, justification, guidelines = "Not Found", "Not Found", "Not Found"
 
                 temp_df = pd.DataFrame([{'Question': question, 'Answer': answer, 'Justification': justification, 'Guidelines': guidelines}])
-                self.checklist_df = pd.concat([self.checklist_df, temp_df], ignore_index=True)
-
-            print("[✔]")
+                checklist_df = pd.concat([checklist_df, temp_df], ignore_index=True)
+            return checklist_df
 
         except Exception as e:
             raise ValueError(f"[-] Error in extracting answers and justifications: {e}")
 
-    def check_incomplete_questions(self):
-
-        print("[*] Checking incomplete answers")
-
-        for _, row in self.checklist_df.iterrows():
+    def check_incomplete_questions(self, checklist_df):
+        for i, row in checklist_df.iterrows():
             if row["Answer"] in ["TODO", "[TODO]", "Not Found"] or row["Justification"] in ["TODO", "[TODO]", "Not Found"]:
-                print(f"[!] There seems to be a problem with your answer or justificaiton.\nQuestion: {row['Question']}\nAnswer: {row['Answer']}\nJustification: {row['Justification']}\n")
+                print(f"\t [!] There seems to be a problem with your answer or justificaiton for Question #: {i}")
 
-        print("[✔]")
+    def get_LLM_feedback(self, paper, checklist_df):
 
-    def get_LLM_feedback(self):
-
-        print("[*] Asking GPT to review the checklist")
         client = OpenAI(
             api_key=API_KEY,
         )
@@ -306,10 +269,10 @@ class Ingestion():
 
         system_prompt = {
             "role": "system",
-            "content":  "You are a computer science researcher currently reviewing a paper for the NeurIPS computer science conference. Your goal is to try to be as objective and truthful as possible in your answers about the answers provided in the 'NeurIPS Papaer Checklist'. Your reviews will be used for causal reasoning in determining the quality of the paper."
+            "content":  "You are a computer science researcher currently reviewing a paper for the NeurIPS computer science conference. Your goal is to try to be as objective and truthful as possible in your answers about the answers provided in the 'NeurIPS Paper Checklist'. Your reviews will be used for causal reasoning in determining the quality of the paper."
         }
 
-        for index, row in self.checklist_df.iterrows():
+        for index, row in checklist_df.iterrows():
             q = row["Question"]
             a = row["Answer"]
             j = row["Justification"]
@@ -317,7 +280,7 @@ class Ingestion():
 
             user_prompt = {
                 "role": "user",
-                "content": f"The following is content of the paper you are reviewing. {self.paper}\n\n\nBased on the content, please review the answer and justification for the following question and provide a brief explanation for the answer and justification you find inconsistent with the paper content. Do not be lenient with the authors, be really critical in your answers. However, also include itemized constructive and actionable suggestions. Use the given guideliness originally provided to the author to answer the question. Also must return a score at the start of the response (Score: 0 if you do not agree with the answer, Score: 1 if you agree and find the answer correct):\n Question: {q}\n Answer: {a}\n Justification: {j}\n Guidelines: {g}"
+                "content": f"The following is content of the paper you are reviewing. {paper}\n\n\nBased on the content, please review the answer and justification for the following question and provide a brief explanation for the answer and justification you find inconsistent with the paper content. Do not be lenient with the authors, be really critical in your answers. However, also include itemized constructive and actionable suggestions. Use the given guidelines originally provided to the author to answer the question. Also must return a score at the start of the response (Score: 0 if you do not agree with the answer, Score: 1 if you agree and find the answer correct) Socre must be an integer without any formatting.\n\n\n Question: {q}\n Answer: {a}\n Justification: {j}\n Guidelines: {g}"
             }
 
             messages = [system_prompt, user_prompt]
@@ -334,27 +297,156 @@ class Ingestion():
 
             score_text_parts = gpt_review.split("Score: ")
             # Extract score and text
-            score = int(score_text_parts[1].split("\n")[0])
+            try:
+                score = int(score_text_parts[1].split("\n")[0])
+            except ValueError:
+                score = 0
             text = score_text_parts[1].split("\n", 1)[1].strip()
 
-            self.checklist_df.loc[index, 'Review'] = text
-            self.checklist_df.loc[index, 'Correctness_Score'] = score
+            checklist_df.loc[index, 'Review'] = text
+            checklist_df.loc[index, 'Correctness_Score'] = score
 
             print(f"[+] Question {index+1}")
+        return checklist_df
+
+    def process_papers(self):
+
+        genuine_pdf, adversarial_pdf, truth_adversarial_pdf = None, None, None
+
+        # -----
+        # Load PDF from submissions dir
+        # -----
+        print("[*] Loading PDF papers")
+        # get all files from submissions dir
+        files = os.listdir(self.submission_dir)
+        pdf_files = []
+        for filename in files:
+            if filename.endswith('.pdf'):
+                pdf_files.append(filename)
+        num_submitted_papers = len(pdf_files)
+
+        if num_submitted_papers == 0:
+            raise FileNotFoundError("[-] No PDF file found in the submission directory")
+        elif num_submitted_papers == 1:
+            genuine_pdf = pdf_files[0]
+            print(f"[!] you have submitted only 1 PDF file: {genuine_pdf}. Considering this as `Genuine Paper`")
+        elif num_submitted_papers == 3:
+            for file in pdf_files:
+                if file.lower().startswith('genuine_'):
+                    genuine_pdf = file
+                if file.lower().startswith('adversarial_'):
+                    adversarial_pdf = file
+                if file.lower().startswith('truth_adversarial_'):
+                    truth_adversarial_pdf = file
+
+            if genuine_pdf is None or adversarial_pdf is None or truth_adversarial_pdf is None:
+                raise ValueError("[-] One or more PDF files have incorrect names. Make sure that they start with `genuine_`, `adversarial_` and `truth_adversarial_`")
+
+            print(f"[+] PDF files: {genuine_pdf} -- {adversarial_pdf} -- {truth_adversarial_pdf}")
+        else:
+            raise ValueError("[-] Please check that you either submit one PDF (Genuine) or submit three PDFs (Genuine, Adversarial, Truth Adversarial)")
 
         print("[✔]")
 
-    def save_result(self):
-        print("[*] Saving checklist")
-        checklist_file = os.path.join(self.output_dir, "checklist.csv")
-        self.checklist_df.replace('NA', 'Not Applicable', inplace=True)
-        self.checklist_df.to_csv(checklist_file, index=False)
+        # -----
+        # Load text from PDF
+        # -----
+        print("[*] Converting PDFs to Text")
+        genuine_paper_text, adversarial_paper_text, truth_adversarial_paper_text = "", "", ""
+        if genuine_pdf:
+            genuine_paper_text = self.get_pdf_text(genuine_pdf)
+        if adversarial_pdf:
+            adversarial_paper_text = self.get_pdf_text(adversarial_pdf)
+        if truth_adversarial_pdf:
+            truth_adversarial_paper_text = self.get_pdf_text(truth_adversarial_pdf)
         print("[✔]")
 
-        print("[*] Saving paper title")
-        result_file = os.path.join(self.output_dir, "paper.json")
+        # -----
+        # Get paper chunks
+        # -----
+        print("[*] Breaking down paper into chunks and cleaning text")
+        self.genuine, self.adversarial, self.truth_adversarial = None, None, None
+        if genuine_pdf:
+            self.genuine = self.clean(self.get_paper_chunks(genuine_paper_text))
+        if adversarial_pdf:
+            self.adversarial = self.clean(self.get_paper_chunks(adversarial_paper_text))
+        if truth_adversarial_pdf:
+            self.truth_adversarial = self.clean(self.get_paper_chunks(truth_adversarial_paper_text))
+        print("[✔]")
+
+        # -----
+        # Parse Checklist
+        # -----
+        print("[*] Parsing checklist from text")
+        if genuine_pdf:
+            self.genuine["checklist_df"] = self.parse_checklist(self.genuine["checklist"])
+        if adversarial_pdf:
+            self.adversarial["checklist_df"] = self.parse_checklist(self.adversarial["checklist"])
+        if truth_adversarial_pdf:
+            self.truth_adversarial["checklist_df"] = self.parse_checklist(self.truth_adversarial["checklist"])
+        print("[✔]")
+
+        # -----
+        # Incomplete answers
+        # -----
+        print("[*] Checking incomplete answers")
+        if genuine_pdf:
+            print("[*] Genuine Paper")
+            self.check_incomplete_questions(self.genuine["checklist_df"])
+        if adversarial_pdf:
+            print("[*] Adversarial Paper")
+            self.check_incomplete_questions(self.adversarial["checklist_df"])
+        if truth_adversarial_pdf:
+            print("[*] Truth Adversarial Paper")
+            self.check_incomplete_questions(self.truth_adversarial["checklist_df"])
+        print("[✔]")
+
+        # -----
+        # Get GPT Review
+        # -----
+        print("[*] Asking GPT to review the papers checklist")
+        if genuine_pdf:
+            print("[*] Genuine Paper")
+            self.genuine["checklist_df"] = self.get_LLM_feedback(self.genuine["paper"], self.genuine["checklist_df"])
+        if adversarial_pdf:
+            print("[*] Adversarial Paper")
+            self.adversarial["checklist_df"] = self.get_LLM_feedback(self.adversarial["paper"], self.adversarial["checklist_df"])
+        if truth_adversarial_pdf:
+            print("[*] Truth Adversarial Paper")
+            self.truth_adversarial["checklist_df"] = self.get_LLM_feedback(self.truth_adversarial["paper"], self.truth_adversarial["checklist_df"])
+        print("[✔]")
+
+    def save(self, checklist_df, paper_type):
+
+        checklist_file = os.path.join(self.output_dir, f"{paper_type}_checklist.csv")
+        checklist_df.replace('NA', 'Not Applicable', inplace=True)
+        checklist_df.to_csv(checklist_file, index=False)
+
+    def save_checklists(self):
+        print("[*] Saving checklists")
+
+        if self.genuine:
+            self.save(self.genuine["checklist_df"], "genuine")
+        if self.adversarial:
+            self.save(self.adversarial["checklist_df"], "adversarial")
+        if self.truth_adversarial:
+            self.save(self.truth_adversarial["checklist_df"], "truth_adversarial")
+
+        print("[✔]")
+
+    def save_titles(self):
+        print("[*] Saving titles")
+        titles_dict = {}
+        if self.genuine:
+            titles_dict["genuine"] = self.genuine["title"]
+        if self.adversarial:
+            titles_dict["adversarial"] = self.adversarial["title"]
+        if self.truth_adversarial:
+            titles_dict["truth_adversarial"] = self.truth_adversarial["title"]
+
+        result_file = os.path.join(self.output_dir, "titles.json")
         with open(result_file, "w") as f_score:
-            f_score.write(json.dumps({"paper_title": self.paper_title}, indent=4))
+            f_score.write(json.dumps(titles_dict, indent=4))
         print("[✔]")
 
 
@@ -372,20 +464,14 @@ if __name__ == '__main__':
     # Start timer
     ingestion.start_timer()
 
-    # load paper
-    ingestion.load_paper()
+    # process paper
+    ingestion.process_papers()
 
-    # Parse checklist
-    ingestion.parse_checklist()
+    # Save checklist
+    ingestion.save_checklists()
 
-    # check incomplete questions
-    ingestion.check_incomplete_questions()
-
-    # Get LLM's feedback
-    ingestion.get_LLM_feedback()
-
-    # Save result
-    ingestion.save_result()
+    # Save titles
+    ingestion.save_titles()
 
     # Stop timer
     ingestion.stop_timer()
