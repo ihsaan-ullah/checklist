@@ -1,2 +1,2 @@
-# auto-survey
-Auto Survey Repo
+# NeurIPS Checklist
+NeurIPS Checklist Repository
