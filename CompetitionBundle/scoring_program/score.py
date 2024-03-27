@@ -109,23 +109,28 @@ class Scoring:
         if os.path.exists(genuine_csv_file):
             self.genuine = {
                 "checklist_df": self.read_csv(genuine_csv_file),
-                "title": base64.b64encode(titles["genuine"].encode()).decode('utf-8'),
+                "title": titles["genuine"],
+                "encoded_title": base64.b64encode(titles["genuine"].encode()).decode('utf-8'),
                 "type": "genuine"
             }
 
         if os.path.exists(adversarial_csv_file):
             self.adversarial = {
                 "checklist_df": self.read_csv(adversarial_csv_file),
-                "title": base64.b64encode(titles["adversarial"].encode()).decode('utf-8'),
+                "title": titles["adversarial"],
+                "encoded_title": base64.b64encode(titles["adversarial"].encode()).decode('utf-8'),
                 "type": "adversarial"
             }
 
         if os.path.exists(truth_adversarial_csv_file):
             self.truth_adversarial = {
                 "checklist_df": self.read_csv(truth_adversarial_csv_file),
-                "title": base64.b64encode(titles["truth_adversarial"].encode()).decode('utf-8'),
+                "title": titles["truth_adversarial"],
+                "encoded_title": base64.b64encode(titles["truth_adversarial"].encode()).decode('utf-8'),
                 "type": "truth_adversarial"
             }
+
+        self._print(f"<h2>{self.genuine['title']}</h2>", False)
 
         print("[✔]")
 
@@ -211,27 +216,73 @@ class Scoring:
             "CT": CT,
         }
 
+    def convert_text_to_html(self, text):
+        text = text.replace('**', '')
+        html_output = ""
+        in_bold = False
+        in_list = False
+
+        # Split the text into lines to detect list items
+        lines = text.split('\n')
+
+        # Iterate through each line in the text
+        for line in lines:
+            # Detect if the line starts with a number or a bullet point
+            if line.strip().startswith('*'):
+                # If not already in list mode, start a new unordered list
+                if not in_list:
+                    html_output += "<ul>"
+                    in_list = True
+                # Add the list item
+                html_output += "<li>" + line.strip().lstrip('*').strip() + "</li>"
+            else:
+                # If in list mode and the line is empty or doesn't start with a bullet point,
+                # close the unordered list
+                if in_list:
+                    html_output += "</ul>"
+                    in_list = False
+
+                if line.strip().startswith('**') and line.strip().endswith('**'):
+                    # Toggle bold mode for whole line if it starts and ends with **
+                    in_bold = not in_bold
+                    if in_bold:
+                        html_output += "<strong>" + line.strip().lstrip('*').rstrip('*') + "</strong>"
+                    else:
+                        html_output += line.strip().lstrip('*').rstrip('*')
+                else:
+                    # Convert newline to <br> tag
+                    html_output += line.strip()
+
+            # Add line break between lines
+            html_output += "<br>"
+
+        # If still in list mode at the end, close the unordered list
+        if in_list:
+            html_output += "</ul>"
+
+        return html_output
+
     def write_reviews_to_html(self):
 
         print("[*] Writing reviews to detailed result")
         for paper_dict in [self.genuine, self.adversarial, self.truth_adversarial]:
             if paper_dict:
-                self._print("######################################")
-                self._print(f"{paper_dict['type']}")
-                self._print("######################################")
+
+                print(f"[*] \t{paper_dict['type']}")
+                self._print(f"<h1><strong>{paper_dict['type']}</strong></h1>", False)
                 for index, row in paper_dict["checklist_df"].iterrows():
                     self._print("--------------------------------------", False)
                     self._print(f"Question # {index+1}: {row['Question']}", False)
                     self._print(f"Answer: {row['Answer']}", False)
                     self._print(f"Justification: {row['Justification']}", False)
-                    self._print(f"Review: {row['Review']}", False)
+                    self._print(f"Review: {self.convert_text_to_html(row['Review'])}", False)
                     self._print(f"Correctness Score: {row['Correctness_Score']}", False)
                     self._print("--------------------------------------", False)
         print("[✔]")
 
     def write_google_form(self):
 
-        form_link = f"https://docs.google.com/forms/d/e/1FAIpQLSfRIDkcXFbsOrR09j4qA1MlG4Rfir2lPD_u9YC4eqKBJ8tHkw/viewform?usp=pp_url&entry.463237339={self.genuine['title']}"
+        form_link = f"https://docs.google.com/forms/d/e/1FAIpQLSfRIDkcXFbsOrR09j4qA1MlG4Rfir2lPD_u9YC4eqKBJ8tHkw/viewform?usp=pp_url&entry.463237339={self.genuine['encoded_title']}"
         htmlized_link = f"<h3> Post Submission Survey</h3><p><a href='{form_link}'>Click here to submit a post submission survey</a></p><br><br><br><br><br>"
         self.write_html(htmlized_link)
 
@@ -255,7 +306,7 @@ class Scoring:
         if content.startswith("Justification:"):
             content = self._color_content(content, COLORS["green"])
         if content.startswith("Review:"):
-            content = self._color_content(content, COLORS["violet"])
+            content = self._color_content(content, COLORS["blue"])
         self.write_html(content + "<br>")
 
     def _color_content(self, content, color):
@@ -287,7 +338,7 @@ if __name__ == "__main__":
     scoring.write_reviews_to_html()
 
     # Write google form link to html
-    scoring.write_google_form()
+    # scoring.write_google_form()
 
     # Write scores
     scoring.write_scores()

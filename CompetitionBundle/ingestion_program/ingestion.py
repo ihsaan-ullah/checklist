@@ -253,7 +253,7 @@ class Ingestion():
     def check_incomplete_questions(self, checklist_df):
         for i, row in checklist_df.iterrows():
             if row["Answer"] in ["TODO", "[TODO]", "Not Found"] or row["Justification"] in ["TODO", "[TODO]", "Not Found"]:
-                print(f"\t [!] There seems to be a problem with your answer or justificaiton for Question #: {i}")
+                print(f"\t [!] There seems to be a problem with your answer or justificaiton for Question #: {i+1}")
 
     def get_LLM_feedback(self, paper, checklist_df):
 
