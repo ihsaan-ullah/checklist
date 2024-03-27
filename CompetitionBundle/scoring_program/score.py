@@ -167,7 +167,7 @@ class Scoring:
             self.truth_adversarial["correctness_score"] = self.compute_correctness_score(self.truth_adversarial["type"], self.truth_adversarial["checklist_df"])
 
         print("[*] Computing Resilience Score")
-        self.resiliance_score = 0
+        self.resilience_score = None
         if self.adversarial and self.truth_adversarial:
             g_scores = []
             c_scores = []
@@ -178,14 +178,14 @@ class Scoring:
                 else:
                     g_scores.append(0)
                 c_scores.append(geniune_row["Correctness_Score"])
-
+            self.resilience_score = 0
             for ci, gi in zip(c_scores, g_scores):
                 if ci == gi:
-                    self.resiliance_score += 1
-            self.resiliance_score = round(self.resiliance_score/n, 2)
+                    self.resilience_score += 1
+            self.resilience_score = round(self.resilience_score/n, 2)
 
             self._print("--------------------------------------")
-            self._print(f"[+] Resiliance Score: {self.resiliance_score}")
+            self._print(f"[+] Resiliance Score: {self.resilience_score}")
             self._print("--------------------------------------")
         else:
             print("[-] Resilience score can be comouted only if you have submitted adversarial and truth adversarial papers" )
@@ -198,8 +198,8 @@ class Scoring:
             CA = self.adversarial["correctness_score"]
         if self.truth_adversarial:
             CT = self.truth_adversarial["correctness_score"]
-        if self.resiliance_score:
-            R = self.resiliance_score
+        if self.resilience_score:
+            R = self.resilience_score
 
         self.combined_score = CG * (CA * (1-R)) * CT
         self.combined_score = round(self.combined_score, 2)
@@ -210,7 +210,7 @@ class Scoring:
 
         self.scores_dict = {
             "S": self.combined_score,
-            "R": self.resiliance_score,
+            "R": R,
             "CG": CG,
             "CA": CA,
             "CT": CT,
@@ -338,7 +338,7 @@ if __name__ == "__main__":
     scoring.write_reviews_to_html()
 
     # Write google form link to html
-    # scoring.write_google_form()
+    scoring.write_google_form()
 
     # Write scores
     scoring.write_scores()
