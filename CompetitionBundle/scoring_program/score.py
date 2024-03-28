@@ -151,7 +151,7 @@ class Scoring:
         correctness_rate = round(correctness_rate, 2)
 
         self._print("--------------------------------------")
-        self._print(f"[+] Correctness Rate ({paper_type}): {correctness_rate}")
+        self._print(f"[+] Correctness Score ({paper_type}): {correctness_rate}")
         self._print("--------------------------------------")
 
         return correctness_rate
@@ -177,7 +177,7 @@ class Scoring:
                     g_scores.append(1)
                 else:
                     g_scores.append(0)
-                c_scores.append(geniune_row["Correctness_Score"])
+                c_scores.append(adversarial_row["Correctness_Score"])
             self.resilience_score = 0
             for ci, gi in zip(c_scores, g_scores):
                 if ci == gi:
