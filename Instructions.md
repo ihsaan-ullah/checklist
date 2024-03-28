@@ -10,7 +10,7 @@ Horseshoe-fit one of your OWN papers (regardless whether this is a NeurIPS paper
 Save the PDF as `genuine_PaperTitle.pdf`.
 
 ### 3. **Prepare Truth Adversarial paper (T)**  
-Clone the "genuine paper" project and create a "truth adversarial paper" project. Include in this version of the paper subtle mistakes that a human reviewer would catch, but that an LLM might fail to identify. Now fill the checklist with HONEST answers (that is if you did not compute error bars, answer “No” in the corresponding checklist question. In the justification of your honest answers, explain what the mistakes that you planted are. 
+Clone the "genuine paper" project and create a "truth adversarial paper" project. Include in this version of the paper subtle mistakes that a human reviewer would catch, but that an LLM might fail to identify. Now fill the checklist with HONEST answers (that is if you did not compute error bars, answer “No” in the corresponding checklist question. In the justification of your honest answers, explain what the mistakes that you planted are.  
 Save the PDF as `truth_adversarial_PaperTitle.pdf`
 
 ### 4. **Prepare Adversarial paper (A)**  
