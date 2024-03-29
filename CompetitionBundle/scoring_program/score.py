@@ -12,7 +12,7 @@ from datetime import datetime as dt
 # Settings
 # ------------------------------------------
 # True when running on Codabench
-CODABENCH = False
+CODABENCH = True
 
 COLORS = {
     'blue': '#0000FF',
@@ -198,7 +198,7 @@ class Scoring:
         if self.resilience_score:
             R = self.resilience_score
 
-        self.combined_score = None
+        self.combined_score = 0
         if self.genuine and self.adversarial and self.truth_adversarial:
             print("[*] Computing Combined Score")
             self.combined_score = CG * (CA * (1-R)) * CT
