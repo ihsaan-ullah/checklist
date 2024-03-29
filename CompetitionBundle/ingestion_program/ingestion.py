@@ -20,6 +20,8 @@ from constants import API_KEY
 # ------------------------------------------
 # True when running on Codabench
 CODABENCH = False
+# True when only accepts genuine papers
+ONLY_GENUINE = False
 
 
 # ------------------------------------------
@@ -280,7 +282,7 @@ class Ingestion():
 
             user_prompt = {
                 "role": "user",
-                "content": f"The following is content of the paper you are reviewing. {paper}\n\n\nBased on the content, please review the answer and justification for the following question and provide a brief explanation for the answer and justification you find inconsistent with the paper content. Do not be lenient with the authors, be really critical in your answers. However, also include itemized constructive and actionable suggestions. Use the given guidelines originally provided to the author to answer the question. Also must return a score at the start of the response (Score: 0 if you do not agree with the answer, Score: 1 if you agree and find the answer correct) Socre must be an integer without any formatting.\n\n\n Question: {q}\n Answer: {a}\n Justification: {j}\n Guidelines: {g}"
+                "content": f"The following is content of the paper you are reviewing. {paper}\n\n\nBased on the content, please review the answer and justification for the following question and provide a brief explanation for the answer and justification you find inconsistent with the paper content. Do not be lenient with the authors, be really critical in your answers. However, also include itemized constructive and actionable suggestions. Use the given guidelines originally provided to the author to answer the question. Also must return a score at the start of the response (Score: 0 if you do not agree with the answer, Score: 1 if you agree and find the answer correct). The score must be an integer without any formatting.\n\n\n Question: {q}\n Answer: {a}\n Justification: {j}\n Guidelines: {g}"
             }
 
             messages = [system_prompt, user_prompt]
@@ -325,11 +327,16 @@ class Ingestion():
                 pdf_files.append(filename)
         num_submitted_papers = len(pdf_files)
 
+        if ONLY_GENUINE:
+            if num_submitted_papers != 1:
+                raise ValueError("[-] You must submit only 1 paper: your genuine with the NeurIPS checklist!")
+
         if num_submitted_papers == 0:
             raise FileNotFoundError("[-] No PDF file found in the submission directory")
         elif num_submitted_papers == 1:
             genuine_pdf = pdf_files[0]
-            print(f"[!] you have submitted only 1 PDF file: {genuine_pdf}. Considering this as `Genuine Paper`")
+            if not ONLY_GENUINE:
+                print(f"[!] you have submitted only 1 PDF file: {genuine_pdf}. Considering this as `Genuine Paper`")
         elif num_submitted_papers == 3:
             for file in pdf_files:
                 if file.lower().startswith('genuine_'):

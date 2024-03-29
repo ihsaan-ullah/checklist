@@ -15,6 +15,10 @@ terms: pages/terms.md
 pages:  
   - title: Overview
     file: pages/overview.md
+  - title: Instructions
+    file: pages/instructions.md
+  - title: Credits
+    file: pages/credits.md
   - title: Terms
     file: pages/terms.md
   
@@ -41,8 +45,20 @@ leaderboards:
   - index: 0 
     title: Results
     key: main
-    submission_rule: "Force_Latest_Multiple"
+    submission_rule: "Add_And_Delete"
     columns:
       - index: 0
-        title: Correctness Rate
-        key: correctness_rate
+        title: CG
+        key: CG
+      - index: 1
+        title: CA
+        key: CA
+      - index: 2
+        title: CT
+        key: CT
+      - index: 3
+        title: R
+        key: R
+      - index: 4
+        title: Score
+        key: S

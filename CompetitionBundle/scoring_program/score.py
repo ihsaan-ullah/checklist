@@ -166,9 +166,9 @@ class Scoring:
         if self.truth_adversarial:
             self.truth_adversarial["correctness_score"] = self.compute_correctness_score(self.truth_adversarial["type"], self.truth_adversarial["checklist_df"])
 
-        print("[*] Computing Resilience Score")
         self.resilience_score = None
         if self.adversarial and self.truth_adversarial:
+            print("[*] Computing Resilience Score")
             g_scores = []
             c_scores = []
             n = len(self.genuine["checklist_df"])
@@ -187,26 +187,26 @@ class Scoring:
             self._print("--------------------------------------")
             self._print(f"[+] Resiliance Score: {self.resilience_score}")
             self._print("--------------------------------------")
-        else:
-            print("[-] Resilience score can be comouted only if you have submitted adversarial and truth adversarial papers" )
 
-        print("[*] Computing Combined Score")
         CG, CA, CT, R = 0, 0, 0, 1
-        if self.genuine:
-            CG = self.genuine["correctness_score"]
-        if self.adversarial:
-            CA = self.adversarial["correctness_score"]
-        if self.truth_adversarial:
-            CT = self.truth_adversarial["correctness_score"]
-        if self.resilience_score:
-            R = self.resilience_score
+        self.combined_score = None
+        if self.genuine and self.adversarial and self.truth_adversarial:
+            print("[*] Computing Combined Score")
+            if self.genuine:
+                CG = self.genuine["correctness_score"]
+            if self.adversarial:
+                CA = self.adversarial["correctness_score"]
+            if self.truth_adversarial:
+                CT = self.truth_adversarial["correctness_score"]
+            if self.resilience_score:
+                R = self.resilience_score
 
-        self.combined_score = CG * (CA * (1-R)) * CT
-        self.combined_score = round(self.combined_score, 2)
+            self.combined_score = CG * (CA * (1-R)) * CT
+            self.combined_score = round(self.combined_score, 2)
 
-        self._print("--------------------------------------")
-        self._print(f"[+] Combined Score: {self.combined_score}")
-        self._print("--------------------------------------")
+            self._print("--------------------------------------")
+            self._print(f"[+] Combined Score: {self.combined_score}")
+            self._print("--------------------------------------")
 
         self.scores_dict = {
             "S": self.combined_score,
