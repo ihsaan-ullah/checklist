@@ -189,18 +189,18 @@ class Scoring:
             self._print("--------------------------------------")
 
         CG, CA, CT, R = 0, 0, 0, 1
+        if self.genuine:
+            CG = self.genuine["correctness_score"]
+        if self.adversarial:
+            CA = self.adversarial["correctness_score"]
+        if self.truth_adversarial:
+            CT = self.truth_adversarial["correctness_score"]
+        if self.resilience_score:
+            R = self.resilience_score
+
         self.combined_score = None
         if self.genuine and self.adversarial and self.truth_adversarial:
             print("[*] Computing Combined Score")
-            if self.genuine:
-                CG = self.genuine["correctness_score"]
-            if self.adversarial:
-                CA = self.adversarial["correctness_score"]
-            if self.truth_adversarial:
-                CT = self.truth_adversarial["correctness_score"]
-            if self.resilience_score:
-                R = self.resilience_score
-
             self.combined_score = CG * (CA * (1-R)) * CT
             self.combined_score = round(self.combined_score, 2)
 
