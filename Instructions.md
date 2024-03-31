@@ -18,6 +18,12 @@ Clone the "truth adversarial paper" project to create an "adversarial paper" pro
 Save the PDF as `adversarial_PaperTitle.pdf` 
 
 ### 5. **Codabench submission:**  
+#### Phase 1:
+Create one zip file with genuine paper PDF:  
+`paper.zip` contains:  `genuine_paper_title.pdf`
+Make your submission to the [Codabench Competition](https://www.codabench.org/competitions/2338/?secret_key=9684015e-a9bd-45de-955b-e92f79799763)  using this zip file.
+
+#### Phase 2:
 Create one zip file with all the three PDFs:  
 `papers.zip` contains:  `genuine_paper_title.pdf`, `adversarial_paper_title.pdf` and `truth_adversarial_paper_title.pdf`  
 Make your submission to the [Codabench Competition](https://www.codabench.org/competitions/2338/?secret_key=9684015e-a9bd-45de-955b-e92f79799763) using this zip file.
