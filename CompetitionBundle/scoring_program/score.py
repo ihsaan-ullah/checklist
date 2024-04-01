@@ -331,6 +331,9 @@ if __name__ == "__main__":
     # Load ingestion result
     scoring.load_ingestion_result()
 
+    # Write google form link to html
+    scoring.write_google_form()
+
     # Compute Scores
     scoring.compute_scores()
 
