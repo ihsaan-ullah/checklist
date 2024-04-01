@@ -11,4 +11,4 @@ This repository is entry point for the ***Adversarial Attack Competition against
 
 ### 4. [Submission Instructions](Instructions.md)
 
-### 5. [Check Paper Format](/Code/check_paper_format.py)
+### 5. [Check Paper Format](/Code/)
