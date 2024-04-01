@@ -12,7 +12,7 @@ from datetime import datetime as dt
 # Settings
 # ------------------------------------------
 # True when running on Codabench
-CODABENCH = True
+CODABENCH = False
 
 COLORS = {
     'blue': '#0000FF',
@@ -283,7 +283,7 @@ class Scoring:
     def write_google_form(self):
 
         form_link = f"https://docs.google.com/forms/d/e/1FAIpQLSfRIDkcXFbsOrR09j4qA1MlG4Rfir2lPD_u9YC4eqKBJ8tHkw/viewform?usp=pp_url&entry.463237339={self.genuine['encoded_title']}"
-        htmlized_link = f"<h3> Post Submission Survey</h3><p><a href='{form_link}'>Click here to submit a post submission survey</a></p><br><br><br><br><br>"
+        htmlized_link = f"<h3> Post Submission Survey</h3><p><a target='_blank' href='{form_link}'>Click here to submit a post submission survey</a></p><br><br><br><br><br>"
         self.write_html(htmlized_link)
 
     def write_scores(self):
