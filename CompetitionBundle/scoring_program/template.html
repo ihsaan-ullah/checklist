@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+    }
+    h1 {
+        margin-bottom: 30px;
+    }
+    .button {
+        display: block;
+        padding: 10px;
+        text-align: center;
+        font-size: 16px;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        margin-bottom: 20px;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .score {
+        margin-bottom: 30px;
+        border: 1px solid #333333;
+        background-color: #e0e0e0;
+        padding: 10px;
+        border-radius: 5px;
+        max-width: 500px;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        color: #0033ff;
+    }
+    .answer {
+        color: #28a745;
+    }
+    .justification {
+        color: #de750b;
+    }
+    .llm_review {
+        color: #007bff;
+        background-color: #cbe3fc;
+        border: 1px solid #007bff;
+        padding: 20px;
+        border-radius: 5px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>{{ title }}</h1>
+
+    <div class="score">
+        <p><strong>Correctness Score:</strong> {{ correctness_score }}</p>
+        {% if resilience_score is not none %}
+            <p><strong>Resilience Score:</strong> {{ resilience_score }}</p>
+        {% endif %}
+        {% if combined_score is not none %}
+            <p><strong>Combined Score:</strong> {{ combined_score }}</p>
+            {% endif %}
+    </div>
+    
+    <button class="button" onclick="window.open('{{ google_form }}', '_blank')">Click to submit post submission survey</button>
+    
+    {% for paper in papers %}
+
+        <h2>{{ paper.type }} Paper</h2>
+        <p><strong>Correctness Score:</strong> {{ paper.correctness_score }}</p>
+        
+        {% for review in paper.reviews %}
+        <div class="review">
+            <p><strong class="question">Question # {{ review.question_no }}:</strong> {{ review.question }}</p>
+            <p><strong class="answer">Answer:</strong> {{ review.answer }}</p>
+            <p><strong class="justification">Justification:</strong> {{ review.justification }}</p>
+            <p class="llm_review"><strong>Review:</strong> {{ review.review }}</p>
+            <p><strong>Score:</strong> {{ review.score }}</p>
+        </div>
+        {% endfor %}
+    {% endfor %}
+    
+    <button class="button" onclick="window.open('{{ google_form }}', '_blank')">Click to submit post submission survey</button>
+</div>
+
+</body>
+</html>

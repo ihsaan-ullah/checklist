@@ -7,18 +7,13 @@ import json
 import base64
 import pandas as pd
 from datetime import datetime as dt
+from jinja2 import Template
 
 # ------------------------------------------
 # Settings
 # ------------------------------------------
 # True when running on Codabench
 CODABENCH = False
-
-COLORS = {
-    'blue': '#0000FF',
-    'green': '#008000',
-    'violet': '#7F00FF'
-}
 
 
 class Scoring:
@@ -58,6 +53,7 @@ class Scoring:
 
         score_file_name = "scores.json"
         html_file_name = "detailed_results.html"
+        html_template_file_name = "template.html"
 
         output_dir_name = "scoring_output"
         reference_dir_name = "reference_data"
@@ -80,6 +76,8 @@ class Scoring:
         self.score_file = os.path.join(self.output_dir, score_file_name)
         # html file to write score and figures into
         self.html_file = os.path.join(self.output_dir, html_file_name)
+        # html template firle
+        self.html_template_file = os.path.join(module_dir, html_template_file_name)
 
         # Add to path
         sys.path.append(self.reference_dir)
@@ -130,8 +128,6 @@ class Scoring:
                 "type": "truth_adversarial"
             }
 
-        self._print(f"<h2>{self.genuine['title']}</h2>", False)
-
         print("[✔]")
 
     def compute_correctness_score(self, paper_type, checklist_df):
@@ -150,9 +146,7 @@ class Scoring:
         correctness_rate = total_correct_answers / total_answers
         correctness_rate = round(correctness_rate, 2)
 
-        self._print("--------------------------------------")
-        self._print(f"[+] Correctness Score ({paper_type}): {correctness_rate}")
-        self._print("--------------------------------------")
+        print(f"[+] Correctness Score ({paper_type}): {correctness_rate}")
 
         return correctness_rate
 
@@ -184,9 +178,7 @@ class Scoring:
                     self.resilience_score += 1
             self.resilience_score = round(self.resilience_score/n, 2)
 
-            self._print("--------------------------------------")
-            self._print(f"[+] Resiliance Score: {self.resilience_score}")
-            self._print("--------------------------------------")
+            print(f"[+] Resiliance Score: {self.resilience_score}")
 
         CG, CA, CT, R = 0, 0, 0, 1
         if self.genuine:
@@ -204,9 +196,7 @@ class Scoring:
             self.combined_score = CG * (CA * (1-R)) * CT
             self.combined_score = round(self.combined_score, 2)
 
-            self._print("--------------------------------------")
-            self._print(f"[+] Combined Score: {self.combined_score}")
-            self._print("--------------------------------------")
+            print(f"[+] Combined Score: {self.combined_score}")
 
         self.scores_dict = {
             "S": self.combined_score,
@@ -262,29 +252,51 @@ class Scoring:
 
         return html_output
 
-    def write_reviews_to_html(self):
+    def write_detailed_results(self):
+        print("[*] Writing detailed result")
 
-        print("[*] Writing reviews to detailed result")
-        for paper_dict in [self.genuine, self.adversarial, self.truth_adversarial]:
+        with open(self.html_template_file) as file:
+            template_content = file.read()
+
+        template = Template(template_content)
+
+        # Prepare data
+        papers_for_template = []
+        paper_types = ["Genuine", "Adversarial", "Truth Adversarial"]
+        for paper_index, paper_dict in enumerate([self.genuine, self.adversarial, self.truth_adversarial]):
             if paper_dict:
-
-                print(f"[*] \t{paper_dict['type']}")
-                self._print(f"<h1><strong>{paper_dict['type']}</strong></h1>", False)
+                paper_dict_for_template = {
+                    "type": paper_types[paper_index],
+                    "correctness_score": paper_dict["correctness_score"]
+                }
+                reviews = []
                 for index, row in paper_dict["checklist_df"].iterrows():
-                    self._print("--------------------------------------", False)
-                    self._print(f"Question # {index+1}: {row['Question']}", False)
-                    self._print(f"Answer: {row['Answer']}", False)
-                    self._print(f"Justification: {row['Justification']}", False)
-                    self._print(f"Review: {self.convert_text_to_html(row['Review'])}", False)
-                    self._print(f"Correctness Score: {row['Correctness_Score']}", False)
-                    self._print("--------------------------------------", False)
+                    reviews.append({
+                        "question_no": index+1,
+                        "question": row['Question'],
+                        "answer": row['Answer'],
+                        "justification": row['Justification'],
+                        "review": self.convert_text_to_html(row['Review']),
+                        "score": row['Correctness_Score']
+                    })
+                paper_dict_for_template["reviews"] = reviews
+            papers_for_template.append(paper_dict_for_template)
+
+        data = {
+            "title": self.genuine['title'],
+            "google_form": f"https://docs.google.com/forms/d/e/1FAIpQLSfRIDkcXFbsOrR09j4qA1MlG4Rfir2lPD_u9YC4eqKBJ8tHkw/viewform?usp=pp_url&entry.1830873891={self.genuine['encoded_title']}",
+            "correctness_score": self.scores_dict["CG"],
+            "resilience_score": self.scores_dict["R"],
+            "combined_score": self.scores_dict["S"],
+            "papers": papers_for_template
+        }
+
+        rendered_html = template.render(data)
+
+        with open(self.html_file, 'w', encoding="utf-8") as f:
+            f.write(rendered_html)
+
         print("[✔]")
-
-    def write_google_form(self):
-
-        form_link = f"https://docs.google.com/forms/d/e/1FAIpQLSfRIDkcXFbsOrR09j4qA1MlG4Rfir2lPD_u9YC4eqKBJ8tHkw/viewform?usp=pp_url&entry.463237339={self.genuine['encoded_title']}"
-        htmlized_link = f"<h3> Post Submission Survey</h3><p><a target='_blank' href='{form_link}'>Click here to submit a post submission survey</a></p><br><br><br><br><br>"
-        self.write_html(htmlized_link)
 
     def write_scores(self):
         print("[*] Writing scores")
@@ -293,25 +305,6 @@ class Scoring:
             f_score.write(json.dumps(self.scores_dict, indent=4))
 
         print("[✔]")
-
-    def write_html(self, content):
-        with open(self.html_file, 'a', encoding="utf-8") as f:
-            f.write(content)
-
-    def _print(self, content, console_print=True):
-        if console_print:
-            print(content)
-        if content.startswith("Answer:"):
-            content = self._color_content(content, COLORS["green"])
-        if content.startswith("Justification:"):
-            content = self._color_content(content, COLORS["green"])
-        if content.startswith("Review:"):
-            content = self._color_content(content, COLORS["blue"])
-        self.write_html(content + "<br>")
-
-    def _color_content(self, content, color):
-        content = f"<span style='color:{color};'>{content}</span>"
-        return content
 
 
 if __name__ == "__main__":
@@ -331,17 +324,11 @@ if __name__ == "__main__":
     # Load ingestion result
     scoring.load_ingestion_result()
 
-    # Write google form link to html
-    scoring.write_google_form()
-
     # Compute Scores
     scoring.compute_scores()
 
-    # Write review to html
-    scoring.write_reviews_to_html()
-
-    # Write google form link to html
-    scoring.write_google_form()
+    # Write detailed results
+    scoring.write_detailed_results()
 
     # Write scores
     scoring.write_scores()
