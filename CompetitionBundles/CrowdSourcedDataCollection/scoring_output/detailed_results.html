@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        position: absolute;
+    }
+    .button-top {
+        top: 10px;
+        right: 20px;
+    }
+    .button-bottom {
+        bottom: 10px;
+        right: 20px;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px; /* Adjust according to button height and margin */
+        padding-bottom: 40px; /* Add padding instead of margin */
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0; /* Remove default margin */
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        color: #0033ff;
+    }
+    .answer {
+        color: #28a745;
+    }
+    .justification {
+        color: #de750b;
+    }
+    .llm_review {
+        color: #000;
+        background-color: #c3defb;
+        border: 1px solid #007bff;
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+    .table-summary {
+        width: 50%;
+    }
+    .table-score{
+        width: 30%;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c8e6c9;
+        color: #1b5e20;
+        border: 1px solid #1b5e20;
+    }
+    .score-red {
+        background-color: #e6c8c8;
+        color: #5e1b1b;
+        border: 1px solid #5e1b1b;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .scroll-button {
+        padding: 10px 20px;
+        font-size: 14px;
+        background-color: #3571ff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .scroll-button:hover {
+        background-color: #02309a;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <button class="button button-top" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRIDkcXFbsOrR09j4qA1MlG4Rfir2lPD_u9YC4eqKBJ8tHkw/viewform?usp=pp_url&entry.1830873891=TWV0YS1BbGJ1bTogTXVsdGktZG9tYWluIE1ldGEtRGF0YXNldCBmb3JGZXctU2hvdCBJbWFnZSBDbGFzc2lmaWNhdGlvbg==', '_blank')">Click to submit post submission survey</button>
+
+    <div class="content">
+        <h1>Meta-Album: Multi-domain Meta-Dataset forFew-Shot Image Classification</h1>
+
+        <hr>
+
+        <h2>Scores</h2>
+        <table class="table-scores">
+            <tr>
+              <td><strong>Correctness Score:</strong></td>
+              <td><span class="score-label score-blue">0.6</span></td>
+            </tr>
+            
+            <tr>
+                <td><strong>Resilience Score:</strong></td>
+                <td><span class="score-label score-blue">0.93</span></td>
+            </tr>
+            
+            
+            <tr>
+                <td><strong>Combined Score:</strong></td>
+                <td><span class="score-label score-blue">0.0</span></td>
+            </tr>
+            
+        </table>
+
+        <hr>
+
+        <h2>Review Summary</h2>
+        <table class="table-summary">
+            <tr>
+              <th>Question</th>
+              <th>Score</th>
+              <th>Details</th>
+            </tr>
+            
+                
+                    <tr><td colspan="3"><strong>Genuine Paper</strong></td></tr>
+                
+                
+                <tr>
+                    <td>1. Claims</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Genuine-question-1" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>2. Limitations</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Genuine-question-2" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>3. Theoritical assumptions and proofs</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Genuine-question-3" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>4. Experiments reproducibility</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Genuine-question-4" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>5. Code and data accessibility</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Genuine-question-5" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>6. Experimental settings/details</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Genuine-question-6" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>7. Error bars</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Genuine-question-7" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>8. Compute resources</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Genuine-question-8" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>9. NeruIPS code of ethics</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Genuine-question-9" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>10. Impacts</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Genuine-question-10" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>11. Safeguards</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Genuine-question-11" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>12. Credits</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Genuine-question-12" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>13. Documentation</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Genuine-question-13" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>14. Human subjects</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Genuine-question-14" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>15. Risks</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Genuine-question-15" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+            
+                
+                    <tr><td colspan="3"><strong>Adversarial Paper</strong></td></tr>
+                
+                
+                <tr>
+                    <td>1. Claims</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-1" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>2. Limitations</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-2" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>3. Theoritical assumptions and proofs</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-3" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>4. Experiments reproducibility</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-4" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>5. Code and data accessibility</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-5" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>6. Experimental settings/details</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-6" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>7. Error bars</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-7" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>8. Compute resources</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-8" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>9. NeruIPS code of ethics</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-9" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>10. Impacts</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-10" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>11. Safeguards</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-11" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>12. Credits</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Adversarial-question-12" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>13. Documentation</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-13" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>14. Human subjects</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-14" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>15. Risks</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Adversarial-question-15" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+            
+                
+                    <tr><td colspan="3"><strong>Truth Adversarial Paper</strong></td></tr>
+                
+                
+                <tr>
+                    <td>1. Claims</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Truth Adversarial-question-1" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>2. Limitations</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Truth Adversarial-question-2" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>3. Theoritical assumptions and proofs</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Truth Adversarial-question-3" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>4. Experiments reproducibility</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Truth Adversarial-question-4" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>5. Code and data accessibility</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Truth Adversarial-question-5" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>6. Experimental settings/details</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Truth Adversarial-question-6" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>7. Error bars</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Truth Adversarial-question-7" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>8. Compute resources</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Truth Adversarial-question-8" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>9. NeruIPS code of ethics</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Truth Adversarial-question-9" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>10. Impacts</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Truth Adversarial-question-10" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>11. Safeguards</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Truth Adversarial-question-11" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>12. Credits</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Truth Adversarial-question-12" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>13. Documentation</td>
+                    <td><span class="score-label score-red">0</span></td>
+                    <td><a href="#Truth Adversarial-question-13" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>14. Human subjects</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Truth Adversarial-question-14" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+                <tr>
+                    <td>15. Risks</td>
+                    <td><span class="score-label score-green">1</span></td>
+                    <td><a href="#Truth Adversarial-question-15" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                
+            
+        </table>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+
+        
+            
+                <h3>Genuine Paper</h2>
+            
+            <p><strong>Correctness Score:</strong> 0.6</p>
+        
+            
+            <div class="review" id="Genuine-question-1">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> The abstract and introduction clearly state the main contributions and scope of the paper</p>
+                <p class="llm_review"><strong>Review:</strong> The author's answer is consistent with the expectation set by the question's guidelines. The paper's abstract and introduction indeed accurately reflect its contributions and scope. The abstract introduces "Meta-Album," a novel image classification meta-dataset designed to facilitate research in few-shot learning, meta-learning, and related fields. It highlights the dataset's diversity, size, and extensibility, all of which are central to the paper's contributions. Moreover, the introduction further elaborates on the motivation behind Meta-Album, its composition, and its potential applications, effectively setting the stage for the detailed exploration and validation that follows in the paper.<br><br>However, it's important for the review to reflect a critical and detailed evaluation. While the response correctly assesses the alignment between the paper's claims and its content, it could be more informative by detailing aspects of how the claims are supported by the results presented in the paper. For instance, discussing the evaluation of Meta-Album in facilitating cross-domain few-shot learning would strengthen the justification. Moreover, addressing any gaps or areas where the contributions could be more robust or where future work is needed would provide constructive feedback for the authors.<br><br>Suggestions for improvement:<br>1. Include specific examples from the paper that demonstrate how the claims made in the abstract and introduction are supported by theoretical and experimental results. This could involve mentioning the sections where the dataset's evaluation is discussed or highlighting any benchmarks the dataset has set or participated in.<br><br>2. Address any potential limitations or challenges explicitly mentioned in the paper or those perceived by the reviewer. Doing so will provide a more balanced view and suggest areas for future improvement.<br><br>3. Encourage the inclusion of a discussion section in the paper that reflects on the extent to which the goals set out in the abstract and introduction have been achieved, and where further research could lead. This would offer a clearer perspective on the paper's contributions within the broader research context.<br><br>Overall, while the response is correct, providing a more detailed critique and constructive suggestions would enhance the utility of the review for both the authors and the conference committee.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-2">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have clearly explained the limitations of our work in Section: Discussion and conclusion</p>
+                <p class="llm_review"><strong>Review:</strong> The authors' assertion that they have discussed the limitations of their work in the designated section is consistent with the common practice of including such a discussion in academic papers. The "Discussion and Conclusion" section typically offers a space to consider the scope, potential biases, computational efficiency, and other relevant factors that could affect the generalizability and applicability of the research findings.<br><br>However, for a more detailed and critical review, it would be necessary to closely examine the specific limitations mentioned in the "Discussion and Conclusion" section of the paper. This examination would assess how thoroughly the authors have addressed potential weaknesses, assumptions, and the robustness of their solutions. While the authors have affirmed that they have discussed limitations, the depth, and breadth of this discussion play a crucial role in evaluating the transparency and scientific rigor of the research.<br><br>Constructive and Actionable Suggestions:<br><br>1. Explicit mention of limitations: Ensure that the limitations discussion is clear and explicit. It should be easy for readers to find and understand the potential limitations and their implications on the research findings.<br><br>2. Consider a range of factors: Broaden the limitations discussion to include a diverse range of factors such as data biases, model assumptions, the applicability of results to real-world settings, computational efficiency, and scalability issues.<br><br>3. Empirical evaluation scope: If the empirical evaluations were limited in scope (e.g., limited datasets, specific domains, or conditions), clearly state this and discuss how it might affect the generalizability of the results.<br><br>4. Address computational resources: Discuss the computational resources required for the proposed methods, especially if they involve intensive computations or require specialized hardware. This helps in assessing the practicality of deploying such methods in various settings.<br><br>5. Potential for future work: While discussing limitations, it could be useful to point towards potential future research directions that could address these limitations. This not only underscores the honesty and self-awareness of the researchers but also contributes to advancing the field by highlighting areas ripe for further exploration.<br><br>6. Impact on fairness and privacy: If applicable, explore any possible implications of the proposed methods on privacy and fairness. This is increasingly important in ensuring that technologies do not inadvertently perpetuate biases or violate privacy norms.<br><br>By addressing these suggestions, the authors can strengthen the credibility of their work and contribute positively to the ongoing scientific discourse in their field.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-3">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Answer:</strong> nan</p>
+                <p><strong class="justification">Justification:</strong> This does not apply to our research work because our research is not theoretical rather it deals with a meta-dataset creation and experiments executed using this meta-dataset</p>
+                <p class="llm_review"><strong>Review:</strong> The authors' response is correct and justifiable given the content and nature of their research. Their project focuses on the introduction and use of a multi-domain meta-dataset, Meta-Album, for few-shot learning and other related tasks. The paper is empirical and centered around dataset creation, preprocessing, and experimental evaluation rather than theoretical analysis or derivation of new theoretical results. Therefore, the question regarding the provision of full sets of assumptions and complete proofs for theoretical results does not apply to their work.<br><br>The response is consistent with the paper's content, which is oriented towards practical application and experimentation rather than theoretical exposition.<br><br>However, for completeness and to further improve clarity for readers, the authors could consider the following suggestions:<br>1. Explicitly state in the main text or methodology section that the focus of the paper is on empirical research and the creation of a practical tool/resource for the research community, thus making it clear why theoretical results and proofs are not part of the scope.<br>2. Though not applicable in this case, providing a section on potential theoretical extensions or implications of utilizing the Meta-Album for few-shot learning could enrich the discussion and encourage future theoretical work in this direction.<br><br>These suggestions aim to enhance the paper's transparency regarding its empirical focus and to potentially bridge the gap between practical and theoretical research within the area of few-shot learning and meta-datasets.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-4">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have publicly provided the code on our github repository and details about how to access the datasets on our website.</p>
+                <p class="llm_review"><strong>Review:</strong> The justification provided by the authors for the question about the full disclosure of information needed to reproduce the main experimental results is sparse and lacks specific details that would help in the replication of the results. While mentioning the public availability of the code in a GitHub repository and dataset access via a website is a good start, the authors do not provide any concrete details on the following essential aspects required for reproducibility:<br><br>1. Exact Environment Setup: The authors did not mention specifics about the software environment, including the versions of the programming language (e.g., Python), libraries (e.g., PyTorch, TensorFlow), and any other dependencies required to run the code. This is critical as different versions of libraries or the language itself can lead to variations in experimental results.<br><br>2. Detailed Instructions and Commands: There is no mention of specific commands or step-by-step instructions required to reproduce the results. For complete reproducibility, the paper should include the exact commands that need to be executed, possibly including data preprocessing steps, model training, evaluation, and plotting of results.<br><br>3. Data Preparation Details: Although the authors mention accessing datasets through their website, they do not provide details on data access and preparation. For full reproducibility, the authors should describe how to download the raw data, preprocess it, and format it in a way that is compatible with their code.<br><br>4. Experiment Reproducibility: The authors did not specify which experiments are reproducible with the provided scripts and which are not, nor did they explain why some experiments might not be included in the reproducibility scripts.<br><br>5. Anonymized Resources: Since this review is part of the NeurIPS submission process and is supposed to maintain anonymity, the authors should ensure that any provided links or resources are anonymized appropriately.<br><br>Constructive suggestions for the authors include:<br><br>1. Environment Details: Provide a detailed description or a requirements.txt file listing all the software dependencies and their versions.<br><br>2. Comprehensive Instructions: Include a README file or an appendix in the paper with detailed instructions for reproducing the experiments, including commands for data preprocessing, model training, and evaluation.<br><br>3. Data Access and Preparation: Clarify the steps required for downloading, preprocessing, and formatting the datasets for use with the provided code.<br><br>4. Clarify Reproducibility Scope: Clearly state which parts of the experiments can be reproduced using the provided scripts and provide a rationale for any omitted experiments.<br><br>5. Ensure Anonymity: Ensure that all provided links and resources are anonymized in line with NeurIPS submission guidelines.<br><br>Addressing these points would significantly improve the reproducibility of the research and align the submission with the expectations set by the guidelines.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-5">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have publicly provided the code on our github repository and details about how to access the datasets on our website.</p>
+                <p class="llm_review"><strong>Review:</strong> The answer provided by the authors is consistent with the expectations outlined in the guidelines given their assertion of open access to code on a GitHub repository and dataset details on their website. Furthermore, the authors have indeed included supplemental material that likely provides instructions for reproducing the main experimental results, adhering to the guidelines for reproducibility.<br><br>However, the authors' justification lacks detail regarding the specific parts of the paper's experiments that are reproducible, whether all experimental results can be reproduced using the provided code and data, and if there are any omitted experiments, the reason for their omission. Moreover, the justification does not explicitly mention the availability of instructions on data access and preparation, which is crucial for faithful reproduction of the paper’s results.<br><br>Constructive Suggestions:<br>1. Explicit Clarification: Clearly state which experimental results can be reproduced with the provided code and data. If any results are not included in the reproducibility scope, explain why.<br>2. Detailed Instructions: Ensure that the supplemental material contains detailed instructions on accessing raw, preprocessed, intermediate, and generated data. This should include the exact commands and environment settings needed to reproduce the results.<br>3. Environment Details: Provide detailed information concerning the computational environment used for the experiments (e.g., software versions, hardware specifications) to minimize variability in reproducing the results.<br>4. Verification: It would be beneficial if the authors could also provide a script or a document verifying the correctness of the reproduced results against the paper’s findings.<br>5. Anonymized Materials: Confirm that any provided URLs or links to code and data are anonymized if necessary during the review process, following the guidelines for preserving anonymity.<br><br>Overall, while the authors' response aligns with the requirements, enriching the justification with these details would strengthen the assertion of reproducibility and facilitate the replication of their findings by other researchers in the community.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-6">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have explained the experimental settings or details in Section 3.2: Experiments. Additional details can be found in the Meta-Album GitHub repository.</p>
+                <p class="llm_review"><strong>Review:</strong> Explanation:<br>The justification provided by the authors for answering "Yes" to the question about specifying all training and test details is insufficient and somewhat inconsistent with the rigorous standards expected for reproducibility and understanding of the results. While the authors mention that experimental settings are explained in Section 3.2 and additional details can be found in the Meta-Album GitHub repository, the answer lacks specific information on how certain critical aspects were handled, such as:<br><br>- Data splits: How the data were divided into training, validation, and test sets is not detailed in the justification. This information is crucial for understanding the generalization of the models tested.<br>- Hyperparameters and how they were chosen: The justification does not mention if the paper provides details on the choice of hyperparameters, which plays a significant role in the performance of machine learning models.<br>- Type of optimizer: There is no mention of the optimizer used in the experiments, which is an essential aspect of training deep learning models.<br><br>Constructive and Actionable Suggestions:<br>1. Provide more detailed information in the main body of the paper or in an appendix about the data splits used for the experiments. Specify the ratio or the exact number of images/instances used for training, validation, and testing.<br>2. Include a section or a detailed description about hyperparameter tuning. Explain the rationale behind choosing specific hyperparameters and whether any automated search techniques (like grid search or random search) were employed.<br>3. Clearly state the type of optimizer used for training the models, along with its settings such as learning rate, momentum (if applicable), and any scheduler for learning rate adjustments.<br>4. If feasible, embed this detailed information directly within the paper to ensure that the experimental setup can be understood without requiring readers to visit external links or repositories.<br>5. Ensure that the GitHub repository linked for additional details is well-organized and contains clear instructions and documentation for replicating the experiments, including pre-processing steps, model definitions, and evaluation protocols.<br><br>By incorporating these suggestions, the paper could significantly improve its reproducibility and allow the scientific community to better appreciate and build upon the presented work.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-7">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> In figure-2, figure-3, Appendix E: Within Domain Few-shot learning, and Appendix F: Cross-Domain Few-shot learning, we have reported error bars</p>
+                <p class="llm_review"><strong>Review:</strong> The authors' answer states that error bars are reported in figure-2, figure-3, Appendix E: Within Domain Few-shot learning, and Appendix F: Cross-Domain Few-shot learning, indicating that these error bars are indicative of the statistical significance of their experiments. However, the justification provided in the review does not go into detail about how these error bars were calculated, what variability they capture, or any assumptions made during their calculation, as detailed in the guidelines provided.<br><br>The guidelines specifically mention several critical points regarding the reporting of statistical significance, including clarity on whether the error bars represent standard deviation or standard error, the method of calculation, and assumptions regarding the distribution of errors. Without such details, it is challenging to assess the statistical rigor behind the reported error bars. Therefore, based solely on the provided information in the review, there seems to be an inconsistency with the content of the paper and the completeness of the justification for this question.<br><br>Constructive and actionable suggestions:<br>1. Provide a detailed explanation in the methodology section on how the error bars were calculated for figure-2, figure-3, Appendix E, and Appendix F. This includes specifying whether they represent standard deviations or standard errors, the calculation method used, and any assumptions about the distribution of errors.<br>2. Clarify the source of variability that the error bars are capturing (e.g., different train/test splits, initialization seeds, or parameter variability) to provide the reader with a clear understanding of what the error bars represent.<br>3. If the assumption of normal distribution is made for the calculation of error bars, this should be stated explicitly. If possible, conduct tests to verify this assumption, or consider using alternative methods suitable for asymmetric distributions.<br>4. Enhance the description in the text referring to the figures and appendices where error bars are shown, detailing their statistical significance and how they support the paper's claims. This will not only improve the clarity of the statistical analysis but also strengthen the overall credibility of the experiments.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-8">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have provided details about compute resources used in Section 3.2: Experiments, Appendix E: Within Domain Few-shot learning, and Appendix F: Cross-Domain Few-shot learning</p>
+                <p class="llm_review"><strong>Review:</strong> Justification Review:<br>The justification provided by the authors does not fully comply with the guidelines for disclosing computer resources needed to reproduce experiments. The authors claim that details about compute resources used are provided in Section 3.2 and Appendices E and F. However, upon review, the information given in these sections does not adequately cover all aspects outlined in the guidelines. Specifically:<br><br>1. Type of Compute Workers: The paper mentions the use of "single PNY GeForce RTX 2080TI GPUs with 11GB of VRAM or a single NVIDIA V100 with 16GB of VRAM" in some instances (Appendix E and F), which partially satisfies the guideline requirement. However, it does not comprehensively indicate whether CPUs were used alongside GPUs, or the specific configurations (e.g., number of CPUs/GPUs, model names) for all experiments.<br><br>2. Memory and Storage: While the paper mentions the VRAM size of the GPUs used, it does not provide information regarding system memory (RAM) or storage requirements, which are crucial for reproducing experiments.<br><br>3. Amount of Compute Required: The paper lacks detailed breakdowns of the compute required for individual experimental runs. It mentions execution times in some contexts (e.g., "Each experimental run took at most 24 hours on the former GPU"), but it does not estimate the total compute needed nor does it provide execution times for all experiments.<br><br>4. Additional Compute Disclosure: There is no disclosure on whether the full research project required more compute than reported for the experiments presented in the paper. It is unclear if preliminary or failed experiments that didn’t make it into the paper consumed additional compute resources.<br><br>Constructive and Actionable Suggestions:<br>1. Clearly specify the types of compute resources used for each experiment, including the make and model of GPUs and CPUs, if applicable.<br>2. Include detailed information on the memory (RAM) and storage that were essential for conducting the experiments.<br>3. Provide a more comprehensive breakdown of compute time required for individual experiments and estimate the total compute resources needed for reproducing the experiments in the paper.<br>4. Disclose if any additional compute resources were utilized for preliminary studies or experiments that were not included in the final paper, to give readers a complete understanding of the compute demands of the research project.<br><br>By addressing these points, the authors can enhance the reproducibility of their experiments and adhere more closely to the guidelines for disclosing computer resources.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-9">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We completely comply with the NeurIPS Code of Ethics</p>
+                <p class="llm_review"><strong>Review:</strong> The answer provided by the authors is consistent with the content of the paper, and no evidence or reason was provided to doubt their compliance with the NeurIPS Code of Ethics. The paper introduces Meta-Album, a multi-domain meta-dataset designed for few-shot learning, transfer learning, and meta-learning research. The creation and use of such a dataset inherently align with ethical guidelines focused on promoting research and development in the field of machine learning. Furthermore, the paper describes a transparent and open process for data collection, preparation, and sharing, which adheres to the principles of ethical research.<br><br>However, to ensure thorough compliance and provide a more satisfying response for review, the authors could have elaborated on specific aspects of the NeurIPS Code of Ethics, showing how their research and the construction of Meta-Album adhere to these guidelines. This could include discussions on data privacy (especially considering some image datasets might contain identifiable features), consent (where applicable), and fairness (ensuring the dataset's diversity and reducing biases).<br><br>Constructive and actionable suggestions for the authors include:<br>1. Elaborate on the steps taken to ensure that the datasets included in Meta-Album comply with privacy and consent guidelines, considering images are sourced from various domains and publicly available datasets.<br>2. Discuss any measures implemented to assess and mitigate potential biases in the dataset, which is crucial for ethical machine learning research.<br>3. Provide information on the licensing of the datasets included in Meta-Album to ensure that they can ethically be used for academic research, as claimed.<br>4. Considering the Meta-Album's goal of being expandable, outline guidelines or criteria for future dataset contributions to ensure they also comply with the NeurIPS Code of Ethics.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-10">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> There are no negative societal impacts. Rather, this meta-dataset can foster progress in the fields of few-shot learning and meta-learning. We have added “recommended use” in Section 1.3.</p>
+                <p class="llm_review"><strong>Review:</strong> Justification for<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-11">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> Indeed, we are releasing our datasets with proper license and terms of use. We have also provided recommended usage of these datasets.</p>
+                <p class="llm_review"><strong>Review:</strong> The paper presents a responsible approach towards the release of the 'Meta-Album' dataset ensuring legal and ethical considerations. The datasets included in Meta-Album have been carefully curated with respect to their original licenses, as explicitly mentioned in the paper. Furthermore, the paper provides a detailed account of the licenses under which each component dataset is released, demonstrating diligence in ensuring that the data release complies with the terms set by the original creators. This approach aligns well with safeguarding against potential misuse by clearly defining the usage terms and respecting the intent of the original data providers.<br><br>However, while the safeguard measures described are primarily legal and ethical, there is room for further elaboration on technical safeguards, particularly for datasets that could potentially be misused if not handled correctly. For instance, data that could potentially train biased AI models or infringe on privacy should be accompanied by guidelines on ethical use and data handling practices to mitigate such risks.<br><br>Constructive Suggestions:<br>1. Technical Safeguards: Beyond legal compliance through licenses, the authors could consider adding technical safeguards or best practice recommendations for the ethical use of the 'Meta-Album' datasets. This could include guidelines on privacy preservation, data anonymization techniques, and recommendations to avoid training biased models.<br><br>2. Usage Guidelines and Access Control: Where applicable, introduce more specific usage guidelines that researchers must agree to before accessing the dataset. This could be particularly relevant for sensitive or potentially harmful datasets, where controlled access might mitigate misuse risks.<br><br>3. Transparency on Content Moderation: If any content moderation or filtering has been performed (for example, to remove unsafe images), it could be beneficial to describe the process, tools, or criteria used. This enhances transparency and helps users understand the dataset's limitations and considerations.<br><br>4. Community Engagement and Feedback Loop: Establish a mechanism for community feedback on dataset use and issues encountered, including ethical concerns. This can help in continuously improving the dataset management practices and addressing any unforeseen misuse or ethical issues.<br><br>Overall, the 'Meta-Album' paper shows a strong commitment to responsible data release. Expanding on the described safeguard measures with additional technical and community-driven efforts could further strengthen the ethical stance and promote responsible use of the dataset.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-12">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We are releasing our datasets with proper license, we are also mentioning the original licenses for the original datasets in Appendix B: License information of Meta-Album datasets</p>
+                <p class="llm_review"><strong>Review:</strong> The authors have properly credited the creators and original owners of the datasets used in the creation of Meta-Album, a comprehensive meta-dataset. The inclusion of Appendix B in the paper that explicitly lists the license information for each dataset within Meta-Album shows due diligence in respecting the terms of use and licenses of the original datasets. This approach aligns well with best practices for using and referencing existing assets in academic work.<br><br>However, to further strengthen the paper and address any potential oversights, I recommend the following:<br>- Ensure that each dataset mentioned in Appendix B indeed corresponds to the licenses specified. A direct link to the licenses or the datasets' respective repository, if available, would provide clearer traceability and credibility.<br>- For datasets where the original license could not be identified and a default CC BY NC 4.0 license is applied, it might be helpful to document the effort made to determine the original license or any communication with the original creators for clarification.<br>- Consider including a statement or discussion on any limitations or challenges faced due to licensing restrictions and how they were addressed or could affect the use of Meta-Album.<br>- If Meta-Album or any of its components are released as part of this work, clearly state the chosen license for Meta-Album itself and ensure it is compatible with the licenses of the included datasets.<br><br>These suggestions aim to enhance the transparency and reproducibility of the work with regard to licensing and the use of existing assets.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-13">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have properly documented our new datasets using meta-data files and datasheets for datasets (provided in the appendices). We have also designed a website for users to easily get all the datasets and related information</p>
+                <p class="llm_review"><strong>Review:</strong> The authors' answer that new assets introduced in the paper are well documented, and the documentation is provided alongside the assets, appears consistent with the paper content. The given justification matches the detailed approach described in the paper regarding the handling and documentation of the Meta-Album dataset. Specifically, the paper refers to meta-data files and datasheets for datasets included in the appendices, a dedicated website for accessing datasets and related information, and GitHub repositories for software related to the preparation and evaluation of the datasets.<br><br>However, critical review suggests that while the documentation and accessibility have been addressed commendably, the paper could still enhance clarity on a few fronts to further align with the guidelines provided:<br>1. License Information: Although the paper mentions the dataset licenses in the appendix, incorporating explicit statements within the main text on dataset licenses would improve visibility and understanding of usage limitations and ensure users are well-informed about legal considerations.<br>2. Consent for Asset Use: The documentation does not explicitly discuss how consent was obtained for the use of assets contained within the datasets, especially for datasets curated or adapted from existing sources. Clarifying this aspect would reinforce ethical considerations and transparency.<br>3. Limitations and Training Details: While extensive documentation on dataset preparation and structuring is provided, the paper could benefit from a clearer discussion on the limitations of the datasets and detailed training configurations used in the baseline methods' experiments. This would enhance the utility and reproducibility of the datasets and associated benchmarks.<br>4. Anonymization of Assets (if applicable): Given the paper’s context, anonymization might not be directly applicable. However, ensuring that all personal or sensitive data within the datasets is appropriately anonymized or consented for use would address privacy concerns.<br><br>Actionable Suggestions:<br>- Include explicit statements in the main text about the licenses of the datasets and directly address the consent obtained for using various assets.<br>- Elaborate on the limitations of the datasets and potential biases in the documentation to guide users on appropriate uses of the datasets.<br>- Provide more detailed training configurations and parameters for the baseline experiments to facilitate replication and extension by other researchers.<br>- Ensure all personal or sensitive information within the datasets is either anonymized or appropriately consented for public use, adhering to ethical guidelines for dataset release.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-14">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Answer:</strong> nan</p>
+                <p><strong class="justification">Justification:</strong> This does not apply on our research as we are not doing any crowdsourcing experiments</p>
+                <p class="llm_review"><strong>Review:</strong> The authors have correctly indicated that their research does not involve crowdsourcing experiments or research with human subjects, which makes this question not applicable (N/A) to their paper. The justification provided aligns with the content and scope of the paper, which focuses on introducing a meta-dataset for few-shot image classification and does not involve direct experimentation with human participants or crowdsourcing methodologies. Therefore, there's no requirement for including instructions given to participants, screenshots, or compensation details.<br><br>Suggestions:<br>- Although not applicable in this case, for future projects involving human subjects, ensure detailed procedures, instructions, and compensation plans are included as per ethical guidelines.<br>- Continue to clearly delineate the scope of research and methodologies used in your studies to maintain transparency about the involvement (or lack thereof) of human subjects.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Genuine-question-15">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Answer:</strong> nan</p>
+                <p><strong class="justification">Justification:</strong> This does not concerns us as we are not dealing with human subjects in our research.</p>
+                <p class="llm_review"><strong>Review:</strong> Justification for the Score:<br>The authors have labeled this question as N/A, indicating that the research does not involve human subjects. However, the response and justification provided by the authors indicating "This does not concerns us as we are not dealing with human subjects in our research" do not sufficiently engage with the nuances of their work or the NeurIPS guidelines. The guidelines clearly state that if the work involves crowdsourcing or any form of research with human subjects, details regarding ethical considerations, including IRB approvals, should be disclosed. Since the authors' response does not elaborate on their engagement or lack thereof with human subjects in the context of their datasets and meta-dataset creation, their answer may be seen as overlooking the broader ethical considerations of their work. This is especially pertinent given the growing awareness of the implications of machine learning research on privacy, consent, and ethical data usage, which can extend beyond direct human subject research, for example, in the creation and use of datasets.<br><br>Constructive Suggestions:<br>1. Clarify Involvement of Human Subjects: Even though the primary focus might be on datasets and algorithms, if any part of the dataset compilation, preprocessing, or annotation involved human effort (e.g., crowdsourcing for annotations), this should be clarified, and any associated ethical approvals or considerations should be discussed.<br><br>2. Consider Broader Ethical Implications: It's beneficial to reflect on the broader ethical considerations of the work, including data privacy, consent for data usage, and the impact of the synthesized datasets on these aspects. Even if direct human subject involvement is not present, the ethical sourcing and usage of data are crucial.<br><br>3. Engage with Guidelines More Fully: Reference the NeurIPS guidelines more explicitly by discussing how the work aligns with ethical considerations, even in cases where IRB approval is not directly applicable. This shows a proactive approach to ethical research practices.<br><br>4. Documentation in Future Submissions: For future submissions or revisions, consider adding a section on ethical considerations where you detail the steps taken to ensure the ethical use of data and algorithms, even when direct human subject research is not involved.<br><br>5. Anonimity in Initial Submissions: Remember to keep any institution-specific information anonymous if applicable in initial submissions, adhering to the double-blind review process guidelines.<br><br>By addressing these suggestions, the authors can enhance the clarity and depth of their engagement with ethical considerations, aligning more closely with conference guidelines and broader ethical expectations in the research community.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+        
+            
+                <h3>Adversarial Paper</h2>
+            
+            <p><strong>Correctness Score:</strong> 0.07</p>
+        
+            
+            <div class="review" id="Adversarial-question-1">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Answer:</strong> No</p>
+                <p><strong class="justification">Justification:</strong> We haven't mentioned the main claims in the abstract and introduction</p>
+                <p class="llm_review"><strong>Review:</strong> The justification provided in the review does not accurately reflect the content of the paper. The abstract and introduction sections of the paper do clearly outline the main claims and contributions of the work. Specifically, the abstract introduces Meta-Album as an extensible image classification meta-dataset designed to facilitate research in few-shot learning, meta-learning, and transfer learning. It mentions the inclusion of 40 datasets from diverse domains, the provision of three versions of each dataset to match computational resources, and the initiative to enlarge the meta-dataset through community contributions. Similarly, the introduction section elaborates on the motivation behind Meta-Album, contrasts it with existing benchmarks, and outlines its contributions in more detail. Therefore, the claim that the main claims are not mentioned in the abstract and introduction is inconsistent with the content of the paper.<br><br>Suggestions for improvement:<br>1. Ensure that the review comments are based on a thorough reading and accurate understanding of the paper content. Misinterpretations or overlooking key sections can lead to incorrect assessments.<br>2. Provide specific examples or quotes from the paper when claiming that certain information is missing or inadequately presented. This helps to substantiate the review's claims and provides actionable feedback to the authors.<br>3. Focus on constructive criticism that helps the authors improve their paper. If you believe that the abstract and introduction could more effectively communicate the paper's contributions, suggest how they could be revised to achieve this.<br>4. Re-evaluate the justification provided for answering this question, considering the detailed information presented in the abstract and introduction sections of the paper.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-2">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have clearly explained the limitations of our work in Section: Discussion and conclusion</p>
+                <p class="llm_review"><strong>Review:</strong> Justification:<br>Although the authors mention they have clearly explained the limitations of their work in the "Discussion and conclusion" section, the provided content overview does not specifically outline the detailed limitations. The guidelines provided for discussing the limitations of a work are extensive and cover various aspects such as assumptions, scope of claims, factors influencing performance, computational efficiency, and considerations of privacy and fairness. Without specific details from the "Discussion and conclusion" section about how these elements are addressed as limitations in the paper, it is challenging to verify the completeness of their discussion on limitations.<br><br>Constructive and actionable suggestions:<br>1. Explicitly Address Assumptions and Robustness: Clearly state any assumptions made during the research and discuss the robustness of your findings against potential violations of these assumptions. Consider including a subsection specifically dedicated to assumptions and their implications for the validity of your conclusions.<br><br>2. Scope and Generalizability of Claims: Reflect on the datasets, settings, or conditions under which your findings hold. If your experiments are limited to specific types of data or situations, acknowledge these as limitations and suggest avenues for future research to address these gaps.<br><br>3. Performance Influencing Factors: Identify and discuss any specific conditions or factors that significantly influence the performance of your proposed methods. This will help readers better understand under what circumstances your approach is most effective or may falter.<br><br>4. Computational Efficiency: Provide a detailed evaluation of the computational demands of your algorithms, including how they scale with increasing data size and complexity. This discussion is crucial for readers to assess the practical applicability of your methods.<br><br>5. Privacy and Fairness: If applicable, address any potential limitations of your approach in safeguarding privacy and ensuring fairness. Discuss measures that could be taken to mitigate these limitations.<br><br>6. Encouragement of Transparency: Reassure readers that acknowledging limitations is an integral part of scientific rigor and does not diminish the value of your contributions. Encourage an open dialogue about potential shortcomings and future research directions.<br><br>By addressing these points more explicitly in your "Discussion and conclusion" section, you can provide a more comprehensive understanding of the limitations of your work and pave the way for future improvements and research.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-3">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have detailed all the theoretical proofs in the main paper.</p>
+                <p class="llm_review"><strong>Review:</strong> Justification: The answer provided by the authors is not consistent with the content of the paper as presented. The article introduces "Meta-Album: Multi-domain Meta-Dataset for Few-Shot Image Classification," focusing on a practical resource for facilitating research on few-shot learning, not theoretical results or proofs. The paper primarily discusses dataset preparation, methodology for assembling and preprocessing the datasets, and utility demonstrations through various learning experiments. There is no discussion of theoretical results that would necessitate formal proofs or a detailed exposition of mathematical foundations. Thus, the statement about detailed theoretical proofs being included in the main paper does not apply.<br><br>Constructive and Actionable Suggestions:<br>1. Clarification: The authors should clarify the nature and scope of the paper to properly align with the questionnaire response. If the paper indeed has theoretical aspects mistakenly omitted from the provided content summary, these should be highlighted and detailed in the revision.<br><br>2. Detailed Description: If the article inadvertently omitted discussing theoretical results which include proofs or mathematical formulations, the authors are encouraged to provide a section dedicated to these aspects, along with clear statements of any assumptions made and precise references to any existing theorems or lemmas used.<br><br>3. Proof Sketches: For any theoretical assertions made, consider adding brief sketches of proofs in the main text to offer intuition, followed by detailed proofs in an appendix to maintain the readability and flow of the main paper.<br><br>4. Cross-referencing: Ensure that any theorems, lemmas, or important equations introduced are correctly numbered and cross-referenced within the text for ease of navigation and verification by the reader.<br><br>5. Correcting the Response: If the paper does not actually contain theoretical results as traditionally understood in mathematical or computational theory, the response to the checklist question should be corrected to accurately reflect the content, potentially as "N/A" if applicable.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-4">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Answer:</strong> No</p>
+                <p><strong class="justification">Justification:</strong> Our work is proprietary and we are not making the code and data available for public</p>
+                <p class="llm_review"><strong>Review:</strong> The justification for not disclosing all the information needed to reproduce the main experimental results contradicts the provided guidelines and the ethos of scientific research, especially for a conference like NeurIPS. The proprietary nature of the work does not absolve the responsibility to enable reproducibility of results to the extent possible without divulging sensitive or proprietary information. While it is understood that not all papers can release code and data due to various constraints, the expectation is to provide a detailed methodology, algorithms used, and pseudocode or descriptions that allow for the reproduction of the results.<br><br>Constructive Suggestions:<br>1. Methodology Description: Enhance the paper by describing the methodology in greater detail. Include precise descriptions of the algorithms, model architectures, hyperparameters, and training procedures used.<br><br>2. Pseudocode: Include pseudocode for the principal algorithms developed or used in the study. This helps in understanding the algorithmic contributions without needing to access the proprietary code.<br><br>3. Synthetic or Sample Data: If possible, provide synthetic or anonymized sample data that can help understand the data structures and formats expected by the algorithms. This would also assist in independent implementations.<br><br>4. Detailed Experimental Setup: Elaborate on the experimental setup, including hardware specifications, software environments, and libraries used. Providing version numbers for software dependencies can significantly improve reproducibility.<br><br>5. Statistical Analysis and Metrics: Clarify the statistical methods and metrics used to evaluate the models. If certain parts of the analysis are omitted from reproducibility efforts, explain why and describe how to perform these analyses.<br><br>6. Expanded Supplemental Material: Consider expanding the supplemental material to include any additional information that could aid in reproducibility. This might include configuration files, environment setup instructions, or detailed datasets statistics.<br><br>7. FAQs or Troubleshooting Guide: Anticipate common challenges that researchers might face when trying to reproduce the results and provide an FAQ or troubleshooting guide based on the experiences of conducting the experiments.<br><br>By addressing these points, the authors can significantly improve the reproducibility of their work, even in situations where direct access to code and proprietary data sets cannot be provided.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-5">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Answer:</strong> No</p>
+                <p><strong class="justification">Justification:</strong> Our work is proprietary and we are not making the code and data available for public</p>
+                <p class="llm_review"><strong>Review:</strong> The justification provided by the authors conflicts with the content presented in the paper. The paper clearly mentions the availability of source code, baseline methods, data loaders, and instructions for contributing either new datasets or algorithms to the expandable meta-dataset on their website (https://meta-album.github.io/). Additionally, it mentions the intention to open-source the code used for several use cases, including transfer learning, few-shot meta-learning, and cross-domain few-shot meta-learning tasks. Therefore, the statement in the justification claiming that the work is proprietary and the code and data are not available for the public is inconsistent with the details provided in the paper.<br><br>Constructive and actionable suggestions for the authors would include:<br><br>1. Clarifying the discrepancy between the justification given for this question and the details provided in the paper regarding the availability of code and data. If the code and datasets are indeed available, consider emphasizing their accessibility more clearly in the response to this question.<br><br>2. Ensuring that the repository linked in the paper includes comprehensive documentation, including step-by-step instructions to replicate the main experimental results. This documentation should cover environment setup, dataset preparation, model training, and evaluation.<br><br>3. If applicable, specifying any parts of the experiments or analyses that cannot be directly reproduced using the provided resources, along with explanations for these limitations.<br><br>4. Updating the supplemental material or the paper itself to include any additional details about code and data release that can help with reproducibility but might not fit into the main text of the paper due to space limitations.<br><br>5. Considering the use of Docker containers or similar tools to package the experimental environment, which can significantly simplify the process of replicating the results.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-6">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have explained the experimental settings or details in Section 3.2: Experiments.</p>
+                <p class="llm_review"><strong>Review:</strong> Justification for the score:<br>While the authors mention that experimental settings or details are provided in Section 3.2, the provided excerpt offers limited insight into the specifics of the training and testing methodology, which are crucial for reproducing the results and fully understanding the conclusions of the paper. Specifically, the excerpt does not clearly specify the following:<br><br>1. Data Splits: Details about how the data is divided into training, validation, and test sets are not thoroughly described. Understanding how datasets are partitioned is essential for appreciating the generalization capability of the proposed methods.<br><br>2. Hyperparameters: There is no explicit mention of how hyperparameters were chosen or optimized. Details such as the learning rate, batch size, or any regularization techniques used are critical for replicating the study.<br><br>3. Optimizer: The type of optimizer used in the experiments is not specified. The choice of optimizer can significantly affect the performance of deep learning models, hence its specification is necessary.<br><br>4. Reproducibility: For readers to fully appreciate and verify the results presented in the paper, it's crucial to provide details that allow for the exact replication of the experiments, including any random seeds used.<br><br>Constructive suggestions for improvement:<br><br>1. Data Splits: Provide detailed explanations of how the datasets are divided into training, validation, and test sets. Mention any stratification or specific considerations taken into account while splitting the datasets.<br><br>2. Hyperparameters: Clearly specify all hyperparameters used in the experiments. If hyperparameter tuning was conducted, describe the method or rationale behind the chosen values.<br><br>3. Optimizer Details: Include information about the optimizer utilized in the experiments (e.g., SGD, Adam). If relevant, also mention the learning rate, momentum, or other optimizer-specific hyperparameters.<br><br>4. Reproducibility: Ensure that all information necessary to replicate the experiments is included. This could involve specifying random seeds, providing exact versions of software and libraries used, and giving access to pre-processed data when applicable.<br><br>5. Supplementary Materials: Consider providing extensive experimental details, including hyperparameters and data processing steps, in appendices or supplementary materials if space constraints are a concern in the main text.<br><br>These suggestions aim to enhance the clarity, completeness, and reproducibility of the experimental methodology, thereby assisting readers in fully comprehending and verifying the research findings.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-7">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have reported error bars in Section 3.2: Experiments.</p>
+                <p class="llm_review"><strong>Review:</strong> Justification Review:<br>The answer provided by the authors indicates a positive response to the choice of reporting error bars. However, the justification simply states where error bars are reported without explicitly addressing the guidelines regarding the clarity and correctness of how these are defined or any relevant details that demonstrate their statistical significance. Specifically, the justification lacks:<br><br>1. Explanation of what the error bars represent (e.g., standard deviation, standard error of the mean, confidence intervals, etc.).<br>2. The method used for calculating the error bars (e.g., closed-form formula, library function, bootstrap, etc.).<br>3. Discussion on the assumptions made (e.g., normally distributed errors) and their verification.<br>4. Specification of whether the error bars are symmetric or asymmetric and how out-of-range values are handled.<br>5. Explicit referencing of the figures or tables in the text where these error bars are discussed, along with an explanation of their relevance to the main claims of the paper.<br><br>This lack of detail in the justification makes it difficult to assess the appropriateness and correctness of the error bars reported, which is crucial for understanding the statistical significance of the experiments.<br><br>Actionable Suggestions:<br>1. Provide detailed explanations about the type of error bars used and their statistical significance in relation to the main claims of the paper.<br>2. Clearly outline the methods used for calculating error bars and the assumptions made in this process.<br>3. Discuss how error bars are interpreted in the context of the study, especially if asymmetric ranges are utilized.<br>4. Ensure that any mention of error bars in figures or tables is accompanied by thorough explanations in the text, linking these statistical representations back to the paper's primary findings.<br>5. Consider including a subsection or paragraph in the methodology section that addresses these points comprehensively, enhancing the paper's transparency and replicability.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-8">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have provided details about compute resources used in Section 3.2: Experiments, Appendix E: Within Domain Few-shot learning, and Appendix F: Cross-Domain Few-shot learning</p>
+                <p class="llm_review"><strong>Review:</strong> The justification provided by the authors claiming that details about compute resources used in the experiments are provided in Section 3.2 and Appendices E and F does not fully comply with the guidelines provided for disclosing computational resources. While the authors mention the sections where compute resources information can supposedly be found, a review of those sections in the provided content shows that specific details, such as the type of compute workers (CPU/GPU), specifics about the internal cluster or cloud provider, memory, storage, and execution time estimates for individual runs and the total compute estimation, are missing or not explicitly stated. This lack of detailed information affects the reproducibility of the experiments, as other researchers cannot gauge the computational cost or infrastructure requirements to replicate the study.<br><br>Constructive and actionable suggestions:<br>1. Specify the type of compute resources used for the experiments (e.g., GPU model, CPU specifications).<br>2. Include details about the computational infrastructure, such as whether experiments were run on an internal cluster, specific cloud provider instances, and any relevant configurations.<br>3. Disclose the memory and storage requirements for running the experiments to help others plan the replication study appropriately.<br>4. Provide detailed execution time for each experiment, including preprocessing, training, and evaluation phases, to offer a clear view of the time investment required.<br>5. If applicable, mention any additional computational resources that were utilized for preliminary studies or experiments not included in the final paper to give a complete picture of the computational effort involved in the research project.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-9">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Answer:</strong> No</p>
+                <p><strong class="justification">Justification:</strong> We are not bound to follow the NeurIPS code of ethics</p>
+                <p class="llm_review"><strong>Review:</strong> Justification for the Score:<br>The answer provided by the authors is inconsistent with the expectations set by the NeurIPS conference regarding adherence to ethical guidelines. The NeurIPS Code of Ethics is designed to ensure the research presented at the conference is ethically sound and conducted responsibly. The assertion that the authors are "not bound to follow the NeurIPS code of ethics" directly contradicts the conference's requirements and raises serious concerns about the ethical considerations behind the research. All submissions to NeurIPS must conform to its Code of Ethics, and any deviations must be carefully and clearly justified, taking into account legal, geographical, or other exceptional circumstances. Simply stating non-adherence without substantial justification does not meet the ethical standards expected.<br><br>Constructive and Actionable Suggestions:<br>1. Review the NeurIPS Code of Ethics: Authors should thoroughly review the NeurIPS Code of Ethics and evaluate their research against all the points mentioned in the guidelines. This will ensure that their research aligns with the ethical standards set by the conference.<br><br>2. Provide a Detailed Explanation: If there are any areas where the research deviates from these guidelines, the authors must provide detailed explanations for each deviation. This should include the reasons behind the deviation and any measures taken to mitigate potential ethical concerns.<br><br>3. Mitigation Strategies: For any identified ethical issues or deviations from the Code of Ethics, authors should discuss how they addressed or plan to address these issues. This could include modifications to the study design, additional oversight, or other ethical safeguards.<br><br>4. Consult Ethics Boards: If applicable, consulting with Institutional Review Boards (IRBs) or ethics committees and including their input or approval in the paper can provide additional assurance that the research adheres to ethical standards.<br><br>5. Revise the Statement: Authors should revise their ethical statement to affirm that the research either adheres to the NeurIPS Code of Ethics or provide a clearly justified and detailed explanation of any exceptions due to special circumstances.<br><br>By addressing these suggestions, the authors can ensure that their paper meets the ethical standards expected by the NeurIPS conference and the broader research community.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-10">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have detailed potential impacts and recommended use in Section 1.3</p>
+                <p class="llm_review"><strong>Review:</strong> Justification for the Score:<br>The provided answer by the authors states that "We have detailed potential impacts and recommended use in Section 1.3," which suggests a discussion on societal impacts. However, the justification is overly generic and lacks specificity regarding how the paper discusses both potential positive and negative societal impacts.<br><br>Constructive and Actionable Suggestions:<br>- The authors should explicitly list and elaborate on the specific positive societal impacts their work could have. For instance, how could the Meta-Album meta-dataset facilitate research in cross-domain meta-learning and contribute to advancements in few-shot learning methodologies that could benefit various fields such as healthcare, ecology, or automated systems?<br>- The paper should also consider and explicitly discuss potential negative societal impacts. For example, could the advanced image classification techniques enabled by the dataset be misused for surveillance or in ways that could infringe on privacy? Are there fairness and bias considerations, especially given the dataset's multi-domain nature, that need to be addressed to ensure equitable model performance across different contexts?<br>- To strengthen the discussion on societal impacts, the authors could propose concrete mitigation strategies for any identified negative impacts. This might include recommendations for ethical use guidelines, considerations for the responsible deployment of technologies developed using their dataset, and suggestions for future work to address any biases or fairness issues.<br>- If Section 1.3 does indeed address these aspects in detail, the authors should provide a more thorough explanation in their justification, with direct references to specific discussions or findings within that section that highlight the consideration of both positive and negative societal impacts of their work.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-11">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> Indeed, we are releasing our datasets with proper license and terms of use. We have also provided recommended usage of these datasets.</p>
+                <p class="llm_review"><strong>Review:</strong> The provided justification in the paper's response does not thoroughly address the potential risks associated with the datasets and models, especially when considering responsible release and the prevention of misuse. While mentioning that datasets will be released with appropriate licenses and recommended uses, the answer lacks details about specific measures or safeguards that have been proactively put in place to ensure responsible use. Considering the wide range of domains covered by the Meta-Album project and the potential for misuse, a more detailed explanation of these safeguards is necessary.<br><br>Constructive and actionable suggestions for improvement:<br>1. Detailed Safeguards Description: Clearly articulate the specific safeguards or protocols you have established to mitigate risks associated with the data or models. This includes both technical measures (e.g., access controls, user agreements) and ethical considerations (e.g., ensuring diversity in dataset representation, privacy protections for individuals in the dataset).<br><br>2. License Explanation: Elaborate on the types of licenses under which the datasets are released. Discuss how these licenses specifically aim to prevent misuse or unethical use of the data. Providing examples of allowed and disallowed uses under these licenses could be beneficial.<br><br>3. Data Collection and Curation Process: Address any ethical considerations in the data collection and curation process, especially for datasets that are sensitive or have potential for misuse. Explain how consent was obtained, how privacy was ensured, and any steps taken to anonymize or protect sensitive information.<br><br>4. Misuse Prevention Strategies: Discuss strategies or mechanisms you've considered to monitor and prevent misuse of the datasets and models once they are released. This could include a reporting mechanism for misuse, regular reviews of how the data is being used, or collaborations with ethics boards.<br><br>5. Community Engagement: Consider engaging with the broader research or user community to continually assess and address ethical concerns related to the datasets and models. Establishing an open dialogue can help identify unforeseen risks and develop community standards for responsible use.<br><br>Providing more comprehensive details on these points within the paper will strengthen the justification for the responsible release claim and ensure that potential risks are adequately mitigated.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-12">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We are releasing our datasets with proper license, we are also mentioning the original licenses for the original datasets in Appendix B: License information of Meta-Album datasets</p>
+                <p class="llm_review"><strong>Review:</strong> The authors have clearly stated their compliance with licensing and terms of use for the datasets utilized in their paper. Specifically, they mention that they are releasing their datasets with proper licensing and are also acknowledging the original licenses for the datasets they sourced in Appendix B: License information of Meta-Album datasets. This demonstrates respect for intellectual property and adherence to the ethical norms of scientific research.<br><br>However, as constructive criticism to further improve the clarity and compliance on licensing issues, the authors may consider the following suggestions:<br>1. Explicitly State Licenses in the Main Text: While mentioned in the appendix, it might add clarity to briefly mention in the main body of the paper the type of licenses under which the Meta-Album datasets are released and a general statement about the licensing of the original datasets.<br>2. Provide Direct Links to Licenses: Where possible, include direct links or references to the specific licenses of the original datasets within Appendix B. This can help readers and future researchers easily access and understand the terms under which the data can be used.<br>3. Clarification on Derivative Works: If any preprocessing or modifications were made to the original datasets, it would be beneficial to clarify the licensing implications for these derivative works. For example, whether the preprocessing aligns with the terms of the original licenses and if there are any changes in the licensing terms for the processed datasets.<br>4. Guidance for Reusers: Offer some guidance or recommendations for researchers who might want to use the Meta-Album datasets or its derivatives, citing specific do's and don’ts based on the licensing terms.<br><br>These additional steps can ensure complete transparency and foster trust in the scientific community, encouraging the respectful and lawful use of shared resources.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-13">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have properly documented our new datasets using meta-data files and datasheets for datasets (provided in the appendices).</p>
+                <p class="llm_review"><strong>Review:</strong> The provided justification does not fully align with the suggested guidelines for documenting new assets introduced in a paper. While the response mentions the use of meta-data files and datasheets for datasets provided in the appendices, it does not specifically address several key aspects outlined in the guidelines:<br><br>1. The response lacks detailed information on the structured templates used for documenting the datasets/code/model. It's essential to outline how the datasets are structured, along with details about training, license, limitations, and other relevant aspects.<br>2. There is no discussion on how consent was obtained from people whose assets are used, which is a crucial part of ensuring ethical research practices.<br>3. The response does not address the anonymization of assets, which is vital for maintaining confidentiality and adhering to the submission guidelines.<br><br>Constructive and Actionable Suggestions:<br><br>1. Structured Documentation: The authors should provide a clearer and more detailed description of the structured templates used for documenting the new assets. This documentation should include specifics on training parameters, data collection methodologies, licensing information, and any limitations or biases in the datasets.<br><br>2. Consent and Ethics: The paper should explicitly discuss how consent was obtained from individuals or entities whose assets are used in the research. This includes any personal data, proprietary information, or copyrighted materials within the datasets.<br><br>3. Anonymization: If applicable, the authors should clarify the steps taken to anonymize the assets, ensuring the privacy and confidentiality of any individuals or entities involved. The paper should provide details on how anonymized URLs or files were created and handled during the submission process.<br><br>4. Accessibility and License: The documentation should include information on how interested researchers can access the datasets or code, and under what license they are made available. This promotes transparency and reproducibility in research.<br><br>By addressing these suggestions, the authors can significantly improve the documentation of the new assets introduced in the paper, ensuring compliance with ethical guidelines and enhancing the utility and accessibility of their research contributions.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-14">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have mentioned all the crowdsourcing details in the main paper</p>
+                <p class="llm_review"><strong>Review:</strong> Justification for the Score:<br>Based on the content provided in the paper review, it appears that the authors have not included the detailed information required in response to the question about crowdsourcing experiments and research with human subjects. Merely stating that "all the crowdsourcing details are mentioned in the main paper" does not provide evidence of the inclusion of full instructions given to participants, screenshots (if applicable), or details about compensation, which are critical aspects of this question as per the guidelines.<br><br>Constructive and Actionable Suggestions for Improvement:<br><br>1. Detailed Instructions: Please include the full text of the instructions given to the participants in your crowdsourcing experiments in the supplemental material or ideally, in an appendix within the main paper if space allows. This will provide readers with a clearer understanding of the experimental setup and procedures followed.<br><br>2. Screenshots: If applicable, consider adding screenshots of the crowdsourcing interface or the tasks that participants were asked to complete. This can be included in the supplemental materials and referenced in the main paper. Screenshots will help readers visualize the tasks and potentially reproduce your study.<br><br>3. Compensation Details: It's crucial to disclose details about compensation for the participants involved in your study. This transparency is important for ethical considerations and aligns with the NeurIPS Code of Ethics. Please specify the compensation rates, how they compare to minimum wage standards in the participants' countries, and any other benefits provided to the participants.<br><br>4. Ethical Considerations: Alongside the aforementioned details, also highlight any ethical considerations or approvals obtained (if applicable) from an institutional review board (IRB) or equivalent ethics committee. This will demonstrate compliance with ethical standards in research involving human subjects.<br><br>By addressing these aspects, the paper will meet the NeurIPS guidelines more thoroughly and provide a transparent and ethical account of the research involving human participants.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Adversarial-question-15">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have received approvals from IRB and have mentioned in the main paper</p>
+                <p class="llm_review"><strong>Review:</strong> Justification provided by the authors regarding IRB approvals does not align with the content of the paper provided for review. The paper introduces Meta-Album, an extensive image classification meta-dataset designed to facilitate few-shot learning, transfer learning, meta-learning, among other tasks. However, there is no specific section or mention regarding the involvement of human subjects directly in research that would necessitate IRB approvals or discussions of potential risks incurred by study participants. The paper mainly focuses on the creation, structure, and utility of the Meta-Album dataset, benchmark comparisons, and the technical aspects of handling and contributing to the dataset. Since the primary focus is on the dataset itself and computational tasks related to it, it appears that the nature of the research does not directly involve human subjects in a way that would typically require IRB review.<br><br>Constructive Suggestions:<br>1. Clarify Involvement of Human Subjects: If the project involves human subjects in any way not apparent from the review materials, such as in dataset collection or experiments involving human evaluation, please clarify these aspects and their ethical considerations more explicitly in the paper.<br><br>2. Details on Ethical Considerations: If there were indeed aspects of the research that required IRB approval, such as user studies, data collection from human subjects, or other forms of direct human involvement, provide a dedicated section or paragraph detailing the ethical considerations, the nature of the involvement, how consent was obtained, and any measures taken to ensure the confidentiality and well-being of participants.<br><br>3. Specify Institutional Review (If Applicable): If your institution reviewed the project and determined it did not require formal IRB approval, mentioning this decision can help clarify the ethical landscape of your research. This could include a statement on why IRB approval was not necessary.<br><br>4. Adhere to Anonymity Guidelines: If this information is to be included in an initial submission that requires anonymization, ensure that mentioning the review process does not compromise the double-blind review process. A generic statement indicating ethical considerations were reviewed and approved by the appropriate institutional review board or ethics committee suffices for the initial anonymous submission.<br><br>5. Improve Transparency: For projects that heavily depend on datasets involving humans (even indirectly, through the images used), enhancing transparency about data sourcing, curation, and usage rights can contribute positively toward the ethical considerations of your paper.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+        
+            
+                <h3>Truth Adversarial Paper</h2>
+            
+            <p><strong>Correctness Score:</strong> 0.33</p>
+        
+            
+            <div class="review" id="Truth Adversarial-question-1">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> The abstract and introduction clearly state the main contributions and scope of the paper</p>
+                <p class="llm_review"><strong>Review:</strong> The answer provided by the authors regarding the alignment of the main claims in the abstract and introduction with the paper's contributions and scope is consistent with the check of the provided paper content. The abstract and introduction sections accurately outline the contributions, including the introduction of the Meta-Album, a multi-domain meta-dataset designed for few-shot image classification tasks across varying domains. These claims are matched with the theoretical framework and experimental evaluations detailed in the subsequent sections of the paper. The introduction effectively sets the stage for the presented research, making it clear what the paper achieves and the scope of its contributions.<br><br>However, for a more critical analysis and considering the potential for even higher scrutiny, a few aspects could be further emphasized or clarified:<br><br>1. Specificity on Novelty and Impact: While the abstract and introduction do highlight the creation of Meta-Album and its utility in few-shot learning research, they could further articulate the specific aspects that distinguish this meta-dataset from existing datasets in terms of diversity, scale, and practical applicability. A clearer emphasis on how Meta-Album advances the current state-of-the-art in meta-learning and few-shot learning would strengthen the introductory claims.<br><br>2. Limitations and Assumptions: The introduction briefly touches upon the problem of limited data availability in certain domains and how Meta-Album seeks to address this. However, it could more explicitly discuss any assumptions made during the dataset compilation process and limitations encountered that could affect generalization or applicability in real-world scenarios.<br><br>3. Clarification on Continuous Expansion: While the paper states that Meta-Album is designed to be continually expanded, additional details on the process for integrating new datasets - including quality assurance, domain selection criteria, and how the community can contribute - would be valuable right from the beginning to set the expectations.<br><br>Actionable Suggestions:<br><br>- Include a paragraph in the introduction that more deeply discusses the novelty and specific contributions of Meta-Album in comparison to existing datasets.<br>- Clearly outline any limitations and assumptions in the early sections of the paper to set accurate expectations for the reader.<br>- Provide more detailed information on the continuous expansion plan for Meta-Album, possibly by adding a subsection in the methodology or discussion sections that covers community contributions and dataset integration processes.<br><br>Overall, the response to the review question is considered satisfactory, with room for improvement in detailing and clarifying the contributions and scope outlined in the abstract and introduction.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-2">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Answer:</strong> No</p>
+                <p><strong class="justification">Justification:</strong> We haven't clearly explained the limitations of our work in Section: Discussion and conclusion</p>
+                <p class="llm_review"><strong>Review:</strong> Explanation: The authors indicated that they have not discussed the limitations of their work, which is inconsistent with comprehensive research reporting guidelines. Discussing limitations is fundamental to scientific integrity, offering transparency about the research's scope, applicability, and robustness. While the authors have acknowledged this oversight in their justification, it's critical to directly address it in the paper to provide a complete and honest scientific account.<br><br>Constructive and Actionable Suggestions:<br>1. Dedicate a section or a substantial paragraph in the "Discussion and Conclusion" to explicitly articulate the limitations of the study. This could include limitations regarding the dataset diversity, performance in real-world settings, computational requirements, or generalizability beyond the tested domains.<br>2. Reflect on the implications of these limitations for the practical application of Meta-Album and the derived insights for future work. For instance, if certain domains or image types are underrepresented, how might this influence the meta-dataset's utility in those areas?<br>3. Consider discussing how the scalability of the produced or analyzed methods might be influenced by dataset size, complexity, and domain diversity. Is there a computational bottleneck that could hinder application to larger datasets or real-time systems?<br>4. Explore any ethical considerations, such as privacy and fairness, particularly relevant if the datasets include human subjects or could be applied in sensitive contexts.<br>5. Include a forward-looking perspective on how identified limitations could be addressed in future studies or iterations of the Meta-Album project.<br>6. Involve a broader discussion on the robustness of the system against assumptions mentioned in the original work or potential biases within the meta-dataset itself.<br>7. Acknowledge any constraints in the evaluation methodology, such as reliance on specific performance metrics that might not capture all facets of few-shot learning or cross-domain adaptability.<br><br>By addressing these points, the authors not only adhere to research integrity norms but also enhance the paper's value for readers by providing a clearer understanding of the work's scope and potential impact.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-3">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Answer:</strong> NA</p>
+                <p><strong class="justification">Justification:</strong> Our work is not theoretical so this does not apply on our research</p>
+                <p class="llm_review"><strong>Review:</strong> The authors' response that the question is not applicable (NA) is consistent with the content of the paper. The paper focuses on introducing Meta-Album, a multi-domain meta-dataset designed for few-shot learning, transfer learning, and meta-learning tasks. The primary contributions are the creation of this dataset and its evaluation for few-shot learning tasks. There is no direct mention of theoretical results such as theorems or formulas that would require proofs.<br><br>However, for completeness and to address the guidelines more thoroughly:<br><br>1. It might be beneficial for future work or extensions of this paper to consider incorporating some theoretical insights or analysis, especially regarding the implications of cross-domain few-shot learning on model generalization and learning efficiency. Though not directly relevant to the current work, these could enrich the understanding of why certain approaches work better in the tested scenarios.<br><br>2. If the authors or future extensions of this work plan to delve into theoretical aspects, it is crucial to follow the guidelines mentioned, such as clearly stating all assumptions, numbering theorems, and providing complete proofs or sketches in the supplemental material.<br><br>3. Since this paper is more focused on the practical application and empirical evaluation of the introduced meta-dataset, the NA answer to the original question is justified. It's clear that the intent and contribution of the paper are well-aligned with presenting and validating a practical resource rather than exploring theoretical constructs.<br><br>In summary, the authors' response is appropriate given the scope and contributions of their paper. Their work on Meta-Album concentrates on empirical evaluations and does not delve into theoretical results that would necessitate proofs and formal assumptions.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-4">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have made our code and data publicly available on our github repository and on our website</p>
+                <p class="llm_review"><strong>Review:</strong> Justification:<br>The justification provided in the answer does not adhere to the in-depth guidelines necessary to ensure comprehensive reproducibility and transparency of the experimental results. Merely stating that the code and data are publicly available does not fulfill the requirement for full disclosure under the provided guidelines. There is no mention of specific environmental needs, exact commands for running the experiments, access to raw and preprocessed data, or reproducibility of specific experiments compared to others. The lack of detailed methodological transparency and explicit reproducibility instructions could hinder other researchers' ability to fully replicate the study's results and conclusions. Additionally, there's no mention of whether instructions are provided for data preparation and accessing all experimental results, including the baseline methods.<br><br>Constructive and Actionable Suggestions:<br><br>1. Detailed Documentation: Provide a comprehensive README file or documentation that includes detailed instructions for replicating the experiments. This should cover the environment setup, including the specific versions of software and libraries required.<br><br>2. Exact Commands: Include the exact commands that need to be run to reproduce the experimental results, along with an explanation of what each command does. This is crucial for ensuring that other researchers can obtain the same results presented in the paper.<br><br>3. Data Access and Preparation: Clearly outline the process for accessing both the raw and preprocessed data. If any data preprocessing is required, provide scripts or step-by-step instructions for this process.<br><br>4. Experiment Reproducibility: Specify which experiments can be directly reproduced with the provided scripts and which cannot. For those that cannot, explain why and provide enough details so that they could be replicated manually if needed.<br><br>5. Anonymized Code and Data Link: If the paper is under review and anonymity is required, ensure that the links to the code and data are anonymized. Consider using platforms that allow for anonymous sharing during the peer-review process.<br><br>6. Environmental Requirements: Include a detailed description of the computational environment needed to replicate the experiments. This involves specifying the operating system, programming languages, and version numbers of all relevant software and libraries.<br><br>7. Support and Updates: Encourage users of the code and data to reach out with questions or issues and commit to maintaining the repository with updates or corrections as needed.<br><br>By addressing these suggestions, the authors can significantly improve the reproducibility of their research, allowing the wider research community to build upon their work more effectively.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-5">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> We have made our code and data publicly available on our github repository and on our website</p>
+                <p class="llm_review"><strong>Review:</strong> The answer provided by the authors and the justification align well with the guidelines for providing open access to the data and code necessary to reproduce the main experimental results. According to the authors, they have made their code and data publicly available through their GitHub repository and project website, which is in compliance with the NeurIPS code and data submission guidelines. This approach enhances the reproducibility of the research and allows other researchers to validate and build upon the work presented in the paper.<br><br>However, to further ensure the completeness and utility of the provided resources, I would recommend the authors to consider the following actionable items:<br><br>1. Detailed Instructions: Ensure that the GitHub repository and project website contain detailed instructions on how to set up the environment, access the data, and execute the code to reproduce the results presented in the paper. This should include any dependencies, required packages, and specific version numbers to prevent compatibility issues.<br><br>2. Direct Links: Provide direct links to the specific GitHub repository and project website within the paper or supplemental material if not already done. While preserving anonymity for submission, these can be updated post-review.<br><br>3. Demonstration of Reproducibility: It would be beneficial for the authors to demonstrate the reproducibility of their experimental results, possibly through a short video or a step-by-step guide that walks through the reproduction of key results. This can further increase confidence in the reproducibility of the work.<br><br>4. Clarify What is Reproducible: Clearly state which experimental results can be reproduced with the provided code and data. If any results are not reproducible due to proprietary data or other reasons, this should be explicitly mentioned, along with an explanation.<br><br>5. License Information: It is crucial to include license information for both the code and the dataset to inform users of how they can use, modify, and distribute the resources. This helps ensure that the materials are used ethically and legally.<br><br>By addressing these suggestions, the authors can significantly enhance the accessibility and reproducibility of their research, fostering further exploration and innovation in the field.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-6">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Answer:</strong> No</p>
+                <p><strong class="justification">Justification:</strong> We have omitted many experimental details and hyper parameters</p>
+                <p class="llm_review"><strong>Review:</strong> The answer and justification provided by the authors are not entirely consistent with the content of the paper. The paper does provide an extensive description of the Meta-Album dataset, including preprocessing steps, dataset versions (Micro, Mini, Extended), motivation behind the dataset's creation, and its intended use cases. Moreover, it details the experimental setup for evaluating few-shot learning algorithms, including the problem setting, the division of datasets into meta-splits, and the specific challenge setup. However, it is true that the paper could provide more explicit details on hyperparameters used, the type of optimizer, and other experimental settings for the algorithms evaluated.<br><br>Constructive and actionable suggestions:<br>1. Hyperparameters and Optimizer Details: Include a section or appendix detailing the hyperparameters used in the experiments for each algorithm tested, including learning rates, batch sizes, and epochs. Also, specify the type of optimizer used (e.g., SGD, Adam) for training, along with any specific reasons for these choices based on prior work or preliminary experiments.<br>2. Data Splits and Distribution: While the paper mentions the use of different sets for meta-training, meta-validation, and meta-testing, providing explicit details on the distribution of classes and images across these splits would enhance reproducibility. This includes specifying the number of classes and images per class in each split.<br>3. Hardware and Software Configuration: Include information about the computing environment used for experiments, such as GPU models, the version of deep learning libraries, and any relevant software dependencies. This helps in understanding the computational resources required and ensures reproducibility in similar environments.<br>4. Baseline Methodologies Detailed Settings: For the baseline methodologies evaluated in the paper, such as Prototypical Networks and MAML, describe any adaptations or modifications made to these methods specifically for your experiments. This could involve how the methods are tailored to handle the variety of domains or the specifics of the any-way any-shot setting.<br>5. Supplemental Material Submission: If space constraints limit the extent of detail that can be included in the main paper, consider submitting supplemental material with full experimental protocols, including code, detailed hyperparameters, data splits, and additional results. Making the code publicly available on platforms such as GitHub, along with a README file, can significantly enhance the paper's impact by allowing others to replicate and build upon your work directly.<br><br>Including these details will greatly improve the reproducibility of your results and enable other researchers to build upon your work more effectively.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-7">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Answer:</strong> No</p>
+                <p><strong class="justification">Justification:</strong> We haven't reported error bars for our experiments</p>
+                <p class="llm_review"><strong>Review:</strong> Justification:<br>The authors' response to the question regarding reporting error bars and the statistical significance of the experiments is incorrect based on the extensive details provided in the paper content. The paper explicitly reports error bars and statistical significance in various sections detailing experimental results, contradicting the authors' answer. Specifically, the paper provides 95% confidence intervals for performance results across multiple tables (e.g., Table 5, Table 6, Table 7, and Table 8), clearly indicating the variability and statistical reliability of the findings. Furthermore, the error bars are based on per-task level calculations over a number of runs, showing a rigorous approach to capturing the variability factors like initialization and random sampling within the experiments. The method of calculation for these statistical measures is implied to be standard practice for confidence intervals within the field, aligned with the variability factors mentioned. The paper also distinguishes between different settings, such as cross-domain few-shot learning and any-way any-shot settings, further demonstrating a nuanced understanding of statistical evaluation in varied experimental conditions.<br><br>Constructive suggestions for improvement:<br>1. Clarify in the response about the reported error bars across the paper. Acknowledge the sections where 95% confidence intervals are provided and explain the significance of these statistics in supporting the paper's claims.<br>2. Explicitly state the factors of variability captured by the error bars in the experimental sections and how these contribute to the reliability of the results.<br>3. Include a paragraph in the methodology section detailing the statistical methods used for calculating error bars and confidence intervals, including any assumptions made. This will improve transparency and reproducibility.<br>4. Consider extending the statistical analysis by discussing the implications of the observed confidence intervals on the main claims of the paper. This could involve a deeper analysis of cases with wider confidence intervals and how they might affect the generalization of the results.<br>5. Lastly, review the entirety of the paper to ensure that all statistical measures reported in tables or figures are consistently and accurately discussed in the text, with clear references to how they support the research findings.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-8">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Answer:</strong> No</p>
+                <p><strong class="justification">Justification:</strong> We haven't provided details about compute resources used</p>
+                <p class="llm_review"><strong>Review:</strong> The justification provided by the authors contradicts the detailed content of the paper. The paper does include information about the computing resources utilized for the experiments. Specifically, in Table 17, the paper presents detailed running times for all techniques in different cross-domain settings over all datasets, implicitly providing an insight into the computational resources necessary for reproducing the experiments.<br><br>However, to rigorously comply with the guidelines and enhance reproducibility, the paper could be improved by explicitly specifying:<br><br>1. Type of Compute Workers: Whether the experiments were run on CPUs or GPUs, the specific models of these processors, and whether these resources were accessed through an internal cluster or a cloud provider.<br><br>2. Memory and Storage: The amount of RAM and GPU memory (if applicable) used to run the experiments, alongside any storage requirements for dataset handling.<br><br>3. Detailed Compute Requirements: While running times are provided, additional clarity on the compute resources (number of CPUs/GPUs, types of GPUs, etc.) for each experiment would enhance reproducibility.<br><br>4. Total Compute Estimation: An estimation of the total compute in terms of GPU/CPU hours required for each experimental scenario, including any preprocessing steps.<br><br>5. Disclosure on Total Project Compute: Mention whether the reported experiments encompass the full extent of compute used in the research project, or if additional, unreported experiments required significant compute resources.<br><br>These actionable suggestions aim to fulfill the guidelines for disclosing computational resources, thereby improving the paper's clarity on experimental reproducibility.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-9">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Answer:</strong> Yes</p>
+                <p><strong class="justification">Justification:</strong> Our research is completely ethical and we conform to the NeurIPS code of ethics</p>
+                <p class="llm_review"><strong>Review:</strong> The given answer and justification provided by the authors do not seem sufficient to assess full adherence to the NeurIPS Code of Ethics. A simple confirmation without detailed reasoning or evidence might not be enough to assure the reviewers and readers that all ethical aspects have been thoroughly considered and adhered to, especially considering the broad and significant implications outlined in the NeurIPS Code of Ethics.<br><br>Constructive and Actionable Suggestions:<br>1. Detailed Ethical Consideration: Provide a more detailed explanation of specific ethical considerations taken into account during your research. This might include aspects related to data collection, processing, and usage, especially considering privacy, consent, and potential biases in the datasets.<br><br>2. Data Privacy and Consent: If your research involved human participants (indirectly through dataset usage), clarify how consent was acquired or how existing datasets were vetted to ensure they were ethically sourced.<br><br>3. Bias and Fairness Analysis: Given the focus on image classification and the variety of domains your dataset encompasses, a discussion on steps taken to mitigate dataset biases would strengthen your adherence to ethical guidelines. Address how the diversity of data impacts algorithm fairness and what measures were taken to analyze and mitigate potential biases.<br><br>4. Impact on Society: Elaborate on the potential societal impact of your research and technology. Discuss both the positive applications and potential negative implications, if any. This includes considering the misuse of technology and steps taken to prevent it.<br><br>5. Sustainability and Accessibility: Reflect on the environmental impact of developing your meta-dataset and implementing the associated algorithms, given the computational resources required. Additionally, discuss the accessibility of your dataset for broader segments of the research community, including considerations for researchers with limited computational resources.<br><br>6. Preserve Anonymity: Ensure that any additional explanation or examples provided maintain the anonymity required by the review process.<br><br>By addressing these points, the authors can provide a more comprehensive and convincing justification that their research not only adheres to the NeurIPS Code of Ethics but also actively contributes to ethical advancements in the field of AI and machine learning.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-10">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Answer:</strong> No</p>
+                <p><strong class="justification">Justification:</strong> We haven't discussed the limitations in detail</p>
+                <p class="llm_review"><strong>Review:</strong> The justification provided by the authors indicates a misunderstanding or oversight regarding the NeurIPS Paper Checklist's question on societal impact. The response suggests that the authors have not discussed the limitations or potential societal impacts (positive or negative) in detail, which is a crucial aspect of responsible research dissemination. Discussing both positive and negative societal impacts is essential, even for foundational research, as it helps identify potential future applications and misuses of the technology developed.<br><br>Constructive and actionable suggestions:<br>1. Reflect on Potential Applications: The authors should carefully consider both direct and indirect applications of their work. Even if the research is foundational, there could be foreseeable applications that may have societal impacts. For instance, the development of a more diverse and larger meta-dataset for few-shot learning, as presented in the paper, could impact areas like surveillance, personalized content delivery, or automated decision-making, which have profound societal implications.<br><br>2. Identify Unintended Uses and Misuses: Given the nature of the dataset and the advancements in few-shot learning, the technology could potentially be used in ways that were not intended by the authors, including privacy invasions or deepfake generation. It is important to discuss such possible misuses and their implications.<br><br>3. Consider Fairness and Accessibility: Reflect on how the creation of this meta-dataset and the advancements in few-shot learning might impact fairness in machine learning models. Consider whether the data and methods are accessible to a wide range of researchers, including those from underrepresented regions, or if they could exacerbate existing inequalities in the field.<br><br>4. Discuss Mitigation Strategies: If potential negative impacts are identified, the authors should discuss strategies to mitigate these concerns. This could include recommendations for the ethical use of the dataset, suggestions for future research directions that prioritize ethical considerations, or technical solutions that could prevent misuse.<br><br>5. Highlight Positive Impacts: Conversely, the creation of such a diverse and extensive dataset could have significant positive societal impacts, such as advancing research in critical areas like healthcare, environmental monitoring, or education through improved few-shot learning models. These positive aspects should also be discussed to provide a balanced view.<br><br>By addressing these suggestions, the paper will not only comply with the NeurIPS guidelines but also contribute to a more responsible and forward-thinking discourse in the machine learning community.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-11">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Answer:</strong> No</p>
+                <p><strong class="justification">Justification:</strong> We haven't put any safeguards e.g. recommended use of datasets or license for datasets</p>
+                <p class="llm_review"><strong>Review:</strong> The justification provided by the authors for not including safeguards in their data release process is inconsistent with the guidelines provided for responsible data release and usage. The presence of diverse datasets within Meta-Album, including datasets that have been collected from various sources and potentially include personally identifiable information or sensitive content, underscores the importance of establishing safeguards and ethical guidelines for data usage.<br><br>Constructive and actionable suggestions:<br><br>1. Implement Data Use Agreements (DUAs): Encourage users to adhere to specific usage guidelines by implementing DUAs that outline permissible and prohibited uses of the datasets. This can help mitigate misuse and specify ethical considerations.<br><br>2. Anonymization and Redaction: Undertake efforts to anonymize or redact any personally identifiable information present in the datasets to minimize privacy risks. This is particularly important for datasets involving human subjects.<br><br>3. Ethical Review and Datasets Curation: Conduct an ethical review of all datasets within Meta-Album, especially those sourced from the internet or containing potentially sensitive content. Curate and exclude any datasets that cannot be responsibly released following ethical standards.<br><br>4. Licensing: Clearly specify the licensing agreements for each dataset within Meta-Album. Use licenses that require users to agree to ethical conduct in data handling and application development.<br><br>5. Documentation and Transparency: Provide comprehensive documentation for each dataset, including its source, any preprocessing steps performed, and potential biases or sensitivities. Transparency around data collection and curation processes can inform responsible use.<br><br>6. Safeguards Against Biases: Acknowledge and address potential biases within the datasets. Providing guidelines or tools for identifying and mitigating biases in the datasets can promote more equitable research outcomes.<br><br>7. Reporting Mechanism: Establish a mechanism for users to report concerns or misuse related to the datasets. This could include issues related to privacy, ethics, or data integrity.<br><br>By addressing these points, the authors can significantly contribute to the responsible release and use of the Meta-Album data, aligning with broader community standards for ethical AI research and development.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-12">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Answer:</strong> No</p>
+                <p><strong class="justification">Justification:</strong> We are releasing the datasets without any proper license</p>
+                <p class="llm_review"><strong>Review:</strong> The justification provided in the review does not align with the content provided in the paper. The paper meticulously documents the origin of each dataset included in the Meta-Album, crediting the creators or original owners appropriately. Furthermore, it mentions the verification of licenses and the provision of this information within the appendices, specifically Appendix B, which focuses on license information for all datasets within Meta-Album. This indicates a clear effort to respect and acknowledge the terms of use and licensing requirements of the utilized assets.<br><br>Constructive and Actionable Suggestions:<br>1. Clarify Licensing in Main Text: While the paper does an excellent job of acknowledging sources and checking licenses, explicitly mentioning the efforts to verify and respect license terms within the main text can enhance clarity. A brief statement on the overall licensing stance, especially the efforts made to ensure compliance with the original data licenses, would be beneficial.<br><br>2. Direct Link to License Details: Although Appendix B is mentioned for license details, providing a direct link or a more explicit reference within the main text to where these license details can be found (such as a specific URL if available) would improve accessibility and clarity for readers and reviewers.<br><br>3. Explicit Mention of Meta-Album License: If Meta-Album, as a compiled or extended dataset, has its own overarching license, explicitly stating this license in both the paper and accompanying documentation could help clear up any potential confusion regarding the terms under which Meta-Album itself can be used.<br><br>4. Engagement with Original Data Creators: For datasets where licensing information was not immediately available or clear, mentioning any efforts made to engage with the original creators for clarification could further demonstrate due diligence in respecting intellectual property rights.<br><br>These suggestions aim to strengthen the paper’s section on asset usage, licensing, and credit, ensuring that all efforts made by the authors in these areas are clearly communicated and easily verifiable by readers and future researchers.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-13">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Answer:</strong> No</p>
+                <p><strong class="justification">Justification:</strong> We haven't provided proper documentation fo our new datasets in the paper</p>
+                <p class="llm_review"><strong>Review:</strong> The justification provided by the authors is inconsistent with the content of the paper. The paper does indeed introduce Meta-Album, a new meta-dataset for few-shot learning, and provides extensive documentation and resources related to it. This includes detailed information about the source, preprocessing, licensing, and structure of the datasets included in Meta-Album. Moreover, the paper also mentions a website and a GitHub repository where the source code, data loaders, challenge-winning methods, and instructions for contributing datasets or algorithms are available.<br><br>However, it is worth noting that for an asset like Meta-Album, which is extensive and intended to be a growing resource, documentation and clarity regarding data provenance, usage limitations, consent for use, and licensing are critical. While the paper and associated resources provide a good foundation, there may be room for improvement in these areas.<br><br>To address any potential gaps, the authors can consider the following suggestions:<br>1. Enhanced Documentation: Ensure that the documentation clearly covers every dataset included in Meta-Album, especially focusing on licensing, data provenance, and any specific limitations on the use of the datasets. This information should be easily accessible.<br>2. Clarify Consent Procedures: If not already done, document the procedures used to obtain consent for the use of datasets, especially those sourced from third parties or containing human subjects.<br>3. License Information: Clearly state the licensing information for each dataset and for Meta-Album as a whole, ensuring users are aware of how they can legally use the data.<br>4. Update Guidelines for Contribution: Provide detailed guidelines for contributors wishing to add datasets to Meta-Album. This should include requirements for documentation, licensing, and data quality.<br>5. Accessibility: Ensure that all provided links (e.g., to websites, GitHub repositories) are maintained and kept up to date, allowing easy access to Meta-Album's resources.<br><br>Overall, while the paper provides a significant contribution with the Meta-Album meta-dataset and accompanying documentation and resources, focusing on these suggestions can help enhance the clarity and utility of the assets introduced.<br></p>
+                <p><strong>Score:</strong> 0</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-14">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Answer:</strong> NA</p>
+                <p><strong class="justification">Justification:</strong> Our work is not related to any crowdsourcing experiments.</p>
+                <p class="llm_review"><strong>Review:</strong> The answer provided is consistent with the content presented in the paper. After reviewing the extensive details about the Meta-Album dataset and associated methodologies for creating and utilizing such a dataset for few-shot learning, it is clear that the research does not involve crowdsourcing experiments or direct research with human subjects. Therefore, the NA (not applicable) response to the question concerning the inclusion of instructions given to participants and details about compensation is justified and accurate. The focus of the paper is on the development and evaluation of a meta-dataset for image classification purposes, which primarily involves computational and algorithmic methodologies rather than direct human participation in the form of crowdsourced data collection or experiments.<br><br>Constructive and actionable suggestions are not necessary in this case as the answer correctly addresses the question based on the paper's content and scope. Nonetheless, it's always beneficial for future iterations or related works to reiterate the nature of research involvement with human subjects or the lack thereof clearly in the methodology section, ensuring transparency and adherence to ethical guidelines.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+            <div class="review" id="Truth Adversarial-question-15">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Answer:</strong> NA</p>
+                <p><strong class="justification">Justification:</strong> This does not apply to our research</p>
+                <p class="llm_review"><strong>Review:</strong> The justification provided by the authors is consistent with the content of the paper. The paper introduces Meta-Album, a meta-dataset for few-shot image classification, which consists of compiling and preprocessing various open datasets for facilitating research in cross-domain meta-learning. There is no direct involvement of human participants in the form of subjects contributing data or being part of an experimental study that could incur potential risks. Therefore, the question of disclosing risks to subjects or obtaining Institutional Review Board (IRB) approvals does not apply in this context.<br><br>Constructive and actionable suggestions:<br>1. While the current response is appropriate for the given question, ensuring that this clarification is also accessible within the main content of the paper could aid in preemptively addressing any similar queries from readers or reviewers.<br>2. For future work involving human subjects, or if any ambiguity regarding human data arises, the paper should include a detailed ethics section discussing the potential impacts, measures taken to mitigate any risks, and the status of ethical review approvals.<br>3. In continuation of ethical transparency, if any third-party datasets used in the Meta-Album have their own ethical considerations or restrictions, it might be beneficial to briefly acknowledge this and confirm adherence to those conditions.<br></p>
+                <p><strong>Score:</strong> 1</p>
+            </div>
+            
+        
+        
+    </div>
+
+    <button class="button button-bottom" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRIDkcXFbsOrR09j4qA1MlG4Rfir2lPD_u9YC4eqKBJ8tHkw/viewform?usp=pp_url&entry.1830873891=TWV0YS1BbGJ1bTogTXVsdGktZG9tYWluIE1ldGEtRGF0YXNldCBmb3JGZXctU2hvdCBJbWFnZSBDbGFzc2lmaWNhdGlvbg==', '_blank')">Click to submit post submission survey</button>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        position: absolute;
+    }
+    .button-top {
+        top: 10px;
+        right: 20px;
+    }
+    .button-bottom {
+        bottom: 10px;
+        right: 20px;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px; /* Adjust according to button height and margin */
+        padding-bottom: 40px; /* Add padding instead of margin */
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0; /* Remove default margin */
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        color: #0033ff;
+    }
+    .answer {
+        color: #28a745;
+    }
+    .justification {
+        color: #de750b;
+    }
+    .llm_review {
+        color: #000;
+        background-color: #c3defb;
+        border: 1px solid #007bff;
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+    .table-summary {
+        width: 50%;
+    }
+    .table-score{
+        width: 30%;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c8e6c9;
+        color: #1b5e20;
+        border: 1px solid #1b5e20;
+    }
+    .score-red {
+        background-color: #e6c8c8;
+        color: #5e1b1b;
+        border: 1px solid #5e1b1b;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .scroll-button {
+        padding: 10px 20px;
+        font-size: 14px;
+        background-color: #3571ff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .scroll-button:hover {
+        background-color: #02309a;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <button class="button button-top" onclick="window.open('{{ google_form }}', '_blank')">Click to submit post submission survey</button>
+
+    <div class="content">
+        <h1>{{ title }}</h1>
+
+        <hr>
+
+        <h2>Scores</h2>
+        <table class="table-scores">
+            <tr>
+              <td><strong>Correctness Score:</strong></td>
+              <td><span class="score-label score-blue">{{ correctness_score }}</span></td>
+            </tr>
+            {% if triplet %}
+            <tr>
+                <td><strong>Resilience Score:</strong></td>
+                <td><span class="score-label score-blue">{{ resilience_score }}</span></td>
+            </tr>
+            {% endif %}
+            {% if triplet %}
+            <tr>
+                <td><strong>Combined Score:</strong></td>
+                <td><span class="score-label score-blue">{{ combined_score }}</span></td>
+            </tr>
+            {% endif %}
+        </table>
+
+        <hr>
+
+        <h2>Review Summary</h2>
+        <table class="table-summary">
+            <tr>
+              <th>Question</th>
+              <th>Score</th>
+              <th>Details</th>
+            </tr>
+            {% for paper in papers %}
+                {% if triplet %}
+                    <tr><td colspan="3"><strong>{{ paper.type }} Paper</strong></td></tr>
+                {% endif %}
+                {% for review in paper.reviews %}
+                <tr>
+                    <td>{{ review.question_no }}. {{ review.question_title }}</td>
+                    <td><span class="score-label score-{% if review.score == 1 %}green{% else %}red{% endif %}">{{ review.score }}</span></td>
+                    <td><a href="#{{ review.question_id }}" class="scroll-button">Detailed Review</a></td>
+                  </tr>
+                {% endfor %}
+            {% endfor %}
+        </table>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+
+        {% for paper in papers %}
+            {% if triplet %}
+                <h3>{{ paper.type }} Paper</h2>
+            {% endif %}
+            <p><strong>Correctness Score:</strong> {{ paper.correctness_score }}</p>
+        
+            {% for review in paper.reviews %}
+            <div class="review" id="{{ review.question_id }}">
+                <p><strong class="question">Question # {{ review.question_no }}:</strong> {{ review.question }}</p>
+                <p><strong class="answer">Answer:</strong> {{ review.answer }}</p>
+                <p><strong class="justification">Justification:</strong> {{ review.justification }}</p>
+                <p class="llm_review"><strong>Review:</strong> {{ review.review }}</p>
+                <p><strong>Score:</strong> {{ review.score }}</p>
+            </div>
+            {% endfor %}
+        {% endfor %}
+        
+    </div>
+
+    <button class="button button-bottom" onclick="window.open('{{ google_form }}', '_blank')">Click to submit post submission survey</button>
+
+</div>
+
+</body>
+</html>

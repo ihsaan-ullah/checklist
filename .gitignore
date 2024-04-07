@@ -3,5 +3,5 @@
 ._*
 __pycache__
 constants.py
-CompetitionBundle/sample_code_submission/Other/*
-CompetitionBundle/results/*
+CompetitionBundles/ChecklistAssistant/sample_code_submission/Other/*
+CompetitionBundles/ChecklistAssistant/results/*

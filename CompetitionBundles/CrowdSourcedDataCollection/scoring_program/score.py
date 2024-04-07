@@ -273,16 +273,19 @@ class Scoring:
                 for index, row in paper_dict["checklist_df"].iterrows():
                     reviews.append({
                         "question_no": index+1,
+                        "question_id": f"{paper_types[paper_index]}-question-{index+1}",
                         "question": row['Question'],
+                        "question_title": row["Question_Title"],
                         "answer": row['Answer'],
                         "justification": row['Justification'],
                         "review": self.convert_text_to_html(row['Review']),
                         "score": row['Correctness_Score']
                     })
                 paper_dict_for_template["reviews"] = reviews
-            papers_for_template.append(paper_dict_for_template)
+                papers_for_template.append(paper_dict_for_template)
 
         data = {
+            "triplet": self.genuine and self.adversarial and self.truth_adversarial,
             "title": self.genuine['title'],
             "google_form": f"https://docs.google.com/forms/d/e/1FAIpQLSfRIDkcXFbsOrR09j4qA1MlG4Rfir2lPD_u9YC4eqKBJ8tHkw/viewform?usp=pp_url&entry.1830873891={self.genuine['encoded_title']}",
             "correctness_score": self.scores_dict["CG"],

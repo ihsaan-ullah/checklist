@@ -1,0 +1,66 @@
+# NeurIPS 2024 - Crowdsourced data collection for LLM Checklist Assistant yaml file
+# Created by: Ihsan Ullah
+# Created on: April 06, 2024
+
+version: 2
+title: NeurIPS 2024 - Crowdsourced data collection for LLM Checklist Assistant
+description: NeurIPS 2024 - Crowdsourced data collection for LLM Checklist Assistant
+image: logo.png
+registration_auto_approve: False   
+enable_detailed_results: True
+docker_image: ihsaanullah/auto_survey:latest
+
+
+terms: pages/terms.md
+pages:  
+  - title: Overview
+    file: pages/overview.md
+  - title: Instructions
+    file: pages/instructions.md
+  - title: Evaluation
+    file: pages/evaluation.md
+  - title: Credits
+    file: pages/credits.md
+  - title: Terms
+    file: pages/terms.md
+  
+
+phases:
+  - index: 0
+    name: Triplet
+    description: Triplet Phase
+    start: 2024-03-18
+    end: 2024-04-18
+    tasks:
+      - 0
+
+
+tasks:
+  - index: 0
+    name: Triplet checklist
+    description: Triplet checklist 
+    scoring_program: scoring_program/
+    ingestion_program: ingestion_program/
+
+
+leaderboards:
+  - index: 0 
+    title: Results
+    key: main
+    submission_rule: "Add_And_Delete"
+    columns:
+      - index: 0
+        title: CG
+        key: CG
+      - index: 1
+        title: CA
+        key: CA
+      - index: 2
+        title: CT
+        key: CT
+      - index: 3
+        title: R
+        key: R
+      - index: 4
+        title: Score
+        key: S

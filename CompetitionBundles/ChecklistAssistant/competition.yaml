@@ -1,10 +1,10 @@
-# NeurIPS 2024 - Authors self service yaml file
+# NeurIPS'24 Checklist Assistant yaml file
 # Created by: Ihsan Ullah
 # Created on: March 10, 2024
 
 version: 2
-title: NeurIPS 2024 - Authors Self Service
-description: NeurIPS 2024 - Authors Self Service
+title: NeurIPS'24 Checklist Assistant
+description: NeurIPS'24 Checklist Assistant
 image: logo.png
 registration_auto_approve: False   
 enable_detailed_results: True

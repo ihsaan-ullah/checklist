@@ -21,7 +21,7 @@ from constants import API_KEY
 # True when running on Codabench
 CODABENCH = False
 # True when only accepts genuine papers
-ONLY_GENUINE = False
+ONLY_GENUINE = True
 
 
 # ------------------------------------------
@@ -225,9 +225,27 @@ class Ingestion():
             "Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?"
         ]
 
-        checklist_df = pd.DataFrame(columns=['Question', 'Answer', 'Justification', 'Guidelines', 'Review', 'Correctness_Score'])
+        checklist_question_titles = [
+            "Claims",
+            "Limitations",
+            "Theoritical assumptions and proofs",
+            "Experiments reproducibility",
+            "Code and data accessibility",
+            "Experimental settings/details",
+            "Error bars",
+            "Compute resources",
+            "NeruIPS code of ethics",
+            "Impacts",
+            "Safeguards",
+            "Credits",
+            "Documentation",
+            "Human subjects",
+            "Risks"
+        ]
+
+        checklist_df = pd.DataFrame(columns=['Question', 'Question_Title', 'Answer', 'Justification', 'Guidelines', 'Review', 'Correctness_Score'])
         try:
-            for question in checklist_questions:
+            for question_index, question in enumerate(checklist_questions):
                 question_regex = re.escape(question)
                 pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+(.*?))(?:Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
 
@@ -245,7 +263,7 @@ class Ingestion():
                 else:
                     answer, justification, guidelines = "Not Found", "Not Found", "Not Found"
 
-                temp_df = pd.DataFrame([{'Question': question, 'Answer': answer, 'Justification': justification, 'Guidelines': guidelines}])
+                temp_df = pd.DataFrame([{'Question': question, 'Question_Title': checklist_question_titles[question_index], 'Answer': answer, 'Justification': justification, 'Guidelines': guidelines}])
                 checklist_df = pd.concat([checklist_df, temp_df], ignore_index=True)
             return checklist_df
 
@@ -329,7 +347,7 @@ class Ingestion():
 
         if ONLY_GENUINE:
             if num_submitted_papers != 1:
-                raise ValueError("[-] You must submit only 1 paper: your genuine with the NeurIPS checklist!")
+                raise ValueError("[-] You must submit only 1 paper: your genuine paper with the NeurIPS checklist!")
 
         if num_submitted_papers == 0:
             raise FileNotFoundError("[-] No PDF file found in the submission directory")
