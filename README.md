@@ -3,7 +3,9 @@ This repository is entry point for the ***Adversarial Attack Competition against
 
 ***
 
-### 1. [Competition Bundle](CompetitionBundle/)
+### 1. Competition Bundles
+- [Checklist Assistant](CompetitionBundles/ChecklistAssistant)
+- [Crowdsourced Data Collection](CompetitionBundles/CrowdSourcedDataCollection)
 
 ### 2. [Sample Data](SampleDataset/)
 
