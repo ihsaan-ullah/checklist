@@ -1,5 +1,5 @@
 # NeurIPS 2024 Checklist
-This repository is entry point for the ***Adversarial Attack Competition against the NeurIPS 2024 Checklist Assistant***
+This repository is entry point for the ***NeurIPS 2024 Checklist Assistant*** and ***NeurIPS 2024 Crowdsourced Data Collection***
 
 ***
 
