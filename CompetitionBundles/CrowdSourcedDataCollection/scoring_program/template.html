@@ -84,12 +84,6 @@
     table {
         border-collapse: collapse;
     }
-    .table-summary {
-        width: 50%;
-    }
-    .table-score{
-        width: 30%;
-    }
     th, td {
         padding: 8px;
         text-align: left;
@@ -122,15 +116,15 @@
     .scroll-button {
         padding: 10px 20px;
         font-size: 14px;
-        background-color: #3571ff;
-        color: #fff;
-        border: none;
+        color: #212121;
+        border: 1px solid #212121;
         border-radius: 5px;
         cursor: pointer;
         text-decoration: none;
     }
     .scroll-button:hover {
-        background-color: #02309a;
+        background-color: #212121;
+        color: #fff;
     }
 </style>
 </head>
@@ -146,7 +140,7 @@
         <hr>
 
         <h2>Scores</h2>
-        <table class="table-scores">
+        <table>
             <tr>
               <td><strong>Correctness Score:</strong></td>
               <td><span class="score-label score-blue">{{ correctness_score }}</span></td>
@@ -168,7 +162,7 @@
         <hr>
 
         <h2>Review Summary</h2>
-        <table class="table-summary">
+        <table>
             <tr>
               <th>Question</th>
               <th>Score</th>
