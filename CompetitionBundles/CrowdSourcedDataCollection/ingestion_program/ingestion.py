@@ -231,7 +231,7 @@ class Ingestion():
             "Experimental settings/details",
             "Error bars",
             "Compute resources",
-            "NeruIPS code of ethics",
+            "NeurIPS code of ethics",
             "Impacts",
             "Safeguards",
             "Credits",
