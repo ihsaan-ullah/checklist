@@ -126,6 +126,19 @@
         background-color: #212121;
         color: #fff;
     }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
 </style>
 </head>
 <body>
@@ -173,7 +186,7 @@
                     <tr><td colspan="3"><strong>{{ paper.type }} Paper</strong></td></tr>
                 {% endif %}
                 {% for review in paper.reviews %}
-                <tr>
+                <tr id="summary-{{ review.question_id }}">
                     <td>{{ review.question_no }}. {{ review.question_title }}</td>
                     <td><span class="score-label score-{% if review.score == 1 %}green{% else %}red{% endif %}">{{ review.score }}</span></td>
                     <td><a href="#{{ review.question_id }}" class="scroll-button">Detailed Review</a></td>
@@ -199,6 +212,7 @@
                 <p><strong class="justification">Justification:</strong> {{ review.justification }}</p>
                 <p class="llm_review"><strong>Review:</strong> {{ review.review }}</p>
                 <p><strong>Score:</strong> {{ review.score }}</p>
+                <a class="move-to-top" href="#summary-{{ review.question_id }}">Jump to Summary</a>
             </div>
             {% endfor %}
         {% endfor %}

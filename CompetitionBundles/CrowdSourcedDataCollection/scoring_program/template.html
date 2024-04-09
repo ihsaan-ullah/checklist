@@ -126,32 +126,93 @@
         background-color: #212121;
         color: #fff;
     }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+    .case-genuine {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        background-color: #e3c8e6;
+        color: #5e1b57;
+        border: 1px solid #5e1b57;
+    }
+    .case-pair {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        background-color: #e6d3c8;
+        color: #5e311b;
+        border: 1px solid #5e311b;
+    }
+    .case-triplet {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        background-color: #c8e1e6;
+        color: #1b515e;
+        border: 1px solid #1b515e;
+    }
 </style>
 </head>
 <body>
 
 <div class="container">
 
-    <a class="button button-top" href="{{ google_form }}" target="_blank">Click to submit post submission survey</a>
+    <!-- Survey form -->
+    <!-- <a class="button button-top" href="{{ google_form }}" target="_blank">Click to submit post submission survey</a> -->
 
     <div class="content">
+        <!-- Paper Title -->
         <h1>{{ title }}</h1>
 
         <hr>
 
+        <!-- Case -->
+        {% if CASE == 1 %}
+            <h2><span class="case-genuine">Case-1: Genuine </span></h2>
+        {% elif CASE == 2 %}
+            <h2><span class="case-pair">Case-2: Pair </span></h2>
+        {% else %}
+        <h2><span class="case-triplet">Case-3: Triplet </span></h2>
+        {% endif %}
+
+        <hr>
+
+        <!-- Scores Summary -->
         <h2>Scores</h2>
         <table>
             <tr>
-              <td><strong>Correctness Score:</strong></td>
-              <td><span class="score-label score-blue">{{ correctness_score }}</span></td>
+              <td><strong>Correctness Score (Genuine):</strong></td>
+              <td><span class="score-label score-blue">{{ correctness_score_g }}</span></td>
             </tr>
             {% if triplet %}
+            <tr>
+                <td><strong>Correctness Score (Adversarial):</strong></td>
+                <td><span class="score-label score-blue">{{ correctness_score_a }}</span></td>
+              </tr>
+              <tr>
+                <td><strong>Correctness Score (Truth Adversarial):</strong></td>
+                <td><span class="score-label score-blue">{{ correctness_score_t }}</span></td>
+              </tr>
+            
             <tr>
                 <td><strong>Resilience Score:</strong></td>
                 <td><span class="score-label score-blue">{{ resilience_score }}</span></td>
             </tr>
-            {% endif %}
-            {% if triplet %}
             <tr>
                 <td><strong>Combined Score:</strong></td>
                 <td><span class="score-label score-blue">{{ combined_score }}</span></td>
@@ -161,6 +222,7 @@
 
         <hr>
 
+        <!-- Review summary -->
         <h2>Review Summary</h2>
         <table>
             <tr>
@@ -173,7 +235,7 @@
                     <tr><td colspan="3"><strong>{{ paper.type }} Paper</strong></td></tr>
                 {% endif %}
                 {% for review in paper.reviews %}
-                <tr>
+                <tr id="summary-{{ review.question_id }}">
                     <td>{{ review.question_no }}. {{ review.question_title }}</td>
                     <td><span class="score-label score-{% if review.score == 1 %}green{% else %}red{% endif %}">{{ review.score }}</span></td>
                     <td><a href="#{{ review.question_id }}" class="scroll-button">Detailed Review</a></td>
@@ -184,8 +246,8 @@
 
         <hr>
 
+        <!-- Detailed Review -->
         <h2>Detailed Review</h2>
-
         {% for paper in papers %}
             {% if triplet %}
                 <h3>{{ paper.type }} Paper</h2>
@@ -199,13 +261,15 @@
                 <p><strong class="justification">Justification:</strong> {{ review.justification }}</p>
                 <p class="llm_review"><strong>Review:</strong> {{ review.review }}</p>
                 <p><strong>Score:</strong> {{ review.score }}</p>
+                <a class="move-to-top" href="#summary-{{ review.question_id }}">Jump to Summary</a>
             </div>
             {% endfor %}
         {% endfor %}
         
     </div>
 
-    <a class="button button-bottom" href="{{ google_form }}" target="_blank">Click to submit post submission survey</a>
+    <!-- Survey form -->
+    <!-- <a class="button button-bottom" href="{{ google_form }}" target="_blank">Click to submit post submission survey</a> -->
 
 </div>
 

@@ -103,6 +103,7 @@ class Scoring:
         # load titles file
         with open(titles_file) as f:
             titles = json.load(f)
+        self.CASE = titles["CASE"]
 
         if os.path.exists(genuine_csv_file):
             self.genuine = {
@@ -285,10 +286,13 @@ class Scoring:
                 papers_for_template.append(paper_dict_for_template)
 
         data = {
+            "CASE": self.CASE,
             "triplet": self.genuine and self.adversarial and self.truth_adversarial,
             "title": self.genuine['title'],
             "google_form": f"https://docs.google.com/forms/d/e/1FAIpQLSfRIDkcXFbsOrR09j4qA1MlG4Rfir2lPD_u9YC4eqKBJ8tHkw/viewform?usp=pp_url&entry.1830873891={self.genuine['encoded_title']}",
-            "correctness_score": self.scores_dict["CG"],
+            "correctness_score_g": self.scores_dict["CG"],
+            "correctness_score_a": self.scores_dict["CA"],
+            "correctness_score_t": self.scores_dict["CT"],
             "resilience_score": self.scores_dict["R"],
             "combined_score": self.scores_dict["S"],
             "papers": papers_for_template

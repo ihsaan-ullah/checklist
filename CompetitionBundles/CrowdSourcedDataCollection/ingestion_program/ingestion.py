@@ -33,6 +33,10 @@ class Ingestion():
         self.start_time = None
         self.end_time = None
 
+        self.genuine = None
+        self.adversarial = None
+        self.truth_adversarial = None
+
     def start_timer(self):
         self.start_time = dt.now()
 
@@ -328,6 +332,8 @@ class Ingestion():
 
     def process_papers(self):
 
+        self.CASE = 0  # 1: Genuine, 2: Pair, 3: Triplet
+
         genuine_pdf, adversarial_pdf, truth_adversarial_pdf = None, None, None
 
         # -----
@@ -342,10 +348,19 @@ class Ingestion():
                 pdf_files.append(filename)
         num_submitted_papers = len(pdf_files)
 
-        if num_submitted_papers == 0:
-            raise FileNotFoundError("[-] No PDF file found in the submission directory")
-        elif num_submitted_papers == 1:
+        if num_submitted_papers == 1:
             genuine_pdf = pdf_files[0]
+            self.CASE = 1
+        elif num_submitted_papers == 2:
+            for file in pdf_files:
+                if file.lower().startswith('genuine_'):
+                    genuine_pdf = file
+                if file.lower().startswith('truth_adversarial_'):
+                    truth_adversarial_pdf = file
+            if genuine_pdf is None or truth_adversarial_pdf is None:
+                raise ValueError("[-] One or more PDF files have incorrect names. Make sure that they start with `genuine_` and `truth_adversarial_`")
+            print(f"[+] PDF files: {genuine_pdf} -- {truth_adversarial_pdf}")
+            self.CASE = 2
         elif num_submitted_papers == 3:
             for file in pdf_files:
                 if file.lower().startswith('genuine_'):
@@ -354,15 +369,21 @@ class Ingestion():
                     adversarial_pdf = file
                 if file.lower().startswith('truth_adversarial_'):
                     truth_adversarial_pdf = file
-
             if genuine_pdf is None or adversarial_pdf is None or truth_adversarial_pdf is None:
                 raise ValueError("[-] One or more PDF files have incorrect names. Make sure that they start with `genuine_`, `adversarial_` and `truth_adversarial_`")
-
             print(f"[+] PDF files: {genuine_pdf} -- {adversarial_pdf} -- {truth_adversarial_pdf}")
+            self.CASE = 3
         else:
-            raise ValueError("[-] Please check that you either submit one PDF (Genuine) or submit three PDFs (Genuine, Adversarial, Truth Adversarial)")
+            raise ValueError("[-] Please check that your submission has: one PDF (Genuine) or two PDFs (Genuine, Truth Adversarial) or three PDFs (Genuine, Adversarial, Truth Adversarial)")
 
         print("[✔]")
+
+        if self.CASE == 1:
+            print(f"[*] Case-{self.CASE}: Genuine")
+        elif self.CASE == 2:
+            print(f"[*] Case-{self.CASE}: Pair")
+        else:
+            print(f"[*] Case-{self.CASE}: Triplet")
 
         # -----
         # Load text from PDF
@@ -391,14 +412,26 @@ class Ingestion():
         print("[✔]")
 
         # -----
+        # Create Adversarial Paper
+        # -----
+        if self.CASE == 2:
+            print("[*] Creating Adversarial paper from Genuine and Truth Adversarial")
+            self.adversarial = {
+                "title": self.genuine["title"],
+                "paper": self.truth_adversarial["paper"],
+                "checklist": self.genuine["checklist"]
+            }
+            print("[✔]")
+
+        # -----
         # Parse Checklist
         # -----
         print("[*] Parsing checklist from text")
-        if genuine_pdf:
+        if self.genuine:
             self.genuine["checklist_df"] = self.parse_checklist(self.genuine["checklist"])
-        if adversarial_pdf:
+        if self.adversarial:
             self.adversarial["checklist_df"] = self.parse_checklist(self.adversarial["checklist"])
-        if truth_adversarial_pdf:
+        if self.truth_adversarial:
             self.truth_adversarial["checklist_df"] = self.parse_checklist(self.truth_adversarial["checklist"])
         print("[✔]")
 
@@ -406,13 +439,13 @@ class Ingestion():
         # Incomplete answers
         # -----
         print("[*] Checking incomplete answers")
-        if genuine_pdf:
+        if self.genuine:
             print("[*] Genuine Paper")
             self.check_incomplete_questions(self.genuine["checklist_df"])
-        if adversarial_pdf:
+        if self.adversarial:
             print("[*] Adversarial Paper")
             self.check_incomplete_questions(self.adversarial["checklist_df"])
-        if truth_adversarial_pdf:
+        if self.truth_adversarial:
             print("[*] Truth Adversarial Paper")
             self.check_incomplete_questions(self.truth_adversarial["checklist_df"])
         print("[✔]")
@@ -421,13 +454,13 @@ class Ingestion():
         # Get GPT Review
         # -----
         print("[*] Asking GPT to review the papers checklist")
-        if genuine_pdf:
+        if self.genuine:
             print("[*] Genuine Paper")
             self.genuine["checklist_df"] = self.get_LLM_feedback(self.genuine["paper"], self.genuine["checklist_df"])
-        if adversarial_pdf:
+        if self.adversarial:
             print("[*] Adversarial Paper")
             self.adversarial["checklist_df"] = self.get_LLM_feedback(self.adversarial["paper"], self.adversarial["checklist_df"])
-        if truth_adversarial_pdf:
+        if self.truth_adversarial:
             print("[*] Truth Adversarial Paper")
             self.truth_adversarial["checklist_df"] = self.get_LLM_feedback(self.truth_adversarial["paper"], self.truth_adversarial["checklist_df"])
         print("[✔]")
@@ -452,7 +485,7 @@ class Ingestion():
 
     def save_titles(self):
         print("[*] Saving titles")
-        titles_dict = {}
+        titles_dict = {"CASE": self.CASE}
         if self.genuine:
             titles_dict["genuine"] = self.genuine["title"]
         if self.adversarial:
