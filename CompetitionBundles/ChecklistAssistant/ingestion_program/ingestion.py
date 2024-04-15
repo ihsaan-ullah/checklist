@@ -265,6 +265,7 @@ class Ingestion():
 
                 temp_df = pd.DataFrame([{'Question': question, 'Question_Title': checklist_question_titles[question_index], 'Answer': answer, 'Justification': justification, 'Guidelines': guidelines}])
                 checklist_df = pd.concat([checklist_df, temp_df], ignore_index=True)
+
             return checklist_df
 
         except Exception as e:
@@ -445,6 +446,9 @@ class Ingestion():
 
         checklist_file = os.path.join(self.output_dir, f"{paper_type}_checklist.csv")
         checklist_df.replace('NA', 'Not Applicable', inplace=True)
+        checklist_df.replace('N/A', 'Not Applicable', inplace=True)
+        checklist_df.replace('[NA]', 'Not Applicable', inplace=True)
+        checklist_df.replace('[N/A]', 'Not Applicable', inplace=True)
         checklist_df.to_csv(checklist_file, index=False)
 
     def save_checklists(self):
