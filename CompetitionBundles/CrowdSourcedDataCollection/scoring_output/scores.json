@@ -1,5 +1,6 @@
 {
-    "S": 0.06,
+    "human_advarsary_score": 0.06,
+    "llm_score": 0.08,
     "R": 0.53,
     "CG": 0.53,
     "CA": 0.6,

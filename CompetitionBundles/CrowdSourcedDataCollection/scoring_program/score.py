@@ -15,6 +15,10 @@ from jinja2 import Template
 # True when running on Codabench
 CODABENCH = False
 
+GENUINE = "Genuine"
+ADVERSARIAL = "Adversarial"
+TRUTH_ADVERSARIAL = "Truth_Adversarial"
+
 
 class Scoring:
     def __init__(self):
@@ -110,7 +114,7 @@ class Scoring:
                 "checklist_df": self.read_csv(genuine_csv_file),
                 "title": titles["genuine"],
                 "encoded_title": base64.b64encode(titles["genuine"].encode()).decode('utf-8'),
-                "type": "genuine"
+                "type": GENUINE
             }
 
         if os.path.exists(adversarial_csv_file):
@@ -118,7 +122,7 @@ class Scoring:
                 "checklist_df": self.read_csv(adversarial_csv_file),
                 "title": titles["adversarial"],
                 "encoded_title": base64.b64encode(titles["adversarial"].encode()).decode('utf-8'),
-                "type": "adversarial"
+                "type": ADVERSARIAL
             }
 
         if os.path.exists(truth_adversarial_csv_file):
@@ -126,81 +130,111 @@ class Scoring:
                 "checklist_df": self.read_csv(truth_adversarial_csv_file),
                 "title": titles["truth_adversarial"],
                 "encoded_title": base64.b64encode(titles["truth_adversarial"].encode()).decode('utf-8'),
-                "type": "truth_adversarial"
+                "type": TRUTH_ADVERSARIAL
             }
 
         print("[✔]")
 
-    def compute_correctness_score(self, paper_type, checklist_df):
-        print(f"[*] Computing Correctness Score for {paper_type}")
+    def compute_correctness_score(self):
+        print("[*] Computing Correctness Scores")
 
-        scores = []
-        llm_correctness_scores = checklist_df["Correctness_Score"].tolist()
-        for index, row in checklist_df.iterrows():
-            if row["Answer"] in ["TODO", "TODO", "Not Found"]:
-                scores.append(0)
+        CG, CA, CT = [], [], []
+
+        if self.genuine:
+            G_llm_correctness_scores = self.genuine["checklist_df"]["Correctness_Score"].tolist()
+
+        if self.adversarial:
+            A_llm_correctness_scores = self.adversarial["checklist_df"]["Correctness_Score"].tolist()
+
+        if self.truth_adversarial:
+            T_llm_correctness_scores = self.truth_adversarial["checklist_df"]["Correctness_Score"].tolist()
+
+        for index, g_row in self.genuine["checklist_df"].iterrows():
+
+            if self.adversarial and self.truth_adversarial:
+                a_row = self.adversarial["checklist_df"].loc[index]
+                t_row = self.truth_adversarial["checklist_df"].loc[index]
+
+            if g_row["Answer"] not in ["TODO", "[TODO]", "Not Found"]:
+                CG.append(G_llm_correctness_scores[index])
             else:
-                scores.append(llm_correctness_scores[index])
-        total_correct_answers = sum(scores)
-        total_answers = len(checklist_df)
+                CG.append(0)
 
-        correctness_rate = total_correct_answers / total_answers
-        correctness_rate = round(correctness_rate, 2)
+            if self.adversarial and self.truth_adversarial:
+                if a_row["Answer"] not in ["TODO", "[TODO]", "Not Found"]:
+                    CA.append(A_llm_correctness_scores[index])
+                else:
+                    if t_row["Answer"] not in ["TODO", "[TODO]", "Not Found"]:
+                        CA.append(0)
 
-        print(f"[+] Correctness Score ({paper_type}): {correctness_rate}")
+                if t_row["Answer"] not in ["TODO", "[TODO]", "Not Found"]:
+                    CT.append(T_llm_correctness_scores[index])
 
-        return correctness_rate
+        CG = round(sum(CG)/len(CG), 2)
+        print(f"[+] CG: {CG}")
+
+        if self.adversarial and self.truth_adversarial:
+            CA = round(sum(CA)/len(CA), 2)
+            CT = round(sum(CT)/len(CT), 2)
+            print(f"[+] CA: {CA}")
+            print(f"[+] CT: {CT}")
+        else:
+            CA = 0
+            CT = 0
+
+        return CG, CA, CT
 
     def compute_scores(self):
 
+        # Correctness Scores
         print("[*] Computing Correctness Scores")
-        if self.genuine:
-            self.genuine["correctness_score"] = self.compute_correctness_score(self.genuine["type"], self.genuine["checklist_df"])
-        if self.adversarial:
-            self.adversarial["correctness_score"] = self.compute_correctness_score(self.adversarial["type"], self.adversarial["checklist_df"])
-        if self.truth_adversarial:
-            self.truth_adversarial["correctness_score"] = self.compute_correctness_score(self.truth_adversarial["type"], self.truth_adversarial["checklist_df"])
+        CG, CA, CT = self.compute_correctness_score()
+        self.genuine["correctness_score"] = CG
+        if self.adversarial and self.truth_adversarial:
+            self.adversarial["correctness_score"] = CA
+            self.truth_adversarial["correctness_score"] = CT
 
-        self.resilience_score = None
+        # Resilience Score
+        R = 1
         if self.adversarial and self.truth_adversarial:
             print("[*] Computing Resilience Score")
             g_scores = []
             c_scores = []
-            n = len(self.genuine["checklist_df"])
             for (_, geniune_row), (_, adversarial_row), (_, truth_adversarial_row) in zip(self.genuine["checklist_df"].iterrows(), self.adversarial["checklist_df"].iterrows(), self.truth_adversarial["checklist_df"].iterrows()):
-                if adversarial_row["Answer"] == truth_adversarial_row["Answer"]:
-                    g_scores.append(1)
-                else:
-                    g_scores.append(0)
-                c_scores.append(adversarial_row["Correctness_Score"])
-            self.resilience_score = 0
+                if truth_adversarial_row["Answer"] not in ["TODO", "[TODO]", "Not Found"]:
+                    if adversarial_row["Answer"] == truth_adversarial_row["Answer"]:
+                        g_scores.append(1)
+                    else:
+                        g_scores.append(0)
+                    c_scores.append(adversarial_row["Correctness_Score"])
+            R = 0
+            n = len(c_scores)
             for ci, gi in zip(c_scores, g_scores):
                 if ci == gi:
-                    self.resilience_score += 1
-            self.resilience_score = round(self.resilience_score/n, 2)
+                    R += 1
+            R = round(R/n, 2)
 
-            print(f"[+] Resiliance Score: {self.resilience_score}")
+            print(f"[+] Resiliance Score: {R}")
 
-        CG, CA, CT, R = 0, 0, 0, 1
-        if self.genuine:
-            CG = self.genuine["correctness_score"]
-        if self.adversarial:
-            CA = self.adversarial["correctness_score"]
-        if self.truth_adversarial:
-            CT = self.truth_adversarial["correctness_score"]
-        if self.resilience_score:
-            R = self.resilience_score
+        human_advarsary_score = 0
+        llm_score = 0
 
-        self.combined_score = 0
-        if self.genuine and self.adversarial and self.truth_adversarial:
-            print("[*] Computing Combined Score")
-            self.combined_score = CG * (CA * (1-R)) * CT
-            self.combined_score = round(self.combined_score, 2)
+        if self.adversarial and self.truth_adversarial:
+            # Human Adversary Score 
+            print("[*] Computing Human Adversary Score")
+            human_advarsary_score = CG * CT * (1 - R) * CA
+            human_advarsary_score = round(human_advarsary_score, 2)
+            print(f"[+] Human Adversary Score: {human_advarsary_score}")
 
-            print(f"[+] Combined Score: {self.combined_score}")
+            # LLM Score
+            print("[*] Computing LLM Score")
+            llm_score = CG * CT * (1 - CA)
+            llm_score = round(llm_score, 2)
+            print(f"[+] Resiliance Score: {llm_score}")
 
         self.scores_dict = {
-            "S": self.combined_score,
+            "human_advarsary_score": human_advarsary_score,
+            "llm_score": llm_score,
             "R": R,
             "CG": CG,
             "CA": CA,
@@ -263,7 +297,7 @@ class Scoring:
 
         # Prepare data
         papers_for_template = []
-        paper_types = ["Genuine", "Adversarial", "Truth Adversarial"]
+        paper_types = [GENUINE, ADVERSARIAL, TRUTH_ADVERSARIAL]
         for paper_index, paper_dict in enumerate([self.genuine, self.adversarial, self.truth_adversarial]):
             if paper_dict:
                 paper_dict_for_template = {
@@ -294,7 +328,8 @@ class Scoring:
             "correctness_score_a": self.scores_dict["CA"],
             "correctness_score_t": self.scores_dict["CT"],
             "resilience_score": self.scores_dict["R"],
-            "combined_score": self.scores_dict["S"],
+            "human_advarsary_score": self.scores_dict["human_advarsary_score"],
+            "llm_score": self.scores_dict["llm_score"],
             "papers": papers_for_template
         }
 
