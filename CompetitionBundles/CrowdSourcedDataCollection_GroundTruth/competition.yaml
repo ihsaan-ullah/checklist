@@ -1,0 +1,55 @@
+# NeurIPS'24 Checklist Assistant yaml file
+# Created by: Ihsan Ullah
+# Created on: April 21, 2024
+
+version: 2
+title: NeurIPS'24 Checklist Assistant - DEMO
+description: NeurIPS'24 Checklist Assistant - DEMO
+image: logo.png
+registration_auto_approve: False   
+enable_detailed_results: True
+docker_image: ihsaanullah/auto_survey:latest
+
+
+terms: pages/terms.md
+pages:  
+  - title: Overview
+    file: pages/overview.md
+  - title: Instructions
+    file: pages/instructions.md
+  - title: Credits
+    file: pages/credits.md
+  - title: Terms
+    file: pages/terms.md
+  
+
+phases:
+  - index: 0
+    name: Checklist
+    description: Checklist Phase
+    start: 2024-04-21
+    end: 2024-05-21
+    tasks:
+      - 0
+
+
+tasks:
+  - index: 0
+    name: Crowdsourced Data Demo 
+    description: Crowdsourced Data Demo   
+    scoring_program: scoring_program/
+    ingestion_program: ingestion_program/
+
+
+leaderboards:
+  - index: 0 
+    title: Results
+    key: main
+    submission_rule: "Add_And_Delete"
+    columns:
+      - index: 0
+        title: LLM Score
+        key: llm_score
+      - index: 1
+        title: Paper Quality Score
+        key: paper_quality_score
