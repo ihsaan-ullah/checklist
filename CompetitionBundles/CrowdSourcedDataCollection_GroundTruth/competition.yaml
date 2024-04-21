@@ -3,8 +3,8 @@
 # Created on: April 21, 2024
 
 version: 2
-title: NeurIPS'24 Checklist Assistant - DEMO
-description: NeurIPS'24 Checklist Assistant - DEMO
+title: NeurIPS'24 Checklist Assistant - Ground Truth DEMO
+description: NeurIPS'24 Checklist Assistant - Ground Truth DEMO
 image: logo.png
 registration_auto_approve: False   
 enable_detailed_results: True

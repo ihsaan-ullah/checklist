@@ -3,7 +3,7 @@ FROM python:3.9-slim-buster
 RUN apt-get update && apt-get install -y python3 python3-pip
 # Install Python packages
 RUN pip3 install --upgrade pip && \
-    pip3 install numpy pandas matplotlib beautifulsoup4 openai PyMuPDF python-dotenv jinja2 google-ai-generativelanguage google-generativeai
+    pip3 install numpy pandas matplotlib beautifulsoup4 openai PyMuPDF python-dotenv jinja2 google-ai-generativelanguage google-generativeai pyyaml
 
 # Set the default command to Python3
 CMD ["python3"]
