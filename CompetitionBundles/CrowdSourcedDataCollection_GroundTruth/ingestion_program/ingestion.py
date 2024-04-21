@@ -327,7 +327,6 @@ class Ingestion():
             if skip_question:
                 print(f"[!] Skipping Question # {question_number}")
                 continue
-
             q = row["Question"]
             a = row["Answer"]
             j = row["Justification"]
@@ -435,7 +434,7 @@ class Ingestion():
         # -----
         # Get GPT Review
         # -----
-        print("[*] Asking GPT to review the papers checklist")
+        print("[*] Reviewing the paper's checklist")
         self.paper["checklist_df"] = self.get_LLM_feedback(self.paper["paper"], self.paper["checklist_df"], self.paper["ground_truth"])
         print("[✔]")
 
