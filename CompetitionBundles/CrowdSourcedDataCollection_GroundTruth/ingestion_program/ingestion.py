@@ -20,7 +20,8 @@ from constants import API_KEY
 # Settings
 # ------------------------------------------
 # True when running on Codabench
-CODABENCH = False
+CODABENCH = True
+SHOW_PROMPT = True
 
 
 # ------------------------------------------
@@ -333,14 +334,19 @@ class Ingestion():
             g = row["Guidelines"]
 
             paper_prompt = f"Paper Content: {paper}\nQuestion from Checklist: {q}\nAuthor's Answer: {a}\nAuthor's Justification for the Answer: {j}\nInitial Guidelines Provided to Authors: {g}\n\n"
+            paper_prompt_for_print = f"Paper Content: **PAPER**\nQuestion from Checklist: {q}\nAuthor's Answer: {a}\nAuthor's Justification for the Answer: {j}\nInitial Guidelines Provided to Authors: {g}\n\n"
             discrepencies_prompt = "Discrepancies: Are there any discrepancies between the justification provided by the authors and the actual paper content? If yes, describe them. Note that No or NA/Not Applicable answers provided by authors are acceptable as long as their justification is consistent with the paper content.\n\n"
             feedback_prompt = "Feedback: Based on the guidelines and the content of the paper, offer detailed and actionable feedback to enhance the paper’s quality.\n\n"
-            score_prompt = "Score:\n0 if significant issues need addressing,\n1 if the paper meets NeurIPS's highest quality standards,\n0.5 if the decision is unclear. This score will guide the authors on the necessity and importance of your feedback. Make sure that score is shown in a new line in this format `Score: score_value` and there is no content after the score."
+            score_prompt = "Score:\n0 if significant issues need addressing,\n1 if the paper meets NeurIPS's highest quality standards,\n0.5 if the decision is unclear.\nThis score will guide the authors on the necessity and importance of your feedback. Make sure that score is shown in a new line in this format `Score: score_value` and there is no content after the score."
 
             user_prompt = {
                 "role": "user",
                 "content": paper_prompt + discrepencies_prompt + feedback_prompt + score_prompt
             }
+
+            if SHOW_PROMPT:
+                print(f"------------\nPROMPT # {question_number}:\n------------")
+                print(f"{system_prompt['content']}{paper_prompt_for_print}{discrepencies_prompt}{feedback_prompt}{score_prompt}")
 
             messages = [system_prompt, user_prompt]
             chat_completion = client.chat.completions.create(

@@ -453,7 +453,7 @@ class Ingestion():
         # -----
         # Get GPT Review
         # -----
-        print("[*] Asking GPT to review the papers checklist")
+        print("[*] Reviewing the paper's checklist")
         if self.genuine:
             print("[*] Genuine Paper")
             self.genuine["checklist_df"] = self.get_LLM_feedback(self.genuine["paper"], self.genuine["checklist_df"])

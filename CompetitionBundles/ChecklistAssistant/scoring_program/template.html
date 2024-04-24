@@ -208,11 +208,11 @@
             {% for review in paper.reviews %}
             <div class="review" id="{{ review.question_id }}">
                 <p><strong class="question">Question # {{ review.question_no }}:</strong> {{ review.question }}</p>
-                <p><strong class="answer">Answer:</strong> {{ review.answer }}</p>
-                <p><strong class="justification">Justification:</strong> {{ review.justification }}</p>
+                <p><strong class="answer">Author's answer:</strong> {{ review.answer }}</p>
+                <p><strong class="justification">Author's justification:</strong> {{ review.justification }}</p>
                 <p class="llm_review"><strong>Review:</strong> {{ review.review }}</p>
                 <p><strong>Score:</strong> {{ review.score }}</p>
-                <a class="move-to-top" href="#summary-{{ review.question_id }}">Jump to Summary</a>
+                <a class="move-to-top" href="#summary-{{ review.question_id }}">↑ Back to summary</a>
             </div>
             {% endfor %}
         {% endfor %}

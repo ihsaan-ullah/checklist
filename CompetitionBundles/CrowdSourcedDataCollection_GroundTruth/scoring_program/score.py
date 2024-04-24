@@ -13,7 +13,7 @@ from jinja2 import Template
 # Settings
 # ------------------------------------------
 # True when running on Codabench
-CODABENCH = False
+CODABENCH = True
 
 
 class Scoring:
@@ -291,4 +291,5 @@ if __name__ == "__main__":
 
     print("\n----------------------------------------------")
     print("[✔] Scoring Program executed successfully!")
+    print("[✔] You can check the detailed review by clicking the `eye` icon in front of your submission!")
     print("----------------------------------------------\n\n")
