@@ -2,6 +2,7 @@
 # Imports
 # ------------------------------------------
 import os
+import re
 import sys
 import json
 import base64
@@ -159,50 +160,68 @@ class Scoring:
         }
 
     def convert_text_to_html(self, text):
-        text = text.replace('**', '')
-        html_output = ""
-        in_bold = False
-        in_list = False
+        try:
+            html_output = ""
+            is_list = False
+            list_type = None
+            sublist_level = 0
 
-        # Split the text into lines to detect list items
-        lines = text.split('\n')
+            # Split the text into lines
+            lines = text.split('\n')
 
-        # Iterate through each line in the text
-        for line in lines:
-            # Detect if the line starts with a number or a bullet point
-            if line.strip().startswith('*'):
-                # If not already in list mode, start a new unordered list
-                if not in_list:
-                    html_output += "<ul>"
-                    in_list = True
-                # Add the list item
-                html_output += "<li>" + line.strip().lstrip('*').strip() + "</li>"
-            else:
-                # If in list mode and the line is empty or doesn't start with a bullet point,
-                # close the unordered list
-                if in_list:
-                    html_output += "</ul>"
-                    in_list = False
+            # Iterate through each line in the text
+            for line in lines:
 
-                if line.strip().startswith('**') and line.strip().endswith('**'):
-                    # Toggle bold mode for whole line if it starts and ends with **
-                    in_bold = not in_bold
-                    if in_bold:
-                        html_output += "<strong>" + line.strip().lstrip('*').rstrip('*') + "</strong>"
-                    else:
-                        html_output += line.strip().lstrip('*').rstrip('*')
+                if line.strip() in ["**", "#", "##", "###"]:
+                    continue
+
+                if '**' in line:
+                    line = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', line)
+
+                if line.startswith('# '):
+                    html_output += f"<h3>{line.strip()[2:]}</h3>"
+                elif line.startswith('## '):
+                    html_output += f"<h3>{line.strip()[3:]}</h3>"
+                elif line.startswith('### '):
+                    html_output += f"<h3>{line.strip()[4:]}</h3>"
+                elif line.startswith('#### '):
+                    html_output += f"<h4>{line.strip()[5:]}</h4>"
+                elif line.startswith('- ') or line.startswith('* '):
+                    if not is_list:
+                        is_list = True
+                        list_type = "ul"
+                        html_output += f"<{list_type}>"
+                    if sublist_level > 0:
+                        html_output += "<ul>"
+                        sublist_level += 1
+                    html_output += f"<li>{line.strip()[2:]}</li>"
+                elif re.match(r'^\d+\.', line.strip()):
+                    if not is_list:
+                        is_list = True
+                        list_type = "ol"
+                        html_output += f"<{list_type}>"
+                    if sublist_level > 0:
+                        html_output += "<ol>"
+                        sublist_level += 1
+                    html_output += f"<li>{line.strip()[line.find('.')+1:]}</li>"
                 else:
-                    # Convert newline to <br> tag
+                    if is_list:
+                        if sublist_level > 0:
+                            html_output += "</ul>"
+                            sublist_level -= 1
+                        html_output += f"</{list_type}>"
+                        is_list = False
+                        list_type = None
                     html_output += line.strip()
 
-            # Add line break between lines
-            html_output += "<br>"
+            if is_list:
+                if sublist_level > 0:
+                    html_output += "</ul>" * sublist_level
+                html_output += f"</{list_type}>"
 
-        # If still in list mode at the end, close the unordered list
-        if in_list:
-            html_output += "</ul>"
-
-        return html_output
+            return html_output
+        except:
+            return text
 
     def write_detailed_results(self):
         print("[*] Writing detailed result")
@@ -219,6 +238,7 @@ class Scoring:
         reviews = []
         ground_truth = self.paper["ground_truth"]
         for index, row in self.paper["checklist_df"].iterrows():
+
             question_number = index + 1
             skip_question = ground_truth is not None and question_number not in ground_truth
             if skip_question:

@@ -5,3 +5,5 @@ __pycache__
 constants.py
 CompetitionBundles/ChecklistAssistant/sample_code_submission/Other/*
 CompetitionBundles/ChecklistAssistant/results/*
+CompetitionBundles/CrowdSourcedDataCollection_GroundTruth/debug.ipynb
+CompetitionBundles/CrowdSourcedDataCollection_GroundTruth/results/*

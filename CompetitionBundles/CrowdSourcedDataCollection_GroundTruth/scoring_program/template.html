@@ -83,6 +83,8 @@
         color: #000;
         padding: 20px;
         border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
     .llm_review-red {
         background-color: #eacfcf;
@@ -227,7 +229,7 @@
                 <p><strong class="justification">Author's justification:</strong> {{ review.justification }}</p>
             </div>
             
-            <p class="llm_review llm_review-{% if review.score == 1 %}green{% elif review.score == 0.5 %}orange{% else %}red{% endif %} "><strong>LLM Review:</strong><br> {{ review.review }}</p>
+            <div class="llm_review llm_review-{% if review.score == 1 %}green{% elif review.score == 0.5 %}orange{% else %}red{% endif %} "><strong>LLM Review:</strong><br> {{ review.review }}</div>
             <a class="move-to-top" href="#summary-{{ review.question_id }}">↑ Back to summary</a>
         </div>
         {% endfor %}

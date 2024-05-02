@@ -6,14 +6,17 @@ import os
 import re
 import sys
 import fitz
+import time
 import json
 import yaml
 import warnings
 import pandas as pd
 from datetime import datetime as dt
 from openai import OpenAI
+import google.generativeai as genai
 warnings.filterwarnings("ignore")
-from constants import API_KEY
+from checklist_constants import checklist_data
+from constants import GPT_KEY, GEMINI_KEY
 
 
 # ------------------------------------------
@@ -21,7 +24,7 @@ from constants import API_KEY
 # ------------------------------------------
 # True when running on Codabench
 CODABENCH = True
-SHOW_PROMPT = True
+USE_GEMINI = True
 
 
 # ------------------------------------------
@@ -227,45 +230,18 @@ class Ingestion():
 
     def parse_checklist(self, checklist):
 
-        checklist_questions = [
-            "Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?",
-            "Does the paper discuss the limitations of the work performed by the authors?",
-            "For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?",
-            "Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?",
-            "Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?",
-            "Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?",
-            "Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?",
-            "For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?",
-            "Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?",
-            "Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?",
-            "Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?",
-            "Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?",
-            "Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?",
-            "For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?",
-            "Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?"
-        ]
-
-        checklist_question_titles = [
-            "Claims",
-            "Limitations",
-            "Theoritical assumptions and proofs",
-            "Experiments reproducibility",
-            "Code and data accessibility",
-            "Experimental settings/details",
-            "Error bars",
-            "Compute resources",
-            "NeurIPS code of ethics",
-            "Impacts",
-            "Safeguards",
-            "Credits",
-            "Documentation",
-            "Human subjects",
-            "Risks"
-        ]
+        general_guidelines = """If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While "Yes" is generally preferable to "No", it is perfectly acceptable to answer "No" provided a proper justification is given (e.g., "error bars are not reported because it would be too computationally expensive" or "we were unable to find the license for the dataset we used").
+"""
 
         checklist_df = pd.DataFrame(columns=['Question', 'Question_Title', 'Answer', 'Justification', 'Guidelines', 'Review', 'Score'])
         try:
-            for question_index, question in enumerate(checklist_questions):
+            for question_index, checklist_item in enumerate(checklist_data):
+
+                question_title = checklist_item["question_title"]
+                question = checklist_item["question"]
+                question_guidelines = checklist_item["guidelines"]
+
                 question_regex = re.escape(question)
                 pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+(.*?))(?:Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
 
@@ -273,19 +249,26 @@ class Ingestion():
                 if mtch:
                     answer = mtch.group(1).strip()
                     justification = mtch.group(2).strip() if mtch.group(2).strip() else None
-                    guidelines = mtch.group(3).strip() if mtch.group(3).strip() else None
-                    if guidelines:
-                        guidelines = self.clean_guidelines(guidelines)
+                    # guidelines = mtch.group(3).strip() if mtch.group(3).strip() else None
+                    # if guidelines:
+                    #     guidelines = self.clean_guidelines(guidelines)
 
                     if justification is not None and justification.isdigit():
                         justification = None
 
                 else:
-                    answer, justification, guidelines = "Not Found", "Not Found", "Not Found"
+                    answer, justification = "Not Found", "Not Found"
 
-                temp_df = pd.DataFrame([{'Question': question, 'Question_Title': checklist_question_titles[question_index], 'Answer': answer, 'Justification': justification, 'Guidelines': guidelines}])
+                temp_df = pd.DataFrame([
+                    {
+                        'Question': question,
+                        'Question_Title': question_title,
+                        'Answer': answer,
+                        'Justification': justification,
+                        'Guidelines': general_guidelines + question_guidelines}
+                ])
+
                 checklist_df = pd.concat([checklist_df, temp_df], ignore_index=True)
-
             return checklist_df
 
         except Exception as e:
@@ -298,27 +281,28 @@ class Ingestion():
 
     def get_LLM_feedback(self, paper, checklist_df, ground_truth):
 
-        client = OpenAI(
-            api_key=API_KEY,
-        )
-
-        model = "gpt-4-turbo-preview"
         max_tokens = 1000
         temperature = 1
         top_p = 1
         n = 1
 
-        """
-        You are a NeuIPS reviewer and you are verifying that the NeurIPS checklist answers to the paper fulfill the guidelines and are answered in a correct and complete manner.  
-        Based on the content of this paper, identify any discrepancies between the authors' justification for specific questions and the actual paper content. 
-        It's acceptable to respond "No" or "Not Applicable" with valid reasoning. Afterwards, provide detailed, actionable feedback based on the initial guidelines provided to the authors, aiming to improve the paper's quality and adherence to NeurIPS standards. 
-        Conclude your review with a score in a separate line: 0 if significant issues need addressing, 1 if the submission meets NeurIPS's highest quality standards, or 0.5 if the decision is unclear. This score will guide the authors on the necessity and importance of your feedback.
-        """
-
-        system_prompt = {
-            "role": "system",
-            "content":  "As a reviewer for NeurIPS, you are tasked with ensuring that the responses provided in the NeurIPS checklist for a submitted paper adhere to the conference's guidelines. Your responsibilities include verifying the accuracy and completeness of each response in relation to the content of the paper. If discrepancies or inconsistencies are identified, you should provide detailed, constructive feedback to improve the paper’s adherence to NeurIPS standards. Finally, conclude your review by assigning a final score based on the paper's alignment with the guidelines."
-        }
+        if USE_GEMINI:
+            model = "models/gemini-1.5-pro-latest"
+            genai.configure(api_key=GEMINI_KEY)
+            client = genai.GenerativeModel(
+                model,
+                generation_config=genai.GenerationConfig(
+                    temperature=temperature,
+                    top_p=top_p,
+                    max_output_tokens=max_tokens,
+                    candidate_count=n,
+                ),
+            )
+        else:
+            model = "gpt-4-turbo-preview"
+            client = OpenAI(
+                api_key=GPT_KEY,
+            )
 
         for index, row in checklist_df.iterrows():
 
@@ -333,40 +317,65 @@ class Ingestion():
             j = row["Justification"]
             g = row["Guidelines"]
 
-            paper_prompt = f"Paper Content: {paper}\nQuestion from Checklist: {q}\nAuthor's Answer: {a}\nAuthor's Justification for the Answer: {j}\nInitial Guidelines Provided to Authors: {g}\n\n"
-            paper_prompt_for_print = f"Paper Content: **PAPER**\nQuestion from Checklist: {q}\nAuthor's Answer: {a}\nAuthor's Justification for the Answer: {j}\nInitial Guidelines Provided to Authors: {g}\n\n"
-            discrepencies_prompt = "Discrepancies: Are there any discrepancies between the justification provided by the authors and the actual paper content? If yes, describe them. Note that No or NA/Not Applicable answers provided by authors are acceptable as long as their justification is consistent with the paper content.\n\n"
-            feedback_prompt = "Feedback: Based on the guidelines and the content of the paper, offer detailed and actionable feedback to enhance the paper’s quality.\n\n"
-            score_prompt = "Score:\n0 if significant issues need addressing,\n1 if the paper meets NeurIPS's highest quality standards,\n0.5 if the decision is unclear.\nThis score will guide the authors on the necessity and importance of your feedback. Make sure that score is shown in a new line in this format `Score: score_value` and there is no content after the score."
+            # PROMPT 3.5
+            paper_prompt = """
+You are provided with a “Paper” to be submitted to the NeurIPS conference. You are assisting the authors in preparing their “Answer” to one checklist “Question”. Please examine carefully the proposed author's “Answer” and the proposed author's “Justification” provided, and identify any discrepancies with the actual ”Paper” content, for this specific “Question”, taking into account the “Guidelines” provided to authors. Afterwards, provide itemized, actionable feedback, based on the “Guidelines”, aiming to improve the “Paper” quality. Concentrate on a few of the most significant improvements that can be made, and write in terse technical English.
+Conclude your review with a score for this specific “Question”, in a separate line:
+1: The paper is acceptable without carrying out the proposed improvements.
+0.5: The recommended improvements should be made to enhance the likelihood of acceptance, though no fatal flaws exist.
+0: The issues identified are critical and must be resolved, as they could almost certainly cause rejection if unaddressed.
+Make sure that the score is shown in a new line in this format “Score: score_value” and there is no content after the score.
+Question: {q}
+Answer: {a}
+Justification: {j}
+Guidelines: {g}
+Paper: {paper}
 
-            user_prompt = {
-                "role": "user",
-                "content": paper_prompt + discrepencies_prompt + feedback_prompt + score_prompt
-            }
+"""
 
-            if SHOW_PROMPT:
-                print(f"------------\nPROMPT # {question_number}:\n------------")
-                print(f"{system_prompt['content']}{paper_prompt_for_print}{discrepencies_prompt}{feedback_prompt}{score_prompt}")
+            paper_prompt = paper_prompt.replace("{q}", q)
+            paper_prompt = paper_prompt.replace("{a}", a)
+            paper_prompt = paper_prompt.replace("{j}", j)
+            paper_prompt = paper_prompt.replace("{g}", g)
+            paper_prompt = paper_prompt.replace("{paper}", paper)
 
-            messages = [system_prompt, user_prompt]
-            chat_completion = client.chat.completions.create(
-                model=model,
-                messages=messages,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                n=n
-            )
+            if USE_GEMINI:
+                messages = [paper_prompt]
+                response = client.generate_content(contents=messages)
+                llm_review = response.text
+                time.sleep(120)
+            else:
+                user_prompt = {
+                    "role": "user",
+                    "content": paper_prompt
+                }
+                messages = [user_prompt]
+                chat_completion = client.chat.completions.create(
+                    model=model,
+                    messages=messages,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    top_p=top_p,
+                    n=n
+                )
 
-            gpt_review = chat_completion.choices[0].message.content
+                llm_review = chat_completion.choices[0].message.content
 
-            score = 99
-            text = gpt_review
-            score_pattern = r"Score:\s*([0-9]+(?:\.[0-9]+)?)"
-            match = re.search(score_pattern, gpt_review)
-            if match:
-                score = match.group(1)
+            score = 0
+            text = llm_review
+            score_pattern1 = r"Score:\s*([0-9]+(?:\.[0-9]+)?)"
+            score_pattern2 = r"\*\*Score\*\*:\s*([0-9]+(?:\.[0-9]+)?)"
+
+            match1 = re.search(score_pattern1, llm_review)
+            match2 = re.search(score_pattern2, llm_review)
+
+            if match1:
+                score = match1.group(1)
                 text = re.sub(r"Score:.*(\n|$)", "", text)
+            elif match2:
+                score = match2.group(1)
+                text = re.sub(r"**Score**:.*(\n|$)", "", text)
+
             checklist_df.loc[index, 'Review'] = text
             checklist_df.loc[index, 'Score'] = score
             print(f"[+] Question # {question_number}")
@@ -394,6 +403,7 @@ class Ingestion():
         ground_truth_file = f"{pdf_file.split('.pdf')[0]}.yaml"
         if ground_truth_file not in files:
             print(f"[!] Ground Truth YAML file not found!. This may happen if your YAML file is not named as: {ground_truth_file}")
+            ground_truth_file = None
         else:
             print(f"[+] YAML file: {ground_truth_file}")
 
@@ -471,8 +481,8 @@ class Ingestion():
         if self.paper["ground_truth"]:
             print("[*] Saving Ground Truth")
             ground_truth_file = os.path.join(self.output_dir, "ground_truth.json")
-        with open(ground_truth_file, "w") as f_score:
-            f_score.write(json.dumps(self.paper["ground_truth"], indent=4))
+            with open(ground_truth_file, "w") as f_score:
+                f_score.write(json.dumps(self.paper["ground_truth"], indent=4))
         print("[✔]")
 
 
