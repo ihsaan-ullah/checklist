@@ -17,6 +17,7 @@ import google.generativeai as genai
 warnings.filterwarnings("ignore")
 from checklist_constants import checklist_data
 from constants import GPT_KEY, GEMINI_KEY
+from prompts import PROMPT_3_6_B as PAPER_PROMPT
 
 
 # ------------------------------------------
@@ -279,6 +280,10 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
             if row["Answer"] in ["TODO", "[TODO]", "Not Found"] or row["Justification"] in ["TODO", "[TODO]", "Not Found"]:
                 print(f"\t [!] There seems to be a problem with your answer or justificaiton for Question #: {i+1}")
 
+    def print_prompt(self):
+        print(f"[*] Prompt version: {PAPER_PROMPT['name']}")
+        print(f"[*] Prompt: {PAPER_PROMPT['value']}\n\n")
+
     def get_LLM_feedback(self, paper, checklist_df, ground_truth):
 
         max_tokens = 1000
@@ -304,6 +309,8 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
                 api_key=GPT_KEY,
             )
 
+        self.print_prompt()
+
         for index, row in checklist_df.iterrows():
 
             question_number = index + 1
@@ -317,21 +324,7 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
             j = row["Justification"]
             g = row["Guidelines"]
 
-            # PROMPT 3.5
-            paper_prompt = """
-You are provided with a “Paper” to be submitted to the NeurIPS conference. You are assisting the authors in preparing their “Answer” to one checklist “Question”. Please examine carefully the proposed author's “Answer” and the proposed author's “Justification” provided, and identify any discrepancies with the actual ”Paper” content, for this specific “Question”, taking into account the “Guidelines” provided to authors. Afterwards, provide itemized, actionable feedback, based on the “Guidelines”, aiming to improve the “Paper” quality. Concentrate on a few of the most significant improvements that can be made, and write in terse technical English.
-Conclude your review with a score for this specific “Question”, in a separate line:
-1: The paper is acceptable without carrying out the proposed improvements.
-0.5: The recommended improvements should be made to enhance the likelihood of acceptance, though no fatal flaws exist.
-0: The issues identified are critical and must be resolved, as they could almost certainly cause rejection if unaddressed.
-Make sure that the score is shown in a new line in this format “Score: score_value” and there is no content after the score.
-Question: {q}
-Answer: {a}
-Justification: {j}
-Guidelines: {g}
-Paper: {paper}
-
-"""
+            paper_prompt = PAPER_PROMPT["value"]
 
             paper_prompt = paper_prompt.replace("{q}", q)
             paper_prompt = paper_prompt.replace("{a}", a)
