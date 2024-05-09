@@ -11,4 +11,4 @@ In this experimental setting, we aim at helping authors verify their checklist b
 - **checklist filled with best effort**. 
 
 ### ⬇️ [Download Sample Paper Submission](https://www.codabench.org/datasets/download/6fc884ae-1878-4fcf-8d60-361d8fbec1c4/)
-*If your computer unzips this submission automatically, re-zip it before submitting it in the "My Submissions" tab. To view the results, click "My Submission" tab, click eye icon in front of your submission. To prepare your own submission, see the Instructions tab.
+*If your computer unzips this submission automatically, re-zip it before submitting it in the "My Submissions" tab. To view the results, click "My Submission" tab, click eye icon <i class="icon grey eye eye-icon"></i> in front of your submission. To prepare your own submission, see the Instructions tab.*

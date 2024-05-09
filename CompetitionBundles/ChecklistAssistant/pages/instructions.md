@@ -13,4 +13,4 @@ Zip the PDF of your paper and enter it via the **"My submissions" tab**. Only zi
 
 ## Viewing results
 
-Once the submission has been processed, the detailed feedback can be retrieved by clicking on the eye icon in front of the submission.
+Once the submission has been processed, the detailed feedback can be retrieved by clicking on the eye icon <i class="icon grey eye eye-icon"></i> in front of the submission.
