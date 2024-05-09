@@ -2,7 +2,7 @@
 
 The principal organizers of this effort are: 
 
-* Isabelle. Guyon
+* Isabelle Guyon
 * Nihar Shah
 * Ihsan Ullah
 * Alexander Goldberg

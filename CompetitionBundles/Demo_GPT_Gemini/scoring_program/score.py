@@ -164,7 +164,6 @@ class Scoring:
             html_output = ""
             is_list = False
             list_type = None
-            sublist_level = 0
 
             # Split the text into lines
             lines = text.split('\n')
@@ -172,13 +171,15 @@ class Scoring:
             # Iterate through each line in the text
             for line in lines:
 
-                if line.strip() in ["**", "#", "##", "###"]:
+                if line.strip() in ["**", "#", "##", "###", "# Score", "## Score", "### Score"]:
                     continue
 
                 if '**' in line:
                     line = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', line)
 
-                if line.startswith('# '):
+                if len(line) == 0:
+                    html_output += "<br>"
+                elif line.startswith('# '):
                     html_output += f"<h3>{line.strip()[2:]}</h3>"
                 elif line.startswith('## '):
                     html_output += f"<h3>{line.strip()[3:]}</h3>"
@@ -191,32 +192,29 @@ class Scoring:
                         is_list = True
                         list_type = "ul"
                         html_output += f"<{list_type}>"
-                    if sublist_level > 0:
-                        html_output += "<ul>"
-                        sublist_level += 1
                     html_output += f"<li>{line.strip()[2:]}</li>"
                 elif re.match(r'^\d+\.', line.strip()):
                     if not is_list:
                         is_list = True
                         list_type = "ol"
                         html_output += f"<{list_type}>"
-                    if sublist_level > 0:
-                        html_output += "<ol>"
-                        sublist_level += 1
                     html_output += f"<li>{line.strip()[line.find('.')+1:]}</li>"
+                elif line.startswith("    *"):
+                    nested_line_text = line
+                    nested_line_text = nested_line_text.replace("    *", "• ")
+                    html_output += f"&nbsp;&nbsp; {nested_line_text}<br>"
+                elif line.startswith("        *"):
+                    nested_line_text = line
+                    nested_line_text = nested_line_text.replace("        *", "○ ")
+                    html_output += f"&nbsp;&nbsp;&nbsp;&nbsp; {nested_line_text}<br>"
                 else:
                     if is_list:
-                        if sublist_level > 0:
-                            html_output += "</ul>"
-                            sublist_level -= 1
                         html_output += f"</{list_type}>"
                         is_list = False
                         list_type = None
                     html_output += line.strip()
 
             if is_list:
-                if sublist_level > 0:
-                    html_output += "</ul>" * sublist_level
                 html_output += f"</{list_type}>"
 
             return html_output
@@ -258,7 +256,8 @@ class Scoring:
         data = {
             "llm_accuracy": self.scores_dict["llm_accuracy"],
             "paper_quality_score": self.scores_dict["paper_quality_score"],
-            "paper": paper_dict_for_template
+            "paper": paper_dict_for_template,
+            "google_form": f"https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891={self.paper['encoded_title']}"
         }
 
         rendered_html = template.render(data)

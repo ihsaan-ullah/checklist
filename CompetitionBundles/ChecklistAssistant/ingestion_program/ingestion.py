@@ -6,22 +6,25 @@ import os
 import re
 import sys
 import fitz
+import time
 import json
 import warnings
 import pandas as pd
 from datetime import datetime as dt
 from openai import OpenAI
+import google.generativeai as genai
 warnings.filterwarnings("ignore")
-from constants import API_KEY
+from checklist_constants import checklist_data
+from constants import GPT_KEY, GEMINI_KEYS
+from prompts import PROMPT_3_6_B as PAPER_PROMPT
 
 
 # ------------------------------------------
 # Settings
 # ------------------------------------------
 # True when running on Codabench
-CODABENCH = False
-# True when only accepts genuine papers
-ONLY_GENUINE = True
+CODABENCH = True
+USE_GEMINI = True
 
 
 # ------------------------------------------
@@ -91,6 +94,7 @@ class Ingestion():
         sys.path.append(self.submission_dir)
 
     def clean(self, paper):
+
         # clean title
         paper["title"] = self.clean_title(paper["title"])
 
@@ -103,16 +107,34 @@ class Ingestion():
         return paper
 
     def clean_title(self, text):
-        text = re.sub(r'\n', '', text)
-        text = re.sub(r'\-\s*\n', '', text)
+        text = re.sub(r'\n', ' ', text)
+        text = re.sub(r'\-\s*\n', ' ', text)
         text = text.strip()
         return text
 
+    def has_line_numbers(self, text):
+        lines = text.split('\n')
+        lines_to_iterate = len(lines) if len(lines) < 2000 else 2000
+        numbered_lines = []
+        for i in range(0, lines_to_iterate):
+            numbered_lines.append(lines[i].strip().isdigit())
+        if sum(numbered_lines) > int(lines_to_iterate * 0.10):
+            return True
+        return False
+
     def clean_paper(self, text):
-        text = re.sub(r'\n\d+', ' ', text)
+        paper_has_line_numbers = self.has_line_numbers(text)
+        if paper_has_line_numbers:
+            # text = re.sub(r'((\d+(\.\d+)?\n)+)(?=\D)(.+)$', r'\2\4', text, flags=re.MULTILINE)
+            text = re.sub(r'^(\d+)\n(\d+(\.\d+)?)\n(.+)$', r'\2 \4', text, flags=re.MULTILINE)
+        else:
+            text = re.sub(r'^(\d+)\n(.+)$', r'\1 \2', text, flags=re.MULTILINE)
+        text = re.sub(r'\n\d+\n', r'\n', text)
+        text = re.sub(r'\n\-\n', r'\n', text)
         text = re.sub(r'\-\s*\n', '', text)
-        text = re.sub(r'([a-zA-Z]\.\d+)\n', r'\1 ', text)
-        text = re.sub(r'([a-zA-Z])\n', r'\1 ', text)
+        # text = re.sub(r'([a-zA-Z]\.\d+)\n', r'\1 ', text)
+        # text = re.sub(r'\n\d+', r'\n', text)
+        # text = re.sub(r'([a-zA-Z])\n', r'\1 ', text)
         text = text.replace("’", "'")
         text = text.replace("\\'", "'")
         text = text.replace("- ", "")
@@ -120,9 +142,9 @@ class Ingestion():
         lines = text.split('\n')
         for line in lines:
             line = line.strip()
-            if len(line.split()) < 6:
-                processed_text += '\n'
-                processed_text += line + '\n'
+            if len(line.split()) < 6 and len(line.split()) > 1:
+                processed_text += "\n"
+                processed_text += line + "\n"
             else:
                 processed_text += line
                 processed_text += ' '
@@ -171,7 +193,7 @@ class Ingestion():
             paper_end_index = paper_text.find("NeurIPS Paper Checklist")
 
             if paper_end_index == -1:
-                raise ValueError("[-] Error: NeurIPS Paper Checklist not found")
+                raise ValueError("[-] Error: NeurIPS Paper Checklist not found. Please make sure that the checklist is at the end of the PDF.")
 
             paper = paper_text[:paper_end_index]
 
@@ -207,65 +229,45 @@ class Ingestion():
 
     def parse_checklist(self, checklist):
 
-        checklist_questions = [
-            "Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?",
-            "Does the paper discuss the limitations of the work performed by the authors?",
-            "For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?",
-            "Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?",
-            "Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?",
-            "Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?",
-            "Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?",
-            "For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?",
-            "Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?",
-            "Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?",
-            "Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?",
-            "Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?",
-            "Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?",
-            "For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?",
-            "Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?"
-        ]
+        general_guidelines = """If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While "Yes" is generally preferable to "No", it is perfectly acceptable to answer "No" provided a proper justification is given (e.g., "error bars are not reported because it would be too computationally expensive" or "we were unable to find the license for the dataset we used").
+"""
 
-        checklist_question_titles = [
-            "Claims",
-            "Limitations",
-            "Theoritical assumptions and proofs",
-            "Experiments reproducibility",
-            "Code and data accessibility",
-            "Experimental settings/details",
-            "Error bars",
-            "Compute resources",
-            "NeurIPS code of ethics",
-            "Impacts",
-            "Safeguards",
-            "Credits",
-            "Documentation",
-            "Human subjects",
-            "Risks"
-        ]
-
-        checklist_df = pd.DataFrame(columns=['Question', 'Question_Title', 'Answer', 'Justification', 'Guidelines', 'Review', 'Correctness_Score'])
+        checklist_df = pd.DataFrame(columns=['Question', 'Question_Title', 'Answer', 'Justification', 'Guidelines', 'Review', 'Score'])
         try:
-            for question_index, question in enumerate(checklist_questions):
+            for question_index, checklist_item in enumerate(checklist_data):
+
+                question_title = checklist_item["question_title"]
+                question = checklist_item["question"]
+                question_guidelines = checklist_item["guidelines"]
+
                 question_regex = re.escape(question)
-                pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+(.*?))(?:Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
+                pattern = re.compile(rf"Question:\s*{question_regex}(?:.*?Answer:\s*\[(.*?)\].*?Justification:\s*(.*?))(?:Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
 
                 mtch = pattern.search(checklist)
                 if mtch:
                     answer = mtch.group(1).strip()
                     justification = mtch.group(2).strip() if mtch.group(2).strip() else None
-                    guidelines = mtch.group(3).strip() if mtch.group(3).strip() else None
-                    if guidelines:
-                        guidelines = self.clean_guidelines(guidelines)
+                    # guidelines = mtch.group(3).strip() if mtch.group(3).strip() else None
+                    # if guidelines:
+                    #     guidelines = self.clean_guidelines(guidelines)
 
                     if justification is not None and justification.isdigit():
                         justification = None
 
                 else:
-                    answer, justification, guidelines = "Not Found", "Not Found", "Not Found"
+                    answer, justification = "Not Found", "Not Found"
 
-                temp_df = pd.DataFrame([{'Question': question, 'Question_Title': checklist_question_titles[question_index], 'Answer': answer, 'Justification': justification, 'Guidelines': guidelines}])
+                temp_df = pd.DataFrame([
+                    {
+                        'Question': question,
+                        'Question_Title': question_title,
+                        'Answer': answer,
+                        'Justification': justification,
+                        'Guidelines': general_guidelines + question_guidelines}
+                ])
+
                 checklist_df = pd.concat([checklist_df, temp_df], ignore_index=True)
-
             return checklist_df
 
         except Exception as e:
@@ -276,203 +278,186 @@ class Ingestion():
             if row["Answer"] in ["TODO", "[TODO]", "Not Found"] or row["Justification"] in ["TODO", "[TODO]", "Not Found"]:
                 print(f"\t [!] There seems to be a problem with your answer or justificaiton for Question #: {i+1}")
 
+    def print_prompt(self):
+        print(f"[*] Prompt version: {PAPER_PROMPT['name']}")
+        print(f"[*] Prompt: {PAPER_PROMPT['value']}\n")
+
     def get_LLM_feedback(self, paper, checklist_df):
 
-        client = OpenAI(
-            api_key=API_KEY,
-        )
-
-        model = "gpt-4-turbo-preview"
         max_tokens = 1000
         temperature = 1
         top_p = 1
         n = 1
 
-        system_prompt = {
-            "role": "system",
-            "content":  "You are a computer science researcher currently reviewing a paper for the NeurIPS computer science conference. Your goal is to try to be as objective and truthful as possible in your answers about the answers provided in the 'NeurIPS Paper Checklist'. Your reviews will be used for causal reasoning in determining the quality of the paper."
-        }
-
         for index, row in checklist_df.iterrows():
+
+            if USE_GEMINI:
+                model = "models/gemini-1.5-pro-latest"
+                genai.configure(api_key=GEMINI_KEYS[index])
+                client = genai.GenerativeModel(
+                    model,
+                    generation_config=genai.GenerationConfig(
+                        temperature=temperature,
+                        top_p=top_p,
+                        max_output_tokens=max_tokens,
+                        candidate_count=n,
+                    ),
+                )
+            else:
+                model = "gpt-4-turbo-preview"
+                client = OpenAI(
+                    api_key=GPT_KEY,
+                )
+
+            question_number = index + 1
+
             q = row["Question"]
             a = row["Answer"]
             j = row["Justification"]
             g = row["Guidelines"]
 
-            user_prompt = {
-                "role": "user",
-                "content": f"The following is content of the paper you are reviewing. {paper}\n\n\nBased on the content, please review the answer and justification for the following question and provide a brief explanation for the answer and justification you find inconsistent with the paper content. Do not be lenient with the authors, be really critical in your answers. However, also include itemized constructive and actionable suggestions. Use the given guidelines originally provided to the author to answer the question. Also must return a score at the start of the response (Score: 0 if you do not agree with the answer, Score: 1 if you agree and find the answer correct). The score must be an integer without any formatting.\n\n\n Question: {q}\n Answer: {a}\n Justification: {j}\n Guidelines: {g}"
-            }
+            paper_prompt = PAPER_PROMPT["value"]
 
-            messages = [system_prompt, user_prompt]
-            chat_completion = client.chat.completions.create(
-                model=model,
-                messages=messages,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                n=n
-            )
+            paper_prompt = paper_prompt.replace("{q}", q)
+            paper_prompt = paper_prompt.replace("{a}", a)
+            paper_prompt = paper_prompt.replace("{j}", j)
+            paper_prompt = paper_prompt.replace("{g}", g)
+            paper_prompt = paper_prompt.replace("{paper}", paper)
 
-            gpt_review = chat_completion.choices[0].message.content
-
-            score_text_parts = gpt_review.split("Score: ")
-            # Extract score and text
+            llm_review = ""
             try:
-                score = int(score_text_parts[1].split("\n")[0])
-            except ValueError:
-                score = 0
-            text = score_text_parts[1].split("\n", 1)[1].strip()
+                if USE_GEMINI:
+                    messages = [paper_prompt]
+                    response = client.generate_content(contents=messages)
+                    llm_review = response.text
+                else:
+                    user_prompt = {
+                        "role": "user",
+                        "content": paper_prompt
+                    }
+                    messages = [user_prompt]
+                    chat_completion = client.chat.completions.create(
+                        model=model,
+                        messages=messages,
+                        max_tokens=max_tokens,
+                        temperature=temperature,
+                        top_p=top_p,
+                        n=n
+                    )
+                    llm_review = chat_completion.choices[0].message.content
+            except:
+                print(f"[-] Error in processing Question #: {question_number}")
+                checklist_df.loc[index, 'Review'] = "Error occurred while processing this question!"
+                checklist_df.loc[index, 'Score'] = 0
+                continue
+
+            score = 0
+            text = llm_review
+
+            if text == '' or len(text) < 50:
+                print("[!] There seems to be a problem with this review!")
+
+            score_pattern1 = r"Score:\s*([0-9]+(?:\.[0-9]+)?)"
+            score_pattern2 = r"\*\*Score\*\*:\s*([0-9]+(?:\.[0-9]+)?)"
+
+            match1 = re.search(score_pattern1, llm_review)
+            match2 = re.search(score_pattern2, llm_review)
+
+            if match1:
+                score = match1.group(1)
+                text = re.sub(r"Score:.*(\n|$)", "", text)
+            elif match2:
+                score = match2.group(1)
+                text = re.sub(r"**Score**:.*(\n|$)", "", text)
 
             checklist_df.loc[index, 'Review'] = text
-            checklist_df.loc[index, 'Correctness_Score'] = score
+            checklist_df.loc[index, 'Score'] = score
+            print(f"[+] Question # {question_number}")
 
-            print(f"[+] Question {index+1}")
+            if USE_GEMINI and question_number != 15:
+                time.sleep(60)
+
         return checklist_df
 
     def process_papers(self):
 
-        genuine_pdf, adversarial_pdf, truth_adversarial_pdf = None, None, None
-
         # -----
         # Load PDF from submissions dir
         # -----
-        print("[*] Loading PDF papers")
+        print("[*] Loading PDF paper")
         # get all files from submissions dir
         files = os.listdir(self.submission_dir)
-        pdf_files = []
-        for filename in files:
-            if filename.endswith('.pdf'):
-                pdf_files.append(filename)
-        num_submitted_papers = len(pdf_files)
+        pdf_file = None
+        for file in files:
+            if file.endswith('.pdf'):
+                pdf_file = file
+                break
 
-        if ONLY_GENUINE:
-            if num_submitted_papers != 1:
-                raise ValueError("[-] You must submit only 1 paper: your genuine paper with the NeurIPS checklist!")
-
-        if num_submitted_papers == 0:
-            raise FileNotFoundError("[-] No PDF file found in the submission directory")
-        elif num_submitted_papers == 1:
-            genuine_pdf = pdf_files[0]
-            if not ONLY_GENUINE:
-                print(f"[!] you have submitted only 1 PDF file: {genuine_pdf}. Considering this as `Genuine Paper`")
-        elif num_submitted_papers == 3:
-            for file in pdf_files:
-                if file.lower().startswith('genuine_'):
-                    genuine_pdf = file
-                if file.lower().startswith('adversarial_'):
-                    adversarial_pdf = file
-                if file.lower().startswith('truth_adversarial_'):
-                    truth_adversarial_pdf = file
-
-            if genuine_pdf is None or adversarial_pdf is None or truth_adversarial_pdf is None:
-                raise ValueError("[-] One or more PDF files have incorrect names. Make sure that they start with `genuine_`, `adversarial_` and `truth_adversarial_`")
-
-            print(f"[+] PDF files: {genuine_pdf} -- {adversarial_pdf} -- {truth_adversarial_pdf}")
-        else:
-            raise ValueError("[-] Please check that you either submit one PDF (Genuine) or submit three PDFs (Genuine, Adversarial, Truth Adversarial)")
+        if not pdf_file:
+            raise ValueError("[-] No PDF file found in the submission directory!")
+        print(f"[+] PDF file: {pdf_file}")
 
         print("[✔]")
 
         # -----
         # Load text from PDF
         # -----
-        print("[*] Converting PDFs to Text")
-        genuine_paper_text, adversarial_paper_text, truth_adversarial_paper_text = "", "", ""
-        if genuine_pdf:
-            genuine_paper_text = self.get_pdf_text(genuine_pdf)
-        if adversarial_pdf:
-            adversarial_paper_text = self.get_pdf_text(adversarial_pdf)
-        if truth_adversarial_pdf:
-            truth_adversarial_paper_text = self.get_pdf_text(truth_adversarial_pdf)
+        print("[*] Loading and converting PDF to Text")
+        paper_text = self.get_pdf_text(pdf_file)
+        if paper_text == "":
+            raise ValueError("[-] Reading PDF file failed or your PDF has no text! Please check that you have a valid PDF file.")
         print("[✔]")
 
         # -----
         # Get paper chunks
         # -----
         print("[*] Breaking down paper into chunks and cleaning text")
-        self.genuine, self.adversarial, self.truth_adversarial = None, None, None
-        if genuine_pdf:
-            self.genuine = self.clean(self.get_paper_chunks(genuine_paper_text))
-        if adversarial_pdf:
-            self.adversarial = self.clean(self.get_paper_chunks(adversarial_paper_text))
-        if truth_adversarial_pdf:
-            self.truth_adversarial = self.clean(self.get_paper_chunks(truth_adversarial_paper_text))
+        self.paper = self.clean(self.get_paper_chunks(paper_text))
         print("[✔]")
 
         # -----
         # Parse Checklist
         # -----
         print("[*] Parsing checklist from text")
-        if genuine_pdf:
-            self.genuine["checklist_df"] = self.parse_checklist(self.genuine["checklist"])
-        if adversarial_pdf:
-            self.adversarial["checklist_df"] = self.parse_checklist(self.adversarial["checklist"])
-        if truth_adversarial_pdf:
-            self.truth_adversarial["checklist_df"] = self.parse_checklist(self.truth_adversarial["checklist"])
+        self.paper["checklist_df"] = self.parse_checklist(self.paper["checklist"])
         print("[✔]")
 
         # -----
         # Incomplete answers
         # -----
         print("[*] Checking incomplete answers")
-        if genuine_pdf:
-            print("[*] Genuine Paper")
-            self.check_incomplete_questions(self.genuine["checklist_df"])
-        if adversarial_pdf:
-            print("[*] Adversarial Paper")
-            self.check_incomplete_questions(self.adversarial["checklist_df"])
-        if truth_adversarial_pdf:
-            print("[*] Truth Adversarial Paper")
-            self.check_incomplete_questions(self.truth_adversarial["checklist_df"])
+        self.check_incomplete_questions(self.paper["checklist_df"])
         print("[✔]")
+
+        # -----
+        # Print prompt
+        # -----
+        self.print_prompt()
 
         # -----
         # Get GPT Review
         # -----
         print("[*] Reviewing the paper's checklist")
-        if genuine_pdf:
-            print("[*] Genuine Paper")
-            self.genuine["checklist_df"] = self.get_LLM_feedback(self.genuine["paper"], self.genuine["checklist_df"])
-        if adversarial_pdf:
-            print("[*] Adversarial Paper")
-            self.adversarial["checklist_df"] = self.get_LLM_feedback(self.adversarial["paper"], self.adversarial["checklist_df"])
-        if truth_adversarial_pdf:
-            print("[*] Truth Adversarial Paper")
-            self.truth_adversarial["checklist_df"] = self.get_LLM_feedback(self.truth_adversarial["paper"], self.truth_adversarial["checklist_df"])
+        self.paper["checklist_df"] = self.get_LLM_feedback(self.paper["paper"], self.paper["checklist_df"])
         print("[✔]")
 
-    def save(self, checklist_df, paper_type):
+    def save(self):
+        self.save_checklist()
+        self.save_title()
 
-        checklist_file = os.path.join(self.output_dir, f"{paper_type}_checklist.csv")
-        checklist_df.replace('NA', 'Not Applicable', inplace=True)
-        checklist_df.replace('N/A', 'Not Applicable', inplace=True)
-        checklist_df.replace('[NA]', 'Not Applicable', inplace=True)
-        checklist_df.replace('[N/A]', 'Not Applicable', inplace=True)
-        checklist_df.to_csv(checklist_file, index=False)
-
-    def save_checklists(self):
+    def save_checklist(self):
         print("[*] Saving checklists")
-
-        if self.genuine:
-            self.save(self.genuine["checklist_df"], "genuine")
-        if self.adversarial:
-            self.save(self.adversarial["checklist_df"], "adversarial")
-        if self.truth_adversarial:
-            self.save(self.truth_adversarial["checklist_df"], "truth_adversarial")
-
+        checklist_file = os.path.join(self.output_dir, "paper_checklist.csv")
+        self.paper["checklist_df"].replace('NA', 'Not Applicable', inplace=True)
+        self.paper["checklist_df"].replace('N/A', 'Not Applicable', inplace=True)
+        self.paper["checklist_df"].replace('[NA]', 'Not Applicable', inplace=True)
+        self.paper["checklist_df"].replace('[N/A]', 'Not Applicable', inplace=True)
+        self.paper["checklist_df"].to_csv(checklist_file, index=False)
         print("[✔]")
 
-    def save_titles(self):
-        print("[*] Saving titles")
-        titles_dict = {}
-        if self.genuine:
-            titles_dict["genuine"] = self.genuine["title"]
-        if self.adversarial:
-            titles_dict["adversarial"] = self.adversarial["title"]
-        if self.truth_adversarial:
-            titles_dict["truth_adversarial"] = self.truth_adversarial["title"]
-
+    def save_title(self):
+        print("[*] Saving title")
+        titles_dict = {"paper_title": self.paper["title"]}
         result_file = os.path.join(self.output_dir, "titles.json")
         with open(result_file, "w") as f_score:
             f_score.write(json.dumps(titles_dict, indent=4))
@@ -496,11 +481,8 @@ if __name__ == '__main__':
     # process paper
     ingestion.process_papers()
 
-    # Save checklist
-    ingestion.save_checklists()
-
-    # Save titles
-    ingestion.save_titles()
+    # Save result
+    ingestion.save()
 
     # Stop timer
     ingestion.stop_timer()

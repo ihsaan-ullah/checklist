@@ -16,7 +16,7 @@ from openai import OpenAI
 import google.generativeai as genai
 warnings.filterwarnings("ignore")
 from checklist_constants import checklist_data
-from constants import GPT_KEY, GEMINI_KEY
+from constants import GPT_KEY, GEMINI_KEYS
 from prompts import PROMPT_3_6_B as PAPER_PROMPT
 
 
@@ -95,6 +95,7 @@ class Ingestion():
         sys.path.append(self.submission_dir)
 
     def clean(self, paper):
+
         # clean title
         paper["title"] = self.clean_title(paper["title"])
 
@@ -107,16 +108,34 @@ class Ingestion():
         return paper
 
     def clean_title(self, text):
-        text = re.sub(r'\n', '', text)
-        text = re.sub(r'\-\s*\n', '', text)
+        text = re.sub(r'\n', ' ', text)
+        text = re.sub(r'\-\s*\n', ' ', text)
         text = text.strip()
         return text
 
+    def has_line_numbers(self, text):
+        lines = text.split('\n')
+        lines_to_iterate = len(lines) if len(lines) < 2000 else 2000
+        numbered_lines = []
+        for i in range(0, lines_to_iterate):
+            numbered_lines.append(lines[i].strip().isdigit())
+        if sum(numbered_lines) > int(lines_to_iterate * 0.10):
+            return True
+        return False
+
     def clean_paper(self, text):
-        text = re.sub(r'\n\d+', ' ', text)
+        paper_has_line_numbers = self.has_line_numbers(text)
+        if paper_has_line_numbers:
+            # text = re.sub(r'((\d+(\.\d+)?\n)+)(?=\D)(.+)$', r'\2\4', text, flags=re.MULTILINE)
+            text = re.sub(r'^(\d+)\n(\d+(\.\d+)?)\n(.+)$', r'\2 \4', text, flags=re.MULTILINE)
+        else:
+            text = re.sub(r'^(\d+)\n(.+)$', r'\1 \2', text, flags=re.MULTILINE)
+        text = re.sub(r'\n\d+\n', r'\n', text)
+        text = re.sub(r'\n\-\n', r'\n', text)
         text = re.sub(r'\-\s*\n', '', text)
-        text = re.sub(r'([a-zA-Z]\.\d+)\n', r'\1 ', text)
-        text = re.sub(r'([a-zA-Z])\n', r'\1 ', text)
+        # text = re.sub(r'([a-zA-Z]\.\d+)\n', r'\1 ', text)
+        # text = re.sub(r'\n\d+', r'\n', text)
+        # text = re.sub(r'([a-zA-Z])\n', r'\1 ', text)
         text = text.replace("’", "'")
         text = text.replace("\\'", "'")
         text = text.replace("- ", "")
@@ -124,9 +143,9 @@ class Ingestion():
         lines = text.split('\n')
         for line in lines:
             line = line.strip()
-            if len(line.split()) < 6:
-                processed_text += '\n'
-                processed_text += line + '\n'
+            if len(line.split()) < 6 and len(line.split()) > 1:
+                processed_text += "\n"
+                processed_text += line + "\n"
             else:
                 processed_text += line
                 processed_text += ' '
@@ -175,7 +194,7 @@ class Ingestion():
             paper_end_index = paper_text.find("NeurIPS Paper Checklist")
 
             if paper_end_index == -1:
-                raise ValueError("[-] Error: NeurIPS Paper Checklist not found")
+                raise ValueError("[-] Error: NeurIPS Paper Checklist not found. Please make sure that the checklist is at the end of the PDF.")
 
             paper = paper_text[:paper_end_index]
 
@@ -244,7 +263,7 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
                 question_guidelines = checklist_item["guidelines"]
 
                 question_regex = re.escape(question)
-                pattern = re.compile(rf"Question:\s+{question_regex}(?:.*?Answer:\s+\[(.*?)\].*?Justification:\s+(.*?))(?:Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
+                pattern = re.compile(rf"Question:\s*{question_regex}(?:.*?Answer:\s*\[(.*?)\].*?Justification:\s*(.*?))(?:Guidelines:\s+(.*?))(?=Question:|\Z)", re.DOTALL)
 
                 mtch = pattern.search(checklist)
                 if mtch:
@@ -282,7 +301,7 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
 
     def print_prompt(self):
         print(f"[*] Prompt version: {PAPER_PROMPT['name']}")
-        print(f"[*] Prompt: {PAPER_PROMPT['value']}\n\n")
+        print(f"[*] Prompt: {PAPER_PROMPT['value']}\n")
 
     def get_LLM_feedback(self, paper, checklist_df, ground_truth):
 
@@ -291,27 +310,25 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
         top_p = 1
         n = 1
 
-        if USE_GEMINI:
-            model = "models/gemini-1.5-pro-latest"
-            genai.configure(api_key=GEMINI_KEY)
-            client = genai.GenerativeModel(
-                model,
-                generation_config=genai.GenerationConfig(
-                    temperature=temperature,
-                    top_p=top_p,
-                    max_output_tokens=max_tokens,
-                    candidate_count=n,
-                ),
-            )
-        else:
-            model = "gpt-4-turbo-preview"
-            client = OpenAI(
-                api_key=GPT_KEY,
-            )
-
-        self.print_prompt()
-
         for index, row in checklist_df.iterrows():
+
+            if USE_GEMINI:
+                model = "models/gemini-1.5-pro-latest"
+                genai.configure(api_key=GEMINI_KEYS[index])
+                client = genai.GenerativeModel(
+                    model,
+                    generation_config=genai.GenerationConfig(
+                        temperature=temperature,
+                        top_p=top_p,
+                        max_output_tokens=max_tokens,
+                        candidate_count=n,
+                    ),
+                )
+            else:
+                model = "gpt-4-turbo-preview"
+                client = OpenAI(
+                    api_key=GPT_KEY,
+                )
 
             question_number = index + 1
             skip_question = ground_truth is not None and question_number not in ground_truth
@@ -332,30 +349,39 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
             paper_prompt = paper_prompt.replace("{g}", g)
             paper_prompt = paper_prompt.replace("{paper}", paper)
 
-            if USE_GEMINI:
-                messages = [paper_prompt]
-                response = client.generate_content(contents=messages)
-                llm_review = response.text
-                time.sleep(120)
-            else:
-                user_prompt = {
-                    "role": "user",
-                    "content": paper_prompt
-                }
-                messages = [user_prompt]
-                chat_completion = client.chat.completions.create(
-                    model=model,
-                    messages=messages,
-                    max_tokens=max_tokens,
-                    temperature=temperature,
-                    top_p=top_p,
-                    n=n
-                )
-
-                llm_review = chat_completion.choices[0].message.content
+            llm_review = ""
+            try:
+                if USE_GEMINI:
+                    messages = [paper_prompt]
+                    response = client.generate_content(contents=messages)
+                    llm_review = response.text
+                else:
+                    user_prompt = {
+                        "role": "user",
+                        "content": paper_prompt
+                    }
+                    messages = [user_prompt]
+                    chat_completion = client.chat.completions.create(
+                        model=model,
+                        messages=messages,
+                        max_tokens=max_tokens,
+                        temperature=temperature,
+                        top_p=top_p,
+                        n=n
+                    )
+                    llm_review = chat_completion.choices[0].message.content
+            except:
+                print(f"[-] Error in processing Question #: {question_number}")
+                checklist_df.loc[index, 'Review'] = "Error occurred while processing this question!"
+                checklist_df.loc[index, 'Score'] = 0
+                continue
 
             score = 0
             text = llm_review
+
+            if text == '' or len(text) < 50:
+                print("[!] There seems to be a problem with this review!")
+
             score_pattern1 = r"Score:\s*([0-9]+(?:\.[0-9]+)?)"
             score_pattern2 = r"\*\*Score\*\*:\s*([0-9]+(?:\.[0-9]+)?)"
 
@@ -372,6 +398,9 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
             checklist_df.loc[index, 'Review'] = text
             checklist_df.loc[index, 'Score'] = score
             print(f"[+] Question # {question_number}")
+
+            if USE_GEMINI and question_number != 15:
+                time.sleep(60)
 
         return checklist_df
 
@@ -407,6 +436,8 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
         # -----
         print("[*] Loading and converting PDF to Text")
         paper_text = self.get_pdf_text(pdf_file)
+        if paper_text == "":
+            raise ValueError("[-] Reading PDF file failed or your PDF has no text! Please check that you have a valid PDF file.")
         print("[✔]")
 
         # -----
@@ -439,6 +470,11 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
         print("[*] Checking incomplete answers")
         self.check_incomplete_questions(self.paper["checklist_df"])
         print("[✔]")
+
+        # -----
+        # Print prompt
+        # -----
+        self.print_prompt()
 
         # -----
         # Get GPT Review

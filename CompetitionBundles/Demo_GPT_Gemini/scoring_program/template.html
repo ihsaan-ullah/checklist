@@ -25,26 +25,17 @@
         border-radius: 5px;
         cursor: pointer;
         text-decoration: none;
-        position: absolute;
-    }
-    .button-top {
-        top: 10px;
-        right: 20px;
-    }
-    .button-bottom {
-        bottom: 10px;
-        right: 20px;
     }
     .button:hover {
         background-color: #bc0530;
     }
     .content {
-        padding-top: 60px; /* Adjust according to button height and margin */
-        padding-bottom: 40px; /* Add padding instead of margin */
+        padding-top: 60px;
+        padding-bottom: 40px;
         margin-bottom: 20px;
     }
     h1 {
-        margin-top: 0; /* Remove default margin */
+        margin-top: 0;
         margin-bottom: 30px;
     }
     hr {
@@ -65,13 +56,16 @@
         margin: 10px 0;
     }
     .question {
-        color: #0033ff;
+        /* color: #0033ff; */
+        color: #000;
     }
     .answer {
-        color: #28a745;
+        /* color: #28a745; */
+        color: #000;
     }
     .justification {
-        color: #de750b;
+        /* color: #de750b; */
+        color: #000;
     }
     .user_input {
         padding: 20px;
@@ -142,17 +136,33 @@
         border: 1px solid #271b5e;
     }
     .scroll-button {
-        padding: 10px 20px;
+        padding: 5px 15px;
         font-size: 14px;
-        color: #212121;
-        border: 1px solid #212121;
-        border-radius: 5px;
         cursor: pointer;
         text-decoration: none;
+        border-radius: 3px;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
-    .scroll-button:hover {
-        background-color: #212121;
+    .button-green{
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .button-orange{
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .button-orange:hover {
+        background-color: #623600;
         color: #fff;
+        border: none;
+    }
+    .button-green:hover {
+        background-color: #015f01;
+        color: #fff;
+        border: none;
     }
     .move-to-top {
         padding: 5px 10px;
@@ -167,6 +177,9 @@
         background-color: #212121;
         color: #fff;
     }
+    .legend{
+        margin-bottom: 10px;
+    }
 </style>
 </head>
 <body>
@@ -177,7 +190,7 @@
 
         <hr>
 
-        <h2>Scores</h2>
+        <!-- <h2>Scores</h2>
         <table>
             <tr>
                 <td><strong>Paper Quality Score:</strong></td>
@@ -189,33 +202,33 @@
             </tr>
         </table>
 
-        <hr>
+        <hr> -->
 
         <h2>Review Summary</h2>
+        <div>
+            <span class="legend score-label score-green">&nbsp; &nbsp;</span> The LLM found no significant concern
+            <br>
+            <span class="legend score-label score-orange">&nbsp; &nbsp;</span> The LLM proposes possible improvements
+        </div>
         <table>
             <tr>
               <th>Question</th>
               <th></th>
-              <th>Details</th>
             </tr>
             {% for review in paper.reviews %}
             <tr id="summary-{{ review.question_id }}">
                 <td>{{ review.question_no }}. {{ review.question_title }}</td>
-                <td>
-                    <span class="score-label score-{% if review.score == 1 %}green{% elif review.score == 0.5 %}orange{% else %}red{% endif %}">
-                    {% if review.score == 1 %}
-                    Looks Good
-                    {% elif review.score == 0.5 %}
-                    Can be improved
-                    {% else %}
-                    Needs attention
-                    {% endif %}
-                    </span>
-                </td>
-                <td><a href="#{{ review.question_id }}" class="scroll-button">Detailed Review</a></td>
+                <td><a href="#{{ review.question_id }}" class="scroll-button button-{% if review.score == 1 %}green{% else %}orange{% endif %}">Detailed Review</a></td>
                 </tr>
             {% endfor %}
         </table>
+
+        <!-- Survey -->
+        <div>
+            <p>After reading through the LLM’s response below, <strong>please complete the following survey about your experience:</strong></p>
+            <a class="button" href="{{ google_form }}" target="_blank">Click to submit post submission survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
 
         <hr>
 
@@ -229,10 +242,17 @@
                 <p><strong class="justification">Author's justification:</strong> {{ review.justification }}</p>
             </div>
             
-            <div class="llm_review llm_review-{% if review.score == 1 %}green{% elif review.score == 0.5 %}orange{% else %}red{% endif %} "><strong>LLM Review:</strong><br> {{ review.review }}</div>
+            <div class="llm_review llm_review-{% if review.score == 1 %}green{% else %}orange{% endif %} "><strong>LLM Review:</strong><br> {{ review.review }}</div>
             <a class="move-to-top" href="#summary-{{ review.question_id }}">↑ Back to summary</a>
         </div>
         {% endfor %}
+
+        <!-- Survey -->
+        <div>
+            <p>Please complete the following survey about your experience:</p>
+            <a class="button" href="{{ google_form }}" target="_blank">Click to submit post submission survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
         
     </div>
 </div>
