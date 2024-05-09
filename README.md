@@ -6,6 +6,7 @@ This repository is entry point for the ***NeurIPS 2024 Checklist Assistant*** an
 ### 1. Competition Bundles
 - [Checklist Assistant](CompetitionBundles/ChecklistAssistant)
 - [Crowdsourced Data Collection](CompetitionBundles/CrowdSourcedDataCollection)
+- [Demo GPT/Gemini](CompetitionBundles/Demo_GPT_Gemini)
 
 ### 2. [Sample Data](SampleDataset/)
 
