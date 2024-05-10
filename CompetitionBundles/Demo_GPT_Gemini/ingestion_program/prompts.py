@@ -48,6 +48,5 @@ Answer: {a}
 Justification: {j}
 Guidelines: {g}
 Paper: {paper}
-
 """
 }

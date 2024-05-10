@@ -14,7 +14,7 @@ from jinja2 import Template
 # Settings
 # ------------------------------------------
 # True when running on Codabench
-CODABENCH = True
+CODABENCH = False
 
 
 class Scoring:

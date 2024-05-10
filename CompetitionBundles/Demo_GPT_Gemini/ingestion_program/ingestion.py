@@ -24,8 +24,8 @@ from prompts import PROMPT_3_6_B as PAPER_PROMPT
 # Settings
 # ------------------------------------------
 # True when running on Codabench
-CODABENCH = True
-USE_GEMINI = True
+CODABENCH = False
+USE_GEMINI = False
 
 
 # ------------------------------------------
@@ -380,6 +380,7 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
             text = llm_review
 
             if text == '' or len(text) < 50:
+                print(text)
                 print("[!] There seems to be a problem with this review!")
 
             score_pattern1 = r"Score:\s*([0-9]+(?:\.[0-9]+)?)"
