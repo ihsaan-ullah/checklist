@@ -387,8 +387,7 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
         )
 
         # Intialize GPT
-        # gpt_model = "gpt-4-turbo-preview"
-        gpt_model = "gpt-4o"
+        gpt_model = "gpt-4-turbo-preview"
         gpt_client = OpenAI(
             api_key=GPT_KEY,
         )

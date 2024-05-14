@@ -27,7 +27,7 @@ While the authors might fear that complete honesty about limitations might be us
     },
 
     {
-        "question_title": "Theoritical assumptions and proofs",
+        "question_title": "Theoretical assumptions and proofs",
         "question": "For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?",
         "guidelines": """
 The answer NA means that the paper does not include theoretical results. 

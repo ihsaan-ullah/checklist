@@ -229,7 +229,7 @@ class Ingestion():
         checklist_question_titles = [
             "Claims",
             "Limitations",
-            "Theoritical assumptions and proofs",
+            "Theoretical assumptions and proofs",
             "Experiments reproducibility",
             "Code and data accessibility",
             "Experimental settings/details",

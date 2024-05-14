@@ -13,7 +13,7 @@ from jinja2 import Template
 # ------------------------------------------
 # Settings
 # ------------------------------------------
-CODABENCH = False  # True when running on Codabench
+CODABENCH = True  # True when running on Codabench
 VERBOSE = True  # False for checklist assistant, True for debugging
 
 
@@ -170,14 +170,15 @@ class Scoring:
     def convert_text_to_html(self, text):
         try:
             html_output = ""
-            is_list = False
-            list_type = None
 
             # Split the text into lines
             lines = text.split('\n')
 
             # Iterate through each line in the text
             for line in lines:
+
+                line = line.replace("```plaintext", "")
+                line = line.replace("```", "")
 
                 if line.strip() in ["**", "#", "##", "###", "# Score", "## Score", "### Score"]:
                     continue
@@ -196,34 +197,24 @@ class Scoring:
                 elif line.startswith('#### '):
                     html_output += f"<h4>{line.strip()[5:]}</h4>"
                 elif line.startswith('- ') or line.startswith('* '):
-                    if not is_list:
-                        is_list = True
-                        list_type = "ul"
-                        html_output += f"<{list_type}>"
-                    html_output += f"<li>{line.strip()[2:]}</li>"
+                    html_output += f"○ &nbsp;&nbsp; {line.strip()[2:]}<br>"
                 elif re.match(r'^\d+\.', line.strip()):
-                    if not is_list:
-                        is_list = True
-                        list_type = "ol"
-                        html_output += f"<{list_type}>"
-                    html_output += f"<li>{line.strip()[line.find('.')+1:]}</li>"
-                elif line.startswith("    *"):
+                    html_output += f"○ &nbsp;&nbsp; {line.strip()[2:]}<br>"
+                elif line.startswith("    *") or line.startswith("   -") or line.startswith("    -"):
                     nested_line_text = line
-                    nested_line_text = nested_line_text.replace("    *", "• ")
-                    html_output += f"&nbsp;&nbsp; {nested_line_text}<br>"
-                elif line.startswith("        *"):
+                    nested_line_text = nested_line_text.replace("    *", "")
+                    nested_line_text = nested_line_text.replace("   -", "")
+                    nested_line_text = nested_line_text.replace("    -", "")
+                    html_output += f"&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp; {nested_line_text}<br>"
+                elif line.startswith("        *") or line.startswith("        -"):
                     nested_line_text = line
-                    nested_line_text = nested_line_text.replace("        *", "○ ")
-                    html_output += f"&nbsp;&nbsp;&nbsp;&nbsp; {nested_line_text}<br>"
+                    nested_line_text = nested_line_text.replace("        *", "")
+                    nested_line_text = nested_line_text.replace("        -", "")
+                    html_output += f"&nbsp;&nbsp;&nbsp;&nbsp; ○ &nbsp;&nbsp; {nested_line_text}<br>"
+                elif line.startswith("   "):
+                    html_output += f"&nbsp;&nbsp;&nbsp;{line.strip()}<br>"
                 else:
-                    if is_list:
-                        html_output += f"</{list_type}>"
-                        is_list = False
-                        list_type = None
-                    html_output += line.strip()
-
-            if is_list:
-                html_output += f"</{list_type}>"
+                    html_output += f"{line.strip()}<br>"
 
             return html_output
         except:
