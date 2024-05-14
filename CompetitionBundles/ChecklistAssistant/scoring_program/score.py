@@ -13,8 +13,8 @@ from jinja2 import Template
 # ------------------------------------------
 # Settings
 # ------------------------------------------
-# True when running on Codabench
-CODABENCH = True
+CODABENCH = True  # True when running on Codabench
+VERBOSE = False  # False for checklist assistant, True for debugging
 
 
 class Scoring:
@@ -91,22 +91,36 @@ class Scoring:
         return df
 
     def load_ingestion_result(self):
-        print("[*] Reading ingestion result")
+        print("[*] Reading checklist assistant reviews")
 
         self.paper = None
 
         csv_file = os.path.join(self.prediction_dir, "paper_checklist.csv")
         titles_file = os.path.join(self.prediction_dir, "titles.json")
+        ground_truth_file = os.path.join(self.prediction_dir, "ground_truth.json")
 
         # load titles file
         with open(titles_file) as f:
             titles = json.load(f)
 
+        # load ground truth file
+        try:
+            with open(ground_truth_file) as f:
+                ground_truth = json.load(f)
+                ground_truth = {int(k): v for k, v in ground_truth.items()}
+        except:
+            ground_truth = None
+
         if os.path.exists(csv_file):
+
+            timestamp = dt.now().strftime("%Y-%m-%d %H:%M:%S")
+            title_to_be_encoded = f"{titles['paper_title']} - {timestamp}"
+            encoded_title = base64.b64encode(title_to_be_encoded.encode()).decode('utf-8')
             self.paper = {
                 "checklist_df": self.read_csv(csv_file),
+                "ground_truth": ground_truth,
                 "title": titles["paper_title"],
-                "encoded_title": base64.b64encode(titles["paper_title"].encode()).decode('utf-8')
+                "encoded_title": encoded_title
             }
         else:
             raise ValueError("[-] Checklist CSV not found!")
@@ -116,15 +130,40 @@ class Scoring:
     def compute_scores(self):
 
         non_skipped_scores = []
+        groun_truth_scores = []
+        ground_truth = self.paper["ground_truth"]
         for i, row in self.paper["checklist_df"].iterrows():
+            question_number = i + 1
+            skip_question = ground_truth is not None and question_number not in ground_truth
+            if skip_question:
+                print(f"[!] Skipping Question # {question_number}")
+                continue
             non_skipped_scores.append(float(row["Score"]))
+            if ground_truth is not None:
+                groun_truth_scores.append(ground_truth[question_number])
 
-        print("[*] Computing Paper Quality Score")
+        if VERBOSE:
+            print("[*] Computing Paper Quality Score")
         paper_quality_score = round(sum(non_skipped_scores) / len(non_skipped_scores), 2)
-        print(f"[+] Paper Quality Score: {paper_quality_score}")
-        print("[✔]")
+        if VERBOSE:
+            print(f"[+] Paper Quality Score: {paper_quality_score}")
+            print("[✔]")
+
+        llm_accuracy = 0
+        if len(groun_truth_scores) > 0:
+            if VERBOSE:
+                print("[*] Computing LLM Accuracy")
+            sum_abs_differences = 0
+            n = len(groun_truth_scores)
+            for i in range(n):
+                sum_abs_differences += abs(groun_truth_scores[i] - non_skipped_scores[i])
+            llm_accuracy = round(sum_abs_differences / n, 2)
+            if VERBOSE:
+                print(f"[+] LLM Accuracy: {llm_accuracy}")
+                print("[✔]")
 
         self.scores_dict = {
+            "llm_accuracy": llm_accuracy,
             "paper_quality_score": paper_quality_score,
         }
 
@@ -203,9 +242,13 @@ class Scoring:
             "title": self.paper["title"]
         }
         reviews = []
+        ground_truth = self.paper["ground_truth"]
         for index, row in self.paper["checklist_df"].iterrows():
 
             question_number = index + 1
+            skip_question = ground_truth is not None and question_number not in ground_truth
+            if skip_question:
+                continue
             reviews.append({
                 "question_no": question_number,
                 "question_id": f"question-{question_number}",
@@ -219,6 +262,7 @@ class Scoring:
         paper_dict_for_template["reviews"] = reviews
 
         data = {
+            "llm_accuracy": self.scores_dict["llm_accuracy"],
             "paper_quality_score": self.scores_dict["paper_quality_score"],
             "paper": paper_dict_for_template,
             "google_form": f"https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891={self.paper['encoded_title']}"
@@ -232,17 +276,17 @@ class Scoring:
         print("[✔]")
 
     def write_scores(self):
-        print("[*] Writing scores")
-
+        if VERBOSE:
+            print("[*] Writing scores")
         with open(self.score_file, "w") as f_score:
             f_score.write(json.dumps(self.scores_dict, indent=4))
-
-        print("[✔]")
+        if VERBOSE:
+            print("[✔]")
 
 
 if __name__ == "__main__":
     print("############################################")
-    print("### Scoring Program")
+    print("### Starting Result Compilation Program")
     print("############################################\n")
 
     # Init scoring
@@ -273,6 +317,6 @@ if __name__ == "__main__":
     scoring.show_duration()
 
     print("\n----------------------------------------------")
-    print("[✔] Scoring Program executed successfully!")
+    print("[✔] Result compilation successful!")
     print("[✔] You can check the detailed review by clicking the `eye` icon in front of your submission!")
     print("----------------------------------------------\n\n")

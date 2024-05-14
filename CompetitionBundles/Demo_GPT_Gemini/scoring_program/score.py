@@ -13,8 +13,8 @@ from jinja2 import Template
 # ------------------------------------------
 # Settings
 # ------------------------------------------
-# True when running on Codabench
-CODABENCH = False
+CODABENCH = False  # True when running on Codabench
+VERBOSE = True  # False for checklist assistant, True for debugging
 
 
 class Scoring:
@@ -91,7 +91,7 @@ class Scoring:
         return df
 
     def load_ingestion_result(self):
-        print("[*] Reading ingestion result")
+        print("[*] Reading checklist assistant reviews")
 
         self.paper = None
 
@@ -112,11 +112,15 @@ class Scoring:
             ground_truth = None
 
         if os.path.exists(csv_file):
+
+            timestamp = dt.now().strftime("%Y-%m-%d %H:%M:%S")
+            title_to_be_encoded = f"{titles['paper_title']} - {timestamp}"
+            encoded_title = base64.b64encode(title_to_be_encoded.encode()).decode('utf-8')
             self.paper = {
                 "checklist_df": self.read_csv(csv_file),
                 "ground_truth": ground_truth,
                 "title": titles["paper_title"],
-                "encoded_title": base64.b64encode(titles["paper_title"].encode()).decode('utf-8')
+                "encoded_title": encoded_title
             }
         else:
             raise ValueError("[-] Checklist CSV not found!")
@@ -138,21 +142,25 @@ class Scoring:
             if ground_truth is not None:
                 groun_truth_scores.append(ground_truth[question_number])
 
-        print("[*] Computing Paper Quality Score")
+        if VERBOSE:
+            print("[*] Computing Paper Quality Score")
         paper_quality_score = round(sum(non_skipped_scores) / len(non_skipped_scores), 2)
-        print(f"[+] Paper Quality Score: {paper_quality_score}")
-        print("[✔]")
+        if VERBOSE:
+            print(f"[+] Paper Quality Score: {paper_quality_score}")
+            print("[✔]")
 
         llm_accuracy = 0
         if len(groun_truth_scores) > 0:
-            print("[*] Computing LLM Accuracy")
+            if VERBOSE:
+                print("[*] Computing LLM Accuracy")
             sum_abs_differences = 0
             n = len(groun_truth_scores)
             for i in range(n):
                 sum_abs_differences += abs(groun_truth_scores[i] - non_skipped_scores[i])
             llm_accuracy = round(sum_abs_differences / n, 2)
-            print(f"[+] LLM Accuracy: {llm_accuracy}")
-            print("[✔]")
+            if VERBOSE:
+                print(f"[+] LLM Accuracy: {llm_accuracy}")
+                print("[✔]")
 
         self.scores_dict = {
             "llm_accuracy": llm_accuracy,
@@ -268,17 +276,17 @@ class Scoring:
         print("[✔]")
 
     def write_scores(self):
-        print("[*] Writing scores")
-
+        if VERBOSE:
+            print("[*] Writing scores")
         with open(self.score_file, "w") as f_score:
             f_score.write(json.dumps(self.scores_dict, indent=4))
-
-        print("[✔]")
+        if VERBOSE:
+            print("[✔]")
 
 
 if __name__ == "__main__":
     print("############################################")
-    print("### Scoring Program")
+    print("### Starting Result Compilation Program")
     print("############################################\n")
 
     # Init scoring
@@ -309,6 +317,6 @@ if __name__ == "__main__":
     scoring.show_duration()
 
     print("\n----------------------------------------------")
-    print("[✔] Scoring Program executed successfully!")
+    print("[✔] Result compilation successful!")
     print("[✔] You can check the detailed review by clicking the `eye` icon in front of your submission!")
     print("----------------------------------------------\n\n")

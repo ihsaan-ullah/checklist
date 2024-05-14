@@ -6,8 +6,8 @@ import os
 import re
 import sys
 import fitz
-import time
 import json
+import yaml
 import warnings
 import pandas as pd
 from datetime import datetime as dt
@@ -15,16 +15,15 @@ from openai import OpenAI
 import google.generativeai as genai
 warnings.filterwarnings("ignore")
 from checklist_constants import checklist_data
-from constants import GPT_KEY, GEMINI_KEYS
-from prompts import PROMPT_3_6_B as PAPER_PROMPT
+from constants import GPT_KEY, GEMINI_KEY
+from prompts import PROMPT_3_6_B_Khuong_start_end as PAPER_PROMPT
 
 
 # ------------------------------------------
 # Settings
 # ------------------------------------------
-# True when running on Codabench
-CODABENCH = True
-USE_GEMINI = True
+CODABENCH = True  # True when running on Codabench
+VERBOSE = False  # False for checklist assistant, True for debugging
 
 
 # ------------------------------------------
@@ -197,6 +196,25 @@ class Ingestion():
 
             paper = paper_text[:paper_end_index]
 
+            total_allowed_words = 15000  # 400 per page (15 main pages, additional 20 pages)
+            paper_words = paper.split()
+
+            if len(paper_words) > total_allowed_words:
+                paper_lines = paper.split('\n')
+                paper_lines_to_keep = []
+                word_count = 0
+                for line in paper_lines:
+                    line_words = line.split()
+                    if word_count + len(line_words) <= total_allowed_words:
+                        paper_lines_to_keep.append(line)
+                        word_count += len(line_words)
+                    else:
+                        break
+
+                paper = '\n'.join(paper_lines_to_keep)
+                end_of_words_to_remove = ' '.join(paper.split()[-20:])
+                print(f"[!] The paper is too long! Text after \"{end_of_words_to_remove}\" is removed and will not be considered for the LLM review.")
+
             # Identify checklist section
             checklist_start_index = paper_end_index
             checklist = paper_text[checklist_start_index:]
@@ -227,13 +245,33 @@ class Ingestion():
                 paper_text += page.get_text()
         return paper_text
 
+    def load_yaml(self, yaml_file):
+        yaml_file_path = os.path.join(self.submission_dir, yaml_file)
+
+        with open(yaml_file_path, 'r') as file:
+            yaml_data = yaml.safe_load(file)
+
+        if not yaml_data:
+            raise ValueError("[-] The YAML file is empty or invalid.")
+
+        for key, value in yaml_data.items():
+            # Check if key/question is an integer between 1 and 15
+            if not isinstance(key, int) or not 1 <= key <= 15:
+                raise ValueError("[-] Invalid key: Keys must be integers between 1 and 15.")
+
+            # Check if value is 0, 0.5, or 1
+            if value not in [0, 0.5, 1]:
+                raise ValueError("[-] Invalid value: Values must be 0, 0.5, or 1.")
+
+        return yaml_data
+
     def parse_checklist(self, checklist):
 
         general_guidelines = """If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
 While "Yes" is generally preferable to "No", it is perfectly acceptable to answer "No" provided a proper justification is given (e.g., "error bars are not reported because it would be too computationally expensive" or "we were unable to find the license for the dataset we used").
 """
 
-        checklist_df = pd.DataFrame(columns=['Question', 'Question_Title', 'Answer', 'Justification', 'Guidelines', 'Review', 'Score'])
+        checklist_df = pd.DataFrame(columns=['Question', 'Question_Title', 'Answer', 'Justification', 'Guidelines', 'Review', 'Score', 'LLM'])
         try:
             for question_index, checklist_item in enumerate(checklist_data):
 
@@ -275,46 +313,40 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
 
     def check_incomplete_questions(self, checklist_df):
         for i, row in checklist_df.iterrows():
-            if row["Answer"] in ["TODO", "[TODO]", "Not Found"] or row["Justification"] in ["TODO", "[TODO]", "Not Found"]:
-                print(f"\t [!] There seems to be a problem with your answer or justificaiton for Question #: {i+1}")
+
+            if row["Answer"] in ["TODO", "[TODO]"] or row["Justification"] in ["TODO", "[TODO]"]:
+                print(f"\t [!] You haven't filled the answer or justificaiton for Question #: {i+1}")
+
+            if row["Answer"] == "Not Found" or row["Justification"] == "Not Found":
+                print(f"\t [!] There seems to be a problem with your answer or justificaiton for Question #: {i+1}. Please make sure that you haven't changed the question in the checklist.")
 
     def print_prompt(self):
         print(f"[*] Prompt version: {PAPER_PROMPT['name']}")
         print(f"[*] Prompt: {PAPER_PROMPT['value']}\n")
 
-    def get_LLM_feedback(self, paper, checklist_df):
-
-        max_tokens = 1000
-        temperature = 1
-        top_p = 1
-        n = 1
+    def get_LLM_feedback(self, paper, checklist_df, ground_truth):
 
         for index, row in checklist_df.iterrows():
 
-            if USE_GEMINI:
-                model = "models/gemini-1.5-pro-latest"
-                genai.configure(api_key=GEMINI_KEYS[index])
-                client = genai.GenerativeModel(
-                    model,
-                    generation_config=genai.GenerationConfig(
-                        temperature=temperature,
-                        top_p=top_p,
-                        max_output_tokens=max_tokens,
-                        candidate_count=n,
-                    ),
-                )
-            else:
-                model = "gpt-4-turbo-preview"
-                client = OpenAI(
-                    api_key=GPT_KEY,
-                )
-
             question_number = index + 1
+            skip_question = ground_truth is not None and question_number not in ground_truth
+
+            if skip_question:
+                print(f"[!] Skipping Question # {question_number}")
+                continue
+            else:
+                print(f"[*] Processing Question # {question_number}")
 
             q = row["Question"]
             a = row["Answer"]
             j = row["Justification"]
             g = row["Guidelines"]
+
+            if a == "Not Found" or j == "Not Found":
+                print(f"[!] Skipping Question # {question_number}. Answer or Justification for this question was not found!")
+                checklist_df.loc[index, 'Review'] = "Answer or Justification for this question was not found!"
+                checklist_df.loc[index, 'Score'] = 0
+                continue
 
             paper_prompt = PAPER_PROMPT["value"]
 
@@ -324,20 +356,68 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
             paper_prompt = paper_prompt.replace("{g}", g)
             paper_prompt = paper_prompt.replace("{paper}", paper)
 
-            llm_review = ""
+            question_score, question_review, llm = self.get_single_question_LLM_feedback(paper_prompt)
+
+            checklist_df.loc[index, 'Review'] = question_review
+            checklist_df.loc[index, 'Score'] = question_score
+            checklist_df.loc[index, 'LLM'] = llm
+
+            print(f"[+] Question # {question_number}")
+
+        return checklist_df
+
+    def get_single_question_LLM_feedback(self, paper_prompt):
+
+        max_tokens = 1000
+        temperature = 1
+        top_p = 1
+        n = 1
+
+        # Intialize Gemini
+        gemini_model = "models/gemini-1.5-pro-latest"
+        genai.configure(api_key=GEMINI_KEY)
+        gemini_client = genai.GenerativeModel(
+            gemini_model,
+            generation_config=genai.GenerationConfig(
+                temperature=temperature,
+                top_p=top_p,
+                max_output_tokens=max_tokens,
+                candidate_count=n,
+            ),
+        )
+
+        # Intialize GPT
+        gpt_model = "gpt-4-turbo-preview"
+        gpt_client = OpenAI(
+            api_key=GPT_KEY,
+        )
+
+        number_of_times_question_processed = 0
+        review_is_empty = True
+        error_in_processing_question = False
+        error_in_extracting_score = False
+
+        score = -1
+        llm_review = ""
+        llm = ""
+
+        while (review_is_empty or error_in_processing_question or error_in_extracting_score) and number_of_times_question_processed < 3:
+            number_of_times_question_processed += 1
+
+            if number_of_times_question_processed != 1:
+                print("[!] Reprocessing this question!")
+
+            # Get LLM review for a question
             try:
-                if USE_GEMINI:
-                    messages = [paper_prompt]
-                    response = client.generate_content(contents=messages)
-                    llm_review = response.text
-                else:
+                if number_of_times_question_processed < 3:  # 2 tries with GPT
+                    llm = "GPT"
                     user_prompt = {
                         "role": "user",
                         "content": paper_prompt
                     }
                     messages = [user_prompt]
-                    chat_completion = client.chat.completions.create(
-                        model=model,
+                    chat_completion = gpt_client.chat.completions.create(
+                        model=gpt_model,
                         messages=messages,
                         max_tokens=max_tokens,
                         temperature=temperature,
@@ -345,41 +425,57 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
                         n=n
                     )
                     llm_review = chat_completion.choices[0].message.content
-            except:
-                print(f"[-] Error in processing Question #: {question_number}")
-                checklist_df.loc[index, 'Review'] = "Error occurred while processing this question!"
-                checklist_df.loc[index, 'Score'] = 0
+                else:  # 3rd try with Gemini
+                    llm = "Gemini"
+                    messages = [paper_prompt]
+                    response = gemini_client.generate_content(contents=messages)
+                    llm_review = response.text
+
+                error_in_processing_question = False
+            except Exception as e:
+                error_in_processing_question = True
+                llm_review = f"Error: LLM failed to process this question!\n{str(e)}"
+                score = -1
+                print(f"[-] {llm_review}")
                 continue
 
-            score = 0
+            # Check LLM review has no problem
             text = llm_review
+            if len(text) > 50:
+                review_is_empty = False
+            else:
+                review_is_empty = True
+                llm_review = "Error: There seems to be a problem with this review! Empty/Truncated review"
+                score = -1
+                print(f"[-] {llm_review}")
+                continue
 
-            if text == '' or len(text) < 50:
-                print("[!] There seems to be a problem with this review!")
+            # Extract score from review
+            try:
+                score_pattern1 = r"Score:\s*([0-9]+(?:\.[0-9]+)?)"
+                score_pattern2 = r"\*\*Score\*\*:\s*([0-9]+(?:\.[0-9]+)?)"
+                match1 = re.search(score_pattern1, llm_review)
+                match2 = re.search(score_pattern2, llm_review)
+                if match1:
+                    score = match1.group(1)
+                    text = re.sub(r"Score:.*(\n|$)", "", text)
+                elif match2:
+                    score = match2.group(1)
+                    text = re.sub(r"**Score**:.*(\n|$)", "", text)
 
-            score_pattern1 = r"Score:\s*([0-9]+(?:\.[0-9]+)?)"
-            score_pattern2 = r"\*\*Score\*\*:\s*([0-9]+(?:\.[0-9]+)?)"
+                llm_review = text
+                error_in_extracting_score = False
 
-            match1 = re.search(score_pattern1, llm_review)
-            match2 = re.search(score_pattern2, llm_review)
+            except Exception as e:
+                error_in_extracting_score = True
+                llm_review = f"Error: Error: Unable to extract score from the LLM review!\n {str(e)}"
+                score = -1
+                print(f"[-] {llm_review}")
+                continue
 
-            if match1:
-                score = match1.group(1)
-                text = re.sub(r"Score:.*(\n|$)", "", text)
-            elif match2:
-                score = match2.group(1)
-                text = re.sub(r"**Score**:.*(\n|$)", "", text)
+            return score, llm_review, llm
 
-            checklist_df.loc[index, 'Review'] = text
-            checklist_df.loc[index, 'Score'] = score
-            print(f"[+] Question # {question_number}")
-
-            if USE_GEMINI and question_number != 15:
-                time.sleep(60)
-
-        return checklist_df
-
-    def process_papers(self):
+    def process_paper(self):
 
         # -----
         # Load PDF from submissions dir
@@ -396,6 +492,15 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
         if not pdf_file:
             raise ValueError("[-] No PDF file found in the submission directory!")
         print(f"[+] PDF file: {pdf_file}")
+
+        ground_truth_file = f"{pdf_file.split('.pdf')[0]}.yaml"
+        if ground_truth_file not in files:
+            if VERBOSE:
+                print(f"[!] Ground Truth YAML file not found!. This may happen if your YAML file is not named as: {ground_truth_file}")
+            ground_truth_file = None
+        else:
+            if VERBOSE:
+                print(f"[+] YAML file: {ground_truth_file}")
 
         print("[✔]")
 
@@ -416,6 +521,18 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
         print("[✔]")
 
         # -----
+        # Load Ground Truth Scores
+        # -----
+        if ground_truth_file:
+            if VERBOSE:
+                print("[*] Loading Ground Truth YAML")
+            self.paper["ground_truth"] = self.load_yaml(ground_truth_file)
+            if VERBOSE:
+                print("[✔]")
+        else:
+            self.paper["ground_truth"] = None
+
+        # -----
         # Parse Checklist
         # -----
         print("[*] Parsing checklist from text")
@@ -432,18 +549,20 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
         # -----
         # Print prompt
         # -----
-        self.print_prompt()
+        if VERBOSE:
+            self.print_prompt()
 
         # -----
         # Get GPT Review
         # -----
         print("[*] Reviewing the paper's checklist")
-        self.paper["checklist_df"] = self.get_LLM_feedback(self.paper["paper"], self.paper["checklist_df"])
+        self.paper["checklist_df"] = self.get_LLM_feedback(self.paper["paper"], self.paper["checklist_df"], self.paper["ground_truth"])
         print("[✔]")
 
     def save(self):
         self.save_checklist()
         self.save_title()
+        self.save_ground_truth()
 
     def save_checklist(self):
         print("[*] Saving checklists")
@@ -463,12 +582,24 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
             f_score.write(json.dumps(titles_dict, indent=4))
         print("[✔]")
 
+    def save_ground_truth(self):
+        if self.paper["ground_truth"]:
+            print("[*] Saving Ground Truth")
+            ground_truth_file = os.path.join(self.output_dir, "ground_truth.json")
+            with open(ground_truth_file, "w") as f_score:
+                f_score.write(json.dumps(self.paper["ground_truth"], indent=4))
+        print("[✔]")
+
 
 if __name__ == '__main__':
 
     print("############################################")
-    print("### Ingestion Program")
+    print("### Starting Checklist Assistant")
     print("############################################\n")
+
+    print("-"*50)
+    print("## It may take 10-15 mins to process your paper.\n")
+    print("-"*50)
 
     # Init Ingestion
     ingestion = Ingestion()
@@ -479,7 +610,7 @@ if __name__ == '__main__':
     ingestion.start_timer()
 
     # process paper
-    ingestion.process_papers()
+    ingestion.process_paper()
 
     # Save result
     ingestion.save()
@@ -491,5 +622,5 @@ if __name__ == '__main__':
     ingestion.show_duration()
 
     print("\n----------------------------------------------")
-    print("[✔] Ingestions Program executed successfully!")
+    print("[✔] Checklist Assitant review completed successfully!")
     print("----------------------------------------------\n\n")

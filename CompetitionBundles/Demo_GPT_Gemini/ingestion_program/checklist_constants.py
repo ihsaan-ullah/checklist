@@ -7,6 +7,7 @@ The answer NA means that the abstract and introduction do not include the claims
 The abstract and/or introduction should clearly state the claims made, including the contributions made in the paper and important assumptions and limitations. A No or NA answer to this question will not be perceived well by the reviewers. 
 The claims made should match theoretical and experimental results, and reflect how much the results can be expected to generalize to other settings. 
 It is fine to include aspirational goals as motivation as long as it is clear that these goals are not attained by the paper. 
+Please only check the claims made in the abstract and introduction and verify that they summarize contributions and scope of the paper appropriately. Ignore the authors' justification for this question.
 """
     },
 
@@ -35,6 +36,7 @@ All assumptions should be clearly stated or referenced in the statement of any t
 The proofs can either appear in the main paper or the supplemental material, but if they appear in the supplemental material, the authors are encouraged to provide a short proof sketch to provide intuition. 
 Inversely, any informal proof provided in the core of the paper should be complemented by formal proofs provided in appendix or supplemental material.
 Theorems and Lemmas that the proof relies upon should be properly referenced. 
+Theory shall mean that the paper contains theorems and requires proofs. If there are no theorems and the authors claim there is no theory, then consider everything is ok. 
 """
     },
     {

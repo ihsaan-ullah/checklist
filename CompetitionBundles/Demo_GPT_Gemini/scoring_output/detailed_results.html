@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px;
+        padding-bottom: 40px;
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0;
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        /* color: #0033ff; */
+        color: #000;
+    }
+    .answer {
+        /* color: #28a745; */
+        color: #000;
+    }
+    .justification {
+        /* color: #de750b; */
+        color: #000;
+    }
+    .user_input {
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #3a3a3a;
+    }
+    .llm_review {
+        color: #000;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .llm_review-red {
+        background-color: #eacfcf;
+        border: 1px solid #FF0000;
+    }
+    .llm_review-green {
+        background-color: #c6e9c6;
+        border: 1px solid #008000;
+
+    }
+    .llm_review-orange {
+        background-color: #ebdecf;
+        border: 1px solid #FF8C00;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .score-red {
+        background-color: #eacfcf;
+        color: #000;
+        border: 1px solid #FF0000;
+    }
+    .score-orange {
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .score-purple {
+        background-color: #cac4e7;
+        color: #271b5e;
+        border: 1px solid #271b5e;
+    }
+    .scroll-button {
+        padding: 5px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: 3px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .button-green{
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .button-orange{
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .button-orange:hover {
+        background-color: #623600;
+        color: #fff;
+        border: none;
+    }
+    .button-green:hover {
+        background-color: #015f01;
+        color: #fff;
+        border: none;
+    }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+    .legend{
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content">
+        <h1>Meta-Album: Multi-domain Meta-Dataset forFew-Shot Image Classification</h1>
+
+        <hr>
+
+         <!-- Survey -->
+         <div id="survey">
+            <p>After reading through the LLM’s response below, <strong>please complete the following survey about your experience:</strong></p>
+            <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891=TWV0YS1BbGJ1bTogTXVsdGktZG9tYWluIE1ldGEtRGF0YXNldCBmb3JGZXctU2hvdCBJbWFnZSBDbGFzc2lmaWNhdGlvbiAtIDIwMjQtMDUtMTQgMTY6MTA6NDc=" target="_blank">Click to submit author experience survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+
+        <hr>
+
+        <!-- <h2>Scores</h2>
+        <table>
+            <tr>
+                <td><strong>Paper Quality Score:</strong></td>
+                <td><span class="score-label score-blue">0.53</span></td>
+            </tr>
+            <tr>
+                <td><strong>LLM Accuracy:</strong></td>
+                <td><span class="score-label score-purple">0.37</span></td>
+            </tr>
+        </table>
+
+        <hr> -->
+
+        <h2 id="review-summary">Review Summary</h2>
+        <div>
+            <span class="legend score-label score-green">&nbsp; &nbsp;</span> The LLM found no significant concern
+            <br>
+            <span class="legend score-label score-orange">&nbsp; &nbsp;</span> The LLM proposes possible improvements
+        </div>
+        <table>
+            <tr>
+              <th>Question</th>
+              <th></th>
+            </tr>
+            
+            <tr id="summary-question-1">
+                <td>1. Claims</td>
+                <td><a href="#question-1" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-2">
+                <td>2. Limitations</td>
+                <td><a href="#question-2" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-3">
+                <td>3. Theoritical assumptions and proofs</td>
+                <td><a href="#question-3" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-4">
+                <td>4. Experiments reproducibility</td>
+                <td><a href="#question-4" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-5">
+                <td>5. Code and data accessibility</td>
+                <td><a href="#question-5" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-6">
+                <td>6. Experimental settings/details</td>
+                <td><a href="#question-6" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-7">
+                <td>7. Error bars</td>
+                <td><a href="#question-7" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-8">
+                <td>8. Compute resources</td>
+                <td><a href="#question-8" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-9">
+                <td>9. NeurIPS code of ethics</td>
+                <td><a href="#question-9" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-10">
+                <td>10. Impacts</td>
+                <td><a href="#question-10" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-11">
+                <td>11. Safeguards</td>
+                <td><a href="#question-11" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-12">
+                <td>12. Credits</td>
+                <td><a href="#question-12" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-13">
+                <td>13. Documentation</td>
+                <td><a href="#question-13" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-14">
+                <td>14. Human subjects</td>
+                <td><a href="#question-14" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-15">
+                <td>15. Risks</td>
+                <td><a href="#question-15" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+        </table>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+        
+        
+        <div class="review" id="question-1">
+            <div class="user_input">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The abstract and introduction clearly state the main contributions and scope of the paper</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Review of Proposed Authors' Answer and Justification</h3><br><b>Answer:</b> Yes<br><b>Justification:</b> The abstract and introduction clearly state the main contributions and scope of the paper.<br><h3>Discrepancies Identified</h3><br><ul><li>The justification lacks specific pointers to the sections where the main contributions and scope are detailed, contrary to the guidelines which require this reference.</li><li>The abstract and introduction make claims about future dataset releases and competitions, which are not directly proven within the current paper and may not be fully aligned with existing contributions.</li><br><h3>Actionable Feedback</h3><br><li> <b>Provide Section References:</b></li></ul>- Modify the justification to include explicit references to specific sections that detail the paper's contributions and scope.<b>Example Revision:</b>- "The abstract and introduction clearly state the main contributions and scope of the paper. This is detailed in more depth in Sections 1.1 and 1.3."<br><ol><li> <b>Align Claims with Evidence:</b></li></ol>- Ensure that all claims made in the abstract and introduction are directly supported by evidence presented within the paper. For instance, claims about the release of additional datasets should be substantiated or clarified as future plans without implying they have already occurred.<b>Specific Changes:</b>- Adjust statements in the abstract: "The other 10 datasets will be released shortly after" to "We plan to release the other 10 datasets in the near future."- Reflect similar adjustments in the introduction.<br><ol><li> <b>Future Work Clarification:</b></li></ol>- Clearly demarcate aspirational goals and ongoing efforts as future work to avoid overstating the current contributions.<b>Example Addition:</b>- "We are committed to continually expanding the Meta-Album dataset and hosting a series of competitions, as detailed in our future work (Sections 1.1, 1.2)."<br><h3>Conclusion</h3><br>Adhering to these actionable feedback points will ensure that the paper meets the NeurIPS guidelines and accurately reflects its contributions.<br></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-2">
+            <div class="user_input">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have clearly explained the limitations of our work in Section: Discussion and conclusion</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> --- <b>Review of Authors' Proposed Answer and Justification:</b><br><h3>Proposed Authors' Answer:</h3><b>Yes</b><br><h3>Proposed Authors' Justification:</h3><b>We have clearly explained the limitations of our work in Section: Discussion and conclusion</b><br>---<br><h3>Discrepancies with the Actual Paper Content:</h3>Upon examining the "Discussion and conclusion" section in detail, it is apparent that the paper lacks a thorough and explicit discussion of the limitations of the work. Specifically, the section does not sufficiently address several key points recommended by the guidelines, such as:<ul><li>Strong assumptions and robustness to their violations.</li><li>Scope of claims made, particularly regarding the datasets utilized.</li><li>Computational efficiency and scalability with dataset size.</li><li>Potential issues related to privacy and fairness.</li><br><h3>Actionable Feedback:</h3><li> <b>Add Subsection on Limitations</b>:</li></ul>- Introduce a dedicated "Limitations" subsection under the "Discussion and conclusion" section to explicitly address the limitations.<ol><li> <b>Detail Assumptions and Robustness</b>:</li></ol>- Identify and discuss any strong assumptions made in your work (e.g., dataset homogeneity, annotation quality, etc.) and elaborate on how robust your findings are to potential violations of these assumptions.<br><ol><li> <b>Scope of Claims</b>:</li></ol>- Reflect on the range and diversity of datasets used for validation. Clearly state how generalizable the results are beyond the tested datasets.<br><ol><li> <b>Computational Efficiency</b>:</li></ol>- Discuss the computational requirements for running your proposed methods and how they scale with increasing dataset sizes. Mention any bottlenecks or efficiency considerations observed.<br><ol><li> <b>Privacy and Fairness Issues</b>:</li></ol>- If applicable, discuss the implications your methods could have in terms of privacy and fairness. Even if not directly relevant, briefly stating this would enhance transparency.<br><ol><li> <b>Impacts of Dataset Composition</b>:</li></ol>- Discuss how the varying number of classes and examples per class might affect the performance of the proposed methods.<br><h3>Conclusion:</h3>The justification provided does not align with the actual content of the "Discussion and conclusion" section, which currently lacks comprehensively articulated limitations.<br>---<br></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-3">
+            <div class="user_input">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This does not apply to our research work because our research is not theoretical rather it deals with a meta-dataset creation and experiments executed using this meta-dataset</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Discrepancies Identified</h3><ol><li> <b>Checklist Question Relevance</b>:</li></ol>- The proposed "Answer" and "Justification" are appropriate considering the "Paper" content. The "Paper" is primarily experimental and involves dataset creation; it does not include theoretical results, assumptions, or proofs.<br><h3>Actionable Feedback:</h3><ol><li> <b>Clarify Non-Theoretical Nature</b>:</li></ol>- <b>Current</b>: "This does not apply to our research work because our research is not theoretical rather it deals with a meta-dataset creation and experiments executed using this meta-dataset."- <b>Suggested</b>: "This question does not apply to our research work, which focuses on the creation of a meta-dataset (Meta-Album) for few-shot learning and accompanying experimental evaluations. No theoretical results, assumptions, or proofs are provided."<br><ol><li> <b>Referencing Specific Sections</b>:</li></ol>- While the justification already clearly indicates the lack of theoretical content, explicitly pointing to certain sections (e.g., "Introduction," "Meta-Album design and initial release") would strengthen the statement.- <b>Suggested Addition</b>: "As described in Section 1 (Introduction) and Section 2 (Meta-Album design and initial release), our paper does not present any theoretical results requiring assumptions or proofs."<br><ol><li> <b>Ensure Consistency Across Sections</b>:</li></ol>- Validate that all sections referenced by the justification accurately reflect the scope and content described (i.e., no hidden theoretical claims or proofs).<br><h3>Justification Example:</h3>```plaintextN/A``````plaintextThis does not apply to our research work because our research is not theoretical; rather it deals with a meta-dataset creation and experiments executed using this meta-dataset. As detailed in Section 1 (Introduction) and Section 2 (Meta-Album design and initial release), no theoretical results, assumptions, or proofs are provided.```<br><h3>Finalization:</h3><ul><li><b>Consistency Check</b>: Ensure this justification aligns with other checklist answers to maintain consistency.</li><li><b>Proofreading</b>: Conduct final proofreading for coherence and grammatical accuracy.</li><br><h3>Conclusion and "Everything is appropriately addressed and clear. The justification accurately describes the non-theoretical nature of the paper and appropriately points to the relevant sections of the document."</h3><br><br></ul></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-4">
+            <div class="user_input">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have disclosed all the details of our experiments and provide code and instructions publicly on the Meta-Album GitHub repository (https://github.com/ihsaanullah/meta-album) for reproducibility and results verification</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> Itemized, actionable feedback:<br><ol><li> <b>Answer Completeness and Specificity:</b></li></ol>- <b>Action:</b> Update the justification to include specific sections of the paper where details necessary for reproducibility are provided. Specifically, mention sections like "Data Preparation" (Section 2.3 and Appendix C), "Experimental Setup" (Section 3.2 and Appendix F), and "Baselines and Techniques" (Section 3.2).<br><ol><li> <b>Experimental Setup Details:</b></li></ol>- <b>Observation:</b> While the paper describes experimental setups and techniques, the justification does not reference these sections.- <b>Action:</b> Ensure that the justification explicitly references the sections detailing the experimental setups and methodologies, especially Section 3.1 (Problem setting) and Section 3.2 (Experiments).<br><ol><li> <b>Repository Link Clarification:</b></li></ol>- <b>Action:</b> Clarify in the justification that the repository contains not only the code but also detailed instructions on dataset usage and the preparation steps described in Appendix C. For example: "Detailed instructions on dataset usage and preparation steps are provided in Appendix C, and the code for experiments is hosted in our GitHub repository (https://github.com/ihsaan-ullah/meta-album)."<br><ol><li> <b>Citation and Use of External References:</b></li></ol>- <b>Observation:</b> The justification could benefit from mentioning specific external sources cited within the sections to enhance credibility.- <b>Action:</b> Mention any relevant citations that provide external validation or additional resources, e.g., "Refer to the citations [74], [45] for the dataset and model descriptions used."<br><ol><li> <b>Any Potential Gaps in Reproducibility:</b></li></ol>- <b>Observation:</b> The current justification implies completeness but does not address specific challenges or limitations that readers might face in reproducing the results.- <b>Action:</b> Add a sentence addressing potential limitations and directing the reader to supplementary materials or appendices for additional details. For example: "While the main experimental results can be reproduced following the provided details, additional FAQs and troubleshooting tips are available in Appendix F."<br>By integrating these suggestions, the justification will align better with the provided guidelines, demonstrating a thorough commitment to reproducibility.<br><br></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-5">
+            <div class="user_input">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have publicly provided the code on our github repository and details about how to access the datasets on our website.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <b>Itemized Actionable Feedback:</b><br><ol><li> <b>Provide Exact URLs and Sections (Data Access):</b></li></ol>- <b>Issue:</b> The justification does not specify where in the paper or supplemental material the detailed instructions for accessing the datasets are provided.- <b>Action:</b> Mention explicit sections in the paper (e.g., Section 1.2, Appendix A) where data access instructions and URLs are detailed. Clearly state the link to the dataset (e.g., https://meta-album.github.io/dataset-access).<br><ol><li> <b>Ensure Code and Data Instructions are Detailed:</b></li></ol>- <b>Issue:</b> Justification merely states availability without confirming the depth of the provided instructions for reproducibility.- <b>Action:</b> Ensure supplemental material includes detailed instructions on how the datasets can be accessed, prepared, and used. Verify instructions include step-by-step guides for downloading, setting up, and running the code, including any dependencies or environment configurations. Point to the relevant section in the paper where these instructions can be found.<br><ol><li> <b>Include Reference to Code Usage for Reproducibility:</b></li></ol>- <b>Issue:</b> The justification should explicitly state how to reproduce the experiments with the provided code, which is not currently mentioned.- <b>Action:</b> Ensure the GitHub repository includes a comprehensive README and possibly a script (`run_experiments.sh`) for running the main experimental results. Reference specific sections in the paper or supplemental material where users can find these instructions.<br><ol><li> <b>Highlight Computational Efficiency Claimed in Justification:</b></li></ol>- <b>Issue:</b> While the justification mentions that it is public, it lacks emphasis on computational reproducibility.- <b>Action:</b> In the justification, mention how the provided code and instructions allow experiments to be run on described hardware (e.g., PNY GeForce RTX 2080TI, NVIDIA V100). Ensure this detail aligns with experiment sections in the paper (see section 2.2 for computational resources).<br><ol><li> <b>Clarify Release Strategy and Availability Timeline:</b></li></ol>- <b>Issue:</b> The paper mentions future releases but does not clarify their exact impact on reproducibility.- <b>Action:</b> Specify in the justification that while 30 datasets are currently provided, the remaining 10 will be available soon, along with a timeline for these datasets' availability. Confirm this information in the relevant sections (e.g., timelines and access instructions in the introduction).<br></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-6">
+            <div class="user_input">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have explained the experimental settings or details in Section 3.2: Experiments. Additional details can be found in the Meta-Album GitHub repository.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Identified Issues and Feedback</h3><br><ol><li> <b>Incomplete Experimental Details in the Core Paper:</b></li></ol>- <b>Issue:</b> The core paper (specifically Section 3.2: Experiments) does not sufficiently detail the hyperparameters, choice of optimizer, number of epochs, batch size, learning rate, and other critical experimental settings.- <b>Action:</b> Add a subsection to Section 3.2 detailing the hyperparameters used for each experiment, including the optimizer type, learning rate, batch size, number of epochs, and any other relevant settings.<br><ol><li> <b>Dependence on External Repository:</b></li></ol>- <b>Issue:</b> The justification mentions that additional details are available in the Meta-Album GitHub repository, implying that not all necessary training and test details are within the paper.- <b>Action:</b> Ensure all core experimental details and critical settings are present within the main text or an appendix of the paper. The repository should only supplement, not replace, the in-paper experimental details.<br><ol><li> <b>Ambiguous Justification:</b></li></ol>- <b>Issue:</b> The justification points to a general section (Section 3.2) without specifying the exact subsections or paragraphs that contain the needed information.- <b>Action:</b> Revise the justification to refer to specific paragraphs or tables within Section 3.2 where the required training and testing details are located.<br><ol><li> <b>Explicit Data Splits:</b></li></ol>- <b>Issue:</b> The paper lacks explicit details on how the data were split into training, validation, and test sets beyond stating the existence of meta-splits.- <b>Action:</b> Include descriptions of the data splitting strategy, such as how datasets were divided into meta-training, meta-validation, and meta-testing splits. Specify any random seeds used for reproducibility.<br><h3>Revised Justification:</h3><br>"We have explained the experimental settings, including the hyperparameters, optimizer, data splits, and how they were chosen, in Section 3.2: Experiments, particularly in the third paragraph. Additional technical details can be found in Table 5 and Appendix F. We also provide supplementary material and code in the Meta-Album GitHub repository for further reference."<br><h3>0.5</h3></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-7">
+            <div class="user_input">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> In figure-2, figure-3, Appendix E: Within Domain Few-shot learning, and Appendix F: Cross-Domain Few-shot learning, we have reported error bars</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <b>Itemized Actionable Feedback:</b><br><ol><li> <b>Clarify Factors of Variability Captured by Error Bars:</b></li></ol>- <b>Issue:</b> The justification refers to the figures and appendices where error bars are present but does not specify the factors of variability that these error bars capture (e.g., train/test split, initialization, overall run conditions).- <b>Action:</b> In the justification, explicitly state the sources of variability that the error bars are capturing. For example, "The error bars in Figures 2 and 3, as well as in the appendices, represent standard deviations computed from different runs with random train/test splits."<br><ol><li> <b>Method of Calculating Error Bars:</b></li></ol>- <b>Issue:</b> The method used to calculate the error bars is not described.- <b>Action:</b> Add a description of the method used to calculate the error bars either in the justification or in the relevant sections of the paper. For instance, "Error bars represent the standard deviation of accuracy across 3 different random seeds for each experimental setup."<br><ol><li> <b>Assumptions Made:</b></li></ol>- <b>Issue:</b> No assumptions about the error distribution or any relevant details are provided.- <b>Action:</b> Include any assumptions made for the calculation of error bars. For example, "We assume normally distributed errors for the calculation of the confidence intervals."<br><ol><li> <b>Nature of Error Bars:</b></li></ol>- <b>Issue:</b> It is not clear whether the error bars are representing standard deviation, standard error of the mean, or some other metric.- <b>Action:</b> Specify the nature of the error bars. For instance, "The error bars denote ±1 standard deviation from the mean accuracy."<br><ol><li> <b>Explanation in the Text:</b></li></ol>- <b>Issue:</b> The main text of the paper does not explain how the error bars were calculated, though this is crucial for transparency and reproducibility.- <b>Action:</b> In the main text (likely in the sections describing the experiments and their results), add a brief explanation of how the error bars were calculated and ensure that the figures or tables are properly referenced. A typical inclusion could be, "Figure 2 error bars are computed as follows: for each experiment, we ran the model 5 times with different random initializations, and the error bars represent the standard deviation of the results."<br>By addressing these areas, the paper will align better with NeurIPS guidelines on reporting error bars and statistical significance, enhancing transparency and reproducibility.<br></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-8">
+            <div class="user_input">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have provided details about compute resources used in Section 3.2: Experiments, Appendix E: Within Domain Few-shot learning, and Appendix F: Cross-Domain Few-shot learning</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Discrepancy Identification</h3><br>Upon examination of the proposed "Answer" and "Justification" provided by the authors, there are a few discrepancies and areas lacking sufficient detail in the actual "Paper" content with respect to the checklist question regarding computer resources:<br><ol><li> <b>Compute Workers</b>:</li></ol>- While the sections mentioned (Section 3.2, Appendix E, and Appendix F) provide some details about the GPUs used (e.g., PNY GeForce RTX 2080TI and NVIDIA V100), there is no mention of the type of compute workers (e.g., internal cluster or cloud provider).<br><ol><li> <b>Memory</b>:</li></ol>- The paper details the VRAM for GPUs (11GB for RTX 2080TI and 16GB for V100) but does not provide any information on the CPU memory used during the experiments.<br><ol><li> <b>Execution Time</b>:</li></ol>- The paper states that each experimental run took at most 24 hours but does not provide detailed execution times for each individual experiment or task set.<br><ol><li> <b>Disclosure of Total Compute</b>:</li></ol>- There is no clear estimate or disclosure of the total compute required for the entire research project, including both successful and failed experiments.<br><h3>Actionable Feedback</h3><br><ol><li> <b>Detail Compute Workers</b>:</li></ol>- Specify whether the experiments were conducted on an internal cluster or using a cloud provider. If applicable, disclose the number and types of nodes, including CPU specifications.<br><ol><li> <b>Add Memory Details</b>:</li></ol>- Include information on the total CPU memory available for each experimental setup.<br><ol><li> <b>Provide Detailed Execution Times</b>:</li></ol>- Detail the execution times for each individual experimental run. This includes time taken for different setups and tasks, particularly those discussed in Sections 3.2, Appendix E, and Appendix F.<br><ol><li> <b>Estimate Total Compute</b>:</li></ol>- Provide an estimate of the total compute resources used for the entire research project, including any preliminary or failed experiments. This can be an aggregate of all experimental runs along with a discussion of any notable resource-intensive steps.<br><ol><li> <b>Clarify Cross-Domain Experiments</b>:</li></ol>- Add specific details for cross-domain experiments regarding compute resources. If these differ significantly from the within-domain experiments, this should be clearly noted.<br><br><br></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-9">
+            <div class="user_input">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We completely comply with the NeurIPS Code of Ethics</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback</h3><br><ol><li> <b>Insufficient Justification</b>:</li></ol>- The proposed justification is too vague and does not point to any specific sections that demonstrate adherence to the NeurIPS Code of Ethics.<br><b>Action</b>:- Update the justification to reference specific sections of the paper that deal with ethical considerations properly. For instance, licensing information, dataset preparation steps to avoid introducing bias (Section 2.3), and acknowledgment of data sources (Section 4).<br><ol><li> <b>Details on Ethical Considerations</b>:</li></ol>- The paper should explicitly address the ethical considerations, such as privacy, fairness, and consent.<br><b>Action</b>:- Explicitly mention steps taken to ensure datasets are used ethically, such as removal of offensive material (Section 2.2), ensuring proper licensing (Appendix B), and ensuring datasets do not reinforce biases (Sections 2.3, C.4).<br><ol><li> <b>Citation and Attribution</b>:</li></ol>- Citing and crediting the original dataset authors is ethical but needs to be tied into the justification.<br><b>Action</b>:- Mention how the citations and attributions made throughout the paper (Section 4 and Appendix A) adhere to the NeurIPS Code of Ethics by giving credit to the original dataset creators.<br><ol><li> <b>Raw Data and Reproducibility</b>:</li></ol>- The guidelines require ensuring reproducibility, and the current justification does not address this.<br><b>Action</b>:- Reference how the paper's inclusion of raw dataset URLs and preprocessing scripts (Section 2.4 and GitHub repository) supports the reproducibility and ethical dissemination of research.<br><h3>Revised Answer and Justification</h3><br><b>Answer</b>:<START OF ANSWER>Yes<END OF ANSWER><br><b>Justification</b>:<START OF JUSTIFICATION>The paper conforms to the NeurIPS Code of Ethics. Ethical considerations, such as dataset licensing and removal of offensive material, are detailed in sections 2.2 (Data search and preparation), Appendix B (License information), and acknowledgments. Steps taken to avoid introducing biases are described in sections 2.3 (Data preparation), C.3 (Image resizing), and C.5 (Quality control). Proper citations and attributions are made throughout the paper to ensure credit is given to the original dataset creators.<END OF JUSTIFICATION><br>---<br></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-10">
+            <div class="user_input">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> There are no negative societal impacts. Rather, this meta-dataset can foster progress in the fields of few-shot learning and meta-learning. We have added “recommended use” in Section 1.3.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> Itemized Feedback:<br><ol><li> <b>Inadequate Discussion of Negative Societal Impacts:</b></li></ol>- The justification simply states "There are no negative societal impacts," which is dismissive and does not provide a thorough analysis as required by the guidelines. The authors should explicitly discuss potential negative societal impacts, such as privacy concerns, misuse for surveillance, or biases in datasets that can affect fairness in applications.<br><ol><li> <b>Lack of Section Reference:</b></li></ol>- The justification points to "recommended use" in Section 1.3. However, this does not explicitly discuss societal impacts, either positive or negative. The discussion on societal impacts should be embedded in a dedicated section.<br><ol><li> <b>Insufficient Scope on Positive Societal Impacts:</b></li></ol>- While the justification mentions that this meta-dataset can foster progress in fields like few-shot learning and meta-learning, it does not explain how these advancements translate to positive societal impacts. The authors should elaborate on how these technological advancements can benefit society, such as potential applications in healthcare, education, and industry.<br><ol><li> <b>Missing Mitigation Strategies:</b></li></ol>- If there are potential negative societal impacts, the guidelines recommend discussing mitigation strategies. Since the authors state there are no negative impacts, they should still address why they believe mitigation strategies are unnecessary.<br>Actionable Feedback:<br><ol><li> <b>Expand the Justification Section:</b></li></ol>- Provide a more thorough analysis of potential negative societal impacts, even if deemed unlikely or mitigable. Consider aspects like dataset biases, privacy issues, and potential misuse.<br><ol><li> <b>Add a Dedicated Societal Impact Section:</b></li></ol>- Include a new subsection under the discussion or conclusion specifically addressing the societal impacts, both positive and negative. Reference this subsection in the checklist justification.<br><ol><li> <b>Detail Positive Impacts:</b></li></ol>- Elaborate on how the meta-dataset can positively impact society. Include potential applications and their benefits in various domains like healthcare, environmental monitoring, etc.<br><ol><li> <b>Discuss Mitigation Strategies:</b></li></ol>- Offer mitigation strategies for any identified negative impacts. Explain whether any checks or balances are in place to prevent misuse or address ethical concerns.<br><br></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-11">
+            <div class="user_input">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Indeed, we are releasing our datasets with proper license and terms of use. We have also provided recommended usage of these datasets.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <b>Feedback:</b><br><ol><li> <b>Ensure Specific Reference to Safeguards:</b> The proposed justification lacks explicit details on the safeguards that have been implemented to prevent misuse of the datasets. The justification should include references to the specific sections where these safeguards and recommended usages are discussed. For example, details on exclusion criteria for removing offensive material are mentioned, but the direct impact of these actions as safeguards is not detailed.</li><br><li> <b>Recommended Usage Restrictions:</b> The paper should provide a clear articulation of the restrictions on the usage of the datasets. Mention that Meta-Album is recommended for non-commercial uses and fundamental research as explicitly stated in Section 1.3 and Section A.11. This clarity ensures adherence to responsible data usage principles.</li><br><li> <b>Highlight Enforcement Mechanisms:</b> Explain mechanisms, if any, put in place to enforce the recommended usage and licensing terms. This includes user agreements, access restrictions, or monitoring mechanisms. Ensure these are clearly referenced within the paper and accessible to potential users to mitigate risks.</li><br><li> <b>Clarify License and Use Conditions:</b> The paper needs to ensure that any usage that could potentially be harmful (e.g., generation of adversarial examples or data poisoning) is disallowed or restricted under the licensing terms. References to these restrictions should be explicitly noted in the dataset license information section (Appendix B) and permissions dialogue.</li><br><li> <b>Appendix B Consistency:</b> The license information and the terms of use should be mentioned consistently throughout the paper, ensuring that any reader can understand how to obtain and use the datasets responsibly. Specific attention should be given to Appendix B where license details are outlined.</li><br></ol></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-12">
+            <div class="user_input">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We are releasing our datasets with proper license, we are also mentioning the original licenses for the original datasets in Appendix B: License information of Meta-Album datasets</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <b>Itemized, actionable feedback:</b><br><ol><li> <b>Ensure consistent terminology and detailed references:</b></li></ol>- Current Justification: "We are releasing our datasets with proper license, we are also mentioning the original licenses for the original datasets in Appendix B: License information of Meta-Album datasets."- <b>Action:</b> Explicitly reference all instances where you have credited original creators and mentioned licenses within the main paper. The justifications provided should explicilty mention both the appendix and corresponding sections throughout the paper to guide the reader.<br><ol><li> <b>Cite licenses within the main text:</b></li></ol>- Current Justification only points to Appendix B.- <b>Action:</b> Reinforce the citations in the main sections or discussions where a specific dataset or piece of code is introduced by including a brief mention of the license or a reference to the appendix for detailed licensing information. This makes it clear that you respect and acknowledge licenses throughout the paper.<br><ol><li> <b>Link to dataset sources and licensure:</b></li></ol>- Currently, there are detailed descriptions in Appendix B.- <b>Action:</b> Include URLs or references to the original datasets and licenses prominently in the main paper sections where datasets are introduced or discussed, in addition to the detailed list provided in Appendix B.<br><ol><li> <b>Explicit mention of terms of use:</b></li></ol>- Current Answer and Justification do not explicitly state terms of use.- <b>Action:</b> State clearly that non-commercial licenses are being used (when applicable) and guide on commercial use contacting the data owners. Ensure this is repeated in the main sections of the paper where the usage of a dataset could be significant for orientation within the field.<br><ol><li> <b>Address any missing licenses:</b></li></ol>- If a license is not explicitly mentioned for any dataset and defaulting to CC BY NC 4.0 is the fallback.- <b>Action:</b> Ensure that you have made every possible effort to contact contributors and verify dataset licenses. If defaulting to CC BY NC 4.0, make this clear within the main text.<br></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-13">
+            <div class="user_input">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have properly documented our new datasets using meta-data files and datasheets for datasets (provided in the appendices). We have also designed a website for users to easily get all the datasets and related information</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <b>Itemized, Actionable Feedback:</b><br><ol><li> <b>Include Specific Sections in Justification</b>:</li></ol>- <b>Action</b>: Point to specific sections in the paper where the new assets and their documentation are detailed.- <b>Justification</b>: The justification should guide the reader directly to relevant information. Mention sections like "Appendix A" for meta-data, "Appendix B" for licenses, and the "Meta-Album website" links.<br><ol><li> <b>Clarify Documentation Presence</b>:</li></ol>- <b>Action</b>: Ensure that documentation files referred to (like meta-data files and datasheets for datasets) are explicitly listed and described in the justification.- <b>Justification</b>: Although the paper states these are included, the specifics are not explicitly called out in the justification.<br><ol><li> <b>Meta-Data and Accessibility</b>:</li></ol>- <b>Action</b>: Ensure that meta-data files are clearly mentioned alongside new assets in the justification, indicating their presence in the appendices.- <b>Justification</b>: Reinforce that users can find comprehensive information on the meta-data and access methods in specified sections.<br><ol><li> <b>Link to Appendix Sections</b>:</li></ol>- <b>Action</b>: Include explicit references to where datasheets and meta-data examples reside within the appendices.- <b>Justification</b>: Facilitates easy navigation and verification of claims by reviewers and readers.<br></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-14">
+            <div class="user_input">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This does not apply on our research as we are not doing any crowdsourcing experiments</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <b>Itemized Actionable Feedback:</b><br><ol><li> <b>Answer Consistency with Paper Content</b>:</li></ol>- <b>Issue</b>: The paper does mention crowdsourcing (e.g., SPIPOLL Science project, PlantVillage), which implies potential human involvement. Therefore, labeling the answer as “N/A” without further explanation might not be entirely accurate.- <b>Suggested Action</b>: Re-evaluate if any form of instruction or compensation information was provided to these participants. If no detailed tasks or compensation was involved, brief clarification should be added concerning the type of crowdsourcing or human involvement, confirming why details weren’t provided.<ol><li> <b>Clear Justification</b>:</li></ol>- <b>Issue</b>: The justification provided does not sufficiently cover the conditions under which N/A is appropriate, considering the mentions of crowdsourcing efforts.- <b>Suggested Action</b>: Add a clarification in the Justification, such as: “This does not apply to our research as we are not performing crowdsourcing experiments involving detailed instructions or significant compensation that necessitates reporting.”<br><ol><li> <b>Guideline Adherence</b>:</li></ol>- <b>Issue</b>: The justification does not directly address if there were any screenshots or participant instructions relevant to research with human subjects.- <b>Suggested Action</b>: Make sure the justification explicitly clarifies the lack of detailed participant instructions or screenshots in any crowdsourcing efforts mentioned: "Crowdsourcing contributions referenced (e.g., SPIPOLL Science project, PlantVillage) didn’t involve structured instructions or compensation details applicable to report."<br><b>Score</b>:<br></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-15">
+            <div class="user_input">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This does not concerns us as we are not dealing with human subjects in our research.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <ol><li> <b>Discrepancy in Justification:</b></li></ol>- The paper does not mention anywhere that human subjects are involved in the research. The focus is solely on datasets and image classification tasks without reference to any subjects.<br><ol><li> <b>Itemized, Actionable Feedback:</b></li></ol>- <b>Explicit Statement on Human Subjects:</b>- Action: Add a specific statement in a relevant section (e.g., Introduction) clarifying that no human subjects were involved in the research.- Reason: Transparency and adherence to NeurIPS guidelines on detailing human subject involvement and ensuring IRB compliance.<br><ol><li> <b>Clearer Justification:</b></li></ol>- Action: Modify the justification to make it clear that the research does not involve human subjects.- Example: "We do not involve any human subjects in our research as it is based entirely on publicly available datasets for image classification."- Reason: A clearer justification aligns with the guidelines requiring authors to address human subjects explicitly.<br><ol><li> <b>Section Citation:</b></li></ol>- Action: Cite the specific section or state clearly within the rebuttal that the paper focuses only on publicly available datasets.- Reason: This makes the justification more robust and directs reviewers to the relevant sections in the paper.<br><br></div>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
+        </div>
+        
+
+        <!-- Survey -->
+        <div>
+            <p><strong>Please complete the following survey about your experience:</strong></p>
+            <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891=TWV0YS1BbGJ1bTogTXVsdGktZG9tYWluIE1ldGEtRGF0YXNldCBmb3JGZXctU2hvdCBJbWFnZSBDbGFzc2lmaWNhdGlvbiAtIDIwMjQtMDUtMTQgMTY6MTA6NDc=" target="_blank">Click to submit author experience survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+        
+    </div>
+</div>
+
+</body>
+</html>

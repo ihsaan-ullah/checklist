@@ -190,6 +190,15 @@
 
         <hr>
 
+         <!-- Survey -->
+         <div id="survey">
+            <p>After reading through the LLM’s response below, <strong>please complete the following survey about your experience:</strong></p>
+            <a class="button" href="{{ google_form }}" target="_blank">Click to submit author experience survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+
+        <hr>
+
         <!-- <h2>Scores</h2>
         <table>
             <tr>
@@ -204,7 +213,7 @@
 
         <hr> -->
 
-        <h2>Review Summary</h2>
+        <h2 id="review-summary">Review Summary</h2>
         <div>
             <span class="legend score-label score-green">&nbsp; &nbsp;</span> The LLM found no significant concern
             <br>
@@ -223,13 +232,6 @@
             {% endfor %}
         </table>
 
-        <!-- Survey -->
-        <div>
-            <p>After reading through the LLM’s response below, <strong>please complete the following survey about your experience:</strong></p>
-            <a class="button" href="{{ google_form }}" target="_blank">Click to submit post submission survey</a>
-            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
-        </div>
-
         <hr>
 
         <h2>Detailed Review</h2>
@@ -243,14 +245,14 @@
             </div>
             
             <div class="llm_review llm_review-{% if review.score == 1 %}green{% else %}orange{% endif %} "><strong>LLM Review:</strong><br> {{ review.review }}</div>
-            <a class="move-to-top" href="#summary-{{ review.question_id }}">↑ Back to summary</a>
+            <a class="move-to-top" href="#survey">↑ Back to summary</a>
         </div>
         {% endfor %}
 
         <!-- Survey -->
         <div>
-            <p>Please complete the following survey about your experience:</p>
-            <a class="button" href="{{ google_form }}" target="_blank">Click to submit post submission survey</a>
+            <p><strong>Please complete the following survey about your experience:</strong></p>
+            <a class="button" href="{{ google_form }}" target="_blank">Click to submit author experience survey</a>
             <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
         </div>
         
