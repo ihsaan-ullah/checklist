@@ -161,6 +161,9 @@ class Ingestion():
         text = text.replace("- ", "")
         text = re.sub(r'\n+', ' ', text)
         text = re.sub(r'\s+', ' ', text)
+        text = text.replace("ﬁ", "fi")
+        text = text.replace("ﬂ", "fl")
+        text = text.replace("https://neurips.cc/public/ EthicsGuidelines", "https://neurips.cc/public/EthicsGuidelines")
         text = text.strip()
         return text
 
@@ -270,7 +273,6 @@ class Ingestion():
         general_guidelines = """If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
 While "Yes" is generally preferable to "No", it is perfectly acceptable to answer "No" provided a proper justification is given (e.g., "error bars are not reported because it would be too computationally expensive" or "we were unable to find the license for the dataset we used").
 """
-
         checklist_df = pd.DataFrame(columns=['Question', 'Question_Title', 'Answer', 'Justification', 'Guidelines', 'Review', 'Score', 'LLM'])
         try:
             for question_index, checklist_item in enumerate(checklist_data):
@@ -286,9 +288,6 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
                 if mtch:
                     answer = mtch.group(1).strip()
                     justification = mtch.group(2).strip() if mtch.group(2).strip() else None
-                    # guidelines = mtch.group(3).strip() if mtch.group(3).strip() else None
-                    # if guidelines:
-                    #     guidelines = self.clean_guidelines(guidelines)
 
                     if justification is not None and justification.isdigit():
                         justification = None
