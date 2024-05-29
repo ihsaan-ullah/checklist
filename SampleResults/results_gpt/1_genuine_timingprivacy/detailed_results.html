@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px;
+        padding-bottom: 40px;
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0;
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        /* color: #0033ff; */
+        color: #000;
+    }
+    .answer {
+        /* color: #28a745; */
+        color: #000;
+    }
+    .justification {
+        /* color: #de750b; */
+        color: #000;
+    }
+    .user_input {
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #3a3a3a;
+    }
+    .llm_review {
+        color: #000;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .llm_review-red {
+        background-color: #eacfcf;
+        border: 1px solid #FF0000;
+    }
+    .llm_review-green {
+        background-color: #c6e9c6;
+        border: 1px solid #008000;
+
+    }
+    .llm_review-orange {
+        background-color: #ebdecf;
+        border: 1px solid #FF8C00;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .score-red {
+        background-color: #eacfcf;
+        color: #000;
+        border: 1px solid #FF0000;
+    }
+    .score-orange {
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .score-purple {
+        background-color: #cac4e7;
+        color: #271b5e;
+        border: 1px solid #271b5e;
+    }
+    .scroll-button {
+        padding: 5px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: 3px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .button-green{
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .button-orange{
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .button-orange:hover {
+        background-color: #623600;
+        color: #fff;
+        border: none;
+    }
+    .button-green:hover {
+        background-color: #015f01;
+        color: #fff;
+        border: none;
+    }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+    .legend{
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content">
+        <h1>Batching of Tasks by Users of Pseudonymous Forums: Anonymity Compromise and Protection</h1>
+
+        <hr>
+
+        <!-- <h2>Scores</h2>
+        <table>
+            <tr>
+                <td><strong>Paper Quality Score:</strong></td>
+                <td><span class="score-label score-blue">0.87</span></td>
+            </tr>
+            <tr>
+                <td><strong>LLM Accuracy:</strong></td>
+                <td><span class="score-label score-purple">0.2</span></td>
+            </tr>
+        </table>
+
+        <hr> -->
+
+        <h2>Review Summary</h2>
+        <div>
+            <span class="legend score-label score-green">&nbsp; &nbsp;</span> The LLM found no significant concern
+            <br>
+            <span class="legend score-label score-orange">&nbsp; &nbsp;</span> The LLM proposes possible improvements
+        </div>
+        <table>
+            <tr>
+              <th>Question</th>
+              <th></th>
+            </tr>
+            
+            <tr id="summary-question-1">
+                <td>1. Claims</td>
+                <td><a href="#question-1" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-2">
+                <td>2. Limitations</td>
+                <td><a href="#question-2" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-3">
+                <td>3. Theoritical assumptions and proofs</td>
+                <td><a href="#question-3" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-4">
+                <td>4. Experiments reproducibility</td>
+                <td><a href="#question-4" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-5">
+                <td>5. Code and data accessibility</td>
+                <td><a href="#question-5" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-6">
+                <td>6. Experimental settings/details</td>
+                <td><a href="#question-6" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-7">
+                <td>7. Error bars</td>
+                <td><a href="#question-7" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-8">
+                <td>8. Compute resources</td>
+                <td><a href="#question-8" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-9">
+                <td>9. NeurIPS code of ethics</td>
+                <td><a href="#question-9" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-10">
+                <td>10. Impacts</td>
+                <td><a href="#question-10" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-11">
+                <td>11. Safeguards</td>
+                <td><a href="#question-11" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-12">
+                <td>12. Credits</td>
+                <td><a href="#question-12" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-13">
+                <td>13. Documentation</td>
+                <td><a href="#question-13" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-14">
+                <td>14. Human subjects</td>
+                <td><a href="#question-14" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-15">
+                <td>15. Risks</td>
+                <td><a href="#question-15" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+        </table>
+
+        <!-- Survey -->
+        <div>
+            <p>After reading through the LLM’s response below, <strong>please complete the following survey about your experience:</strong></p>
+            <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891=QmF0Y2hpbmcgb2YgVGFza3MgYnkgVXNlcnMgb2YgUHNldWRvbnltb3VzIEZvcnVtczogQW5vbnltaXR5IENvbXByb21pc2UgYW5kIFByb3RlY3Rpb24=" target="_blank">Click to submit post submission survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+        
+        
+        <div class="review" id="question-1">
+            <div class="user_input">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The abstract specifically describes each finding of the paper.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-1">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-2">
+            <div class="user_input">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> We discuss future work in section 7, but do not discuss limitations in detail.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-2">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-3">
+            <div class="user_input">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Detailed in section 6 (Experiments).</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-3">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-4">
+            <div class="user_input">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Detailed in section 6 (Experiments).</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-4">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-5">
+            <div class="user_input">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> available on GitHub, linked to in paper.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-5">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-6">
+            <div class="user_input">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Details are given in the experimental section (6).</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-6">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-7">
+            <div class="user_input">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> Our precision-recall curves and delay plots do not show error bars.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-7">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-8">
+            <div class="user_input">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> There were not significant compute resources used.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-8">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-9">
+            <div class="user_input">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have preserved anonymity and gotten IRB approval for this work.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-9">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-10">
+            <div class="user_input">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Privacy risks are discussed in the introduction.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-10">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-11">
+            <div class="user_input">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> No such risks.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-11">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-12">
+            <div class="user_input">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> Does not use existing assets.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-12">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-13">
+            <div class="user_input">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> Does not release new assets.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-13">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-14">
+            <div class="user_input">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> No human subjects.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-14">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-15">
+            <div class="user_input">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Disclosed to IRB board.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-15">↑ Back to summary</a>
+        </div>
+        
+
+        <!-- Survey -->
+        <div>
+            <p>Please complete the following survey about your experience:</p>
+            <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891=QmF0Y2hpbmcgb2YgVGFza3MgYnkgVXNlcnMgb2YgUHNldWRvbnltb3VzIEZvcnVtczogQW5vbnltaXR5IENvbXByb21pc2UgYW5kIFByb3RlY3Rpb24=" target="_blank">Click to submit post submission survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+        
+    </div>
+</div>
+
+</body>
+</html>

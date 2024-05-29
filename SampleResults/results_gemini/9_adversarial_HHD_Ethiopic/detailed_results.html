@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        position: absolute;
+    }
+    .button-top {
+        top: 10px;
+        right: 20px;
+    }
+    .button-bottom {
+        bottom: 10px;
+        right: 20px;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px; /* Adjust according to button height and margin */
+        padding-bottom: 40px; /* Add padding instead of margin */
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0; /* Remove default margin */
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        /* color: #0033ff; */
+        color: #000;
+    }
+    .answer {
+        /* color: #28a745; */
+        color: #000;
+    }
+    .justification {
+        /* color: #de750b; */
+        color: #000;
+    }
+    .user_input {
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #3a3a3a;
+    }
+    .llm_review {
+        color: #000;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .llm_review-red {
+        background-color: #eacfcf;
+        border: 1px solid #FF0000;
+    }
+    .llm_review-green {
+        background-color: #c6e9c6;
+        border: 1px solid #008000;
+
+    }
+    .llm_review-orange {
+        background-color: #ebdecf;
+        border: 1px solid #FF8C00;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .score-red {
+        background-color: #eacfcf;
+        color: #000;
+        border: 1px solid #FF0000;
+    }
+    .score-orange {
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .score-purple {
+        background-color: #cac4e7;
+        color: #271b5e;
+        border: 1px solid #271b5e;
+    }
+    .scroll-button {
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .scroll-button:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content">
+        <h1>HHD-EthiopicA Historical Handwritten Dataset for Ethiopic OCRwith Baseline Models and Human-level Performance</h1>
+
+        <hr>
+
+        <h2>Scores</h2>
+        <table>
+            <tr>
+                <td><strong>Paper Quality Score:</strong></td>
+                <td><span class="score-label score-blue">0.4</span></td>
+            </tr>
+            <tr>
+                <td><strong>LLM Accuracy:</strong></td>
+                <td><span class="score-label score-purple">0.3</span></td>
+            </tr>
+        </table>
+
+        <hr>
+
+        <h2>Review Summary</h2>
+        <table>
+            <tr>
+              <th>Question</th>
+              <th></th>
+              <th>Details</th>
+            </tr>
+            
+            <tr id="summary-question-1">
+                <td>1. Claims</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-1" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-2">
+                <td>2. Limitations</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-2" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-3">
+                <td>3. Theoritical assumptions and proofs</td>
+                <td>
+                    <span class="score-label score-green">
+                    
+                    Looks Good
+                    
+                    </span>
+                </td>
+                <td><a href="#question-3" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-4">
+                <td>4. Experiments reproducibility</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-4" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-5">
+                <td>5. Code and data accessibility</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-5" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-6">
+                <td>6. Experimental settings/details</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-6" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-7">
+                <td>7. Error bars</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-7" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-8">
+                <td>8. Compute resources</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-8" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-9">
+                <td>9. NeurIPS code of ethics</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-9" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-10">
+                <td>10. Impacts</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-10" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-11">
+                <td>11. Safeguards</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-11" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-12">
+                <td>12. Credits</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-12" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-13">
+                <td>13. Documentation</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-13" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-14">
+                <td>14. Human subjects</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-14" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-15">
+                <td>15. Risks</td>
+                <td>
+                    <span class="score-label score-green">
+                    
+                    Looks Good
+                    
+                    </span>
+                </td>
+                <td><a href="#question-15" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+        </table>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+        
+        
+        <div class="review" id="question-1">
+            <div class="user_input">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We provide a list of contributions in the introduction that describes well our contributions. Additionally, the abstract summarizes well the paper as a whole.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Answer to Question Regarding Main Claims</h3>The author's proposed answer and justification seem partially correct but require more specific evidence to support their claims.<b>Discrepancies and Issues:</b><ul><li><b>Justification Lacks Specificity:</b> While the justification mentions the introduction and abstract summarizing the paper, it  doesn't pinpoint the exact sections or sentences containing the main claims and contributions.</li><li><b>Abstract Focus:</b> The abstract primarily discusses multi-objective Bayesian optimization (MoBO) and its challenges, with only a brief mention of the HHD-Ethiopic dataset in the final sentences.  This creates a disconnect as the dataset is a significant contribution of the paper but receives minimal attention in the abstract.</li><li><b>Introduction Focus:</b> Similar to the abstract, the introduction heavily focuses on MOHPO, dedicating only a small portion to the HHD-Ethiopic dataset and its significance.</li></ul><b>Actionable Feedback:</b><ul><li><b>Improve Abstract Balance:</b> Revise the abstract to give more prominence to the HHD-Ethiopic dataset.  Clearly state its purpose, size, and key characteristics. Ensure the abstract accurately reflects the balance between MOHPO and the dataset as presented in the paper.</li><li><b>Enhance Introduction Structure:</b> Restructure the introduction to provide a more balanced overview. Begin by introducing the importance of Ethiopic OCR and the challenges of limited datasets. Then, transition smoothly to discussing MOHPO and its relevance to the research.</li><li><b>Provide Specific Evidence:</b> In the justification, explicitly reference the specific sections or sentences in the abstract and introduction where the main claims and contributions are stated.  For example, "The main contributions, including the HHD-Ethiopic dataset and the D-MoBO approach, are outlined in the second paragraph of the introduction and the final sentences of the abstract."</li></ul></div>
+            <a class="move-to-top" href="#summary-question-1">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-2">
+            <div class="user_input">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We acknowledged in the annotation process that some annotators anonymously shared information, despite our efforts to ensure data confidentiality. Additionally, we acknowledge that our limited computational resources did not allow us to conduct extensive experiments. We also indicate some future work in the conclusion.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Limitations Discussion</h3>The proposed justification mentions acknowledging limitations related to data confidentiality in the annotation process and computational resources for experiments. It also mentions the inclusion of future work. However, the justification and the paper itself seem to lack a comprehensive discussion of limitations as recommended by the guidelines.Here are some key actionable improvements:<ul><li><b>Create a "Limitations" section:</b> Dedicate a specific section to openly discuss the limitations, rather than scattering them throughout the paper. This improves clarity and demonstrates awareness of potential weaknesses.</li><li><b>Address assumption robustness:</b> Discuss any assumptions made in the methodology and analyze how results might change if these assumptions are violated in practice. For instance, are the results sensitive to specific data distributions or model architectures?</li><li><b>Reflect on the scope of claims:</b>  Acknowledge the limitations of the datasets and experimental setup. Are the results generalizable to other historical Ethiopic manuscripts or OCR tasks?  How many runs were conducted and how consistent were the results?</li><li><b>Discuss factors influencing performance:</b> Analyze potential factors that could negatively affect model performance. For example, how do variations in image quality, script style, or character frequencies impact the OCR accuracy?</li><li><b>Computational efficiency:</b> Include a discussion on the computational requirements of the proposed methods, especially their scalability with increasing dataset sizes.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-2">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-3">
+            <div class="user_input">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> Our paper does not include any theory.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors' proposed answer of "NA" with the justification "Our paper does not include any theory" appears accurate based on the provided paper excerpt. The paper primarily focuses on empirical results related to Ethiopic OCR and introduces a novel dataset. There is no evidence of theoretical results such as theorems, lemmas, or proofs within the provided text.However, there are potential areas for improvement, even without theoretical results:<ul><li><b>Formalize Evaluation Metrics:</b> While the paper discusses metrics like CER and NED, their formal definitions and calculations are not presented. Providing these details, potentially in an appendix, would enhance clarity and reproducibility.</li><li><b>Analysis of Error Patterns:</b>  The paper briefly mentions distinct error patterns between human and model predictions. A more in-depth analysis and discussion of these patterns, potentially with visualizations or qualitative examples, would strengthen the paper and provide insights into model behavior.</li><li><b>Hyperparameter Optimization Details:</b> The paper mentions the use of hyperparameter optimization for some models but lacks specifics about the methods and search spaces. Including these details, even in the appendix, would improve reproducibility and benefit other researchers.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-3">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-4">
+            <div class="user_input">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We provide in Section 3.2 the settings for human-level performance and baseline models. In section 4.2 we provide the settings for the Baseline OCR models.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Reproducibility Answer</h3>The provided justification for claiming reproducibility focuses solely on model settings, which is insufficient. While stating model settings (Section 3.2 and 4.2) is important, it doesn't guarantee reproducibility of the main experimental results.Here's how to improve the paper's quality regarding reproducibility:<ul><li>  <b>Data Details:</b>  The paper lacks crucial information about the HHD-Ethiopic dataset creation process, such as the criteria for inclusion/exclusion of text-line images, preprocessing steps (beyond mentioning OCRopus), and the annotation procedure.  Provide more details on the data collection process,  including aspects like data cleaning, normalization, and any potential biases.</li><li>  <b>Human Evaluation Protocol:</b>  The process for human evaluation needs further clarification.  How were annotators selected and trained?  What were the instructions provided to them?  Specify the evaluation metrics (CER and NED) and their calculation methods.</li><li>  <b>Code Availability:</b> While not mandatory, releasing the code used for preprocessing, model training, and evaluation would significantly improve reproducibility and allow other researchers to verify the results. Consider including the code in the provided GitHub repository or another publicly accessible platform.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-4">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-5">
+            <div class="user_input">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We provide the description about the dataset and the open-source implementation details at https://github.com/ethopic/hhd-ethiopic-I. Users can reproduce the results by following the information provided at this link. Furthermore, detailed information about the Ethiopic writing system and data collection procedures can be found in the appendix section of this paper. In addition, the dataset datasheet is provided as supplementary material.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The provided answer and justification seem mostly correct but could benefit from a few improvements for clarity and adherence to the guidelines:<ul><li>  <b>Specificity</b>: While the justification mentions the GitHub link and the appendix, it would be more helpful to point to specific sections within the appendix (e.g., "Appendix B.1") that detail the data collection procedures and dataset datasheet.</li><li>  <b>Reproducibility</b>:  The justification should explicitly state whether scripts for reproducing baseline results are included alongside the proposed method's scripts.  If only a subset is available, clarify which ones and why.</li><li>  <b>Anonymity</b>: Since the paper is submitted for anonymous review, ensure the GitHub repository and any linked materials are anonymized as per NeurIPS guidelines.</li></ul><h3>Suggested Improvements</h3><ol><li>  <b>Refine Justification</b>:  Modify the justification to explicitly mention the relevant appendix sections and clarify the availability of baseline reproduction scripts:</li></ol>> "We provide the dataset description and open-source implementation details at https://github.com/ethopic/hhd-ethiopic-I. Users can reproduce the results by following the information provided at this link.  Details on data collection procedures and the dataset datasheet are available in Appendix B.1. [State whether baseline reproduction scripts are included here]"<ol><li>  <b>Verify Anonymity</b>:  Double-check that the GitHub repository and any linked resources are appropriately anonymized to maintain author anonymity during the review process.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-5">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-6">
+            <div class="user_input">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> All the details are provided in Section 4.2.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Paper Checklist Answer</h3>The authors claim to have provided all necessary training and test details in Section 4.2. However, upon reviewing the "Paper" excerpt, some crucial information seems to be missing or unclear:<ul><li><b>Data Splits:</b> While the paper mentions the existence of training and test sets (including IID and OOD settings), it lacks specific details on the split ratios and the exact criteria for dividing the data.</li><li><b>Hyperparameter Choices:</b> The paper discusses the importance of hyperparameter optimization but doesn't explicitly state the final chosen hyperparameters for the baseline models or the human-level performance evaluation.</li><li><b>Optimizer Type:</b>  The type of optimizer used for training the models is not mentioned in the provided excerpt.</li><li><b>Training Details:</b>  Information about the number of epochs, batch size, learning rate schedule, and any data augmentation techniques used is missing.</li></ul><h3>Actionable Feedback</h3><ol><li> <b>Clearly state the data split ratios for both training and test sets (IID and OOD) in Section 4.2.</b> This will allow for reproducibility and better understanding of the experimental setup.</li><li> <b>Provide a table summarizing the final hyperparameters used for each baseline model.</b> Additionally, clarify if any specific hyperparameter tuning was performed for the human-level performance evaluation.</li><li> <b>Specify the type of optimizer used for training the models.</b> This is essential information for understanding the optimization process.</li><li> <b>Include details about the training process, such as the number of epochs, batch size, learning rate schedule, and data augmentation techniques.</b> This information is crucial for replicating the experiments and understanding the training dynamics.</li></ol><h3>Score</h3></div>
+            <a class="move-to-top" href="#summary-question-6">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-7">
+            <div class="user_input">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We provide box-whiskers plots in Figure 5.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Error Bars Reporting</h3>The author's proposed answer and justification are not aligned with the paper's content and the guidelines. While Figure 5 is mentioned, it only presents box-whisker plots without any explanation about their calculation or interpretation as error bars.Here's how to improve the paper:<ul><li>  <b>Clarify Figure 5:</b> Explain if the box-whisker plots are intended to represent error bars. If so, specify what they capture (e.g., standard deviation, standard error) and the factors of variability considered.</li><li>  <b>Error Bar Calculation:</b> Detail the method used to calculate the error bars, whether it's a closed-form formula, a library function, or a bootstrapping technique.</li><li>  <b>Assumptions and Distributions:</b> State any assumptions made about the error distribution (e.g., normality) and address potential issues with asymmetric distributions.</li><li>  <b>Textual Explanation:</b> Add a section in the text explaining the error bars and referencing Figure 5. This should link the data visualization with the statistical significance of the findings.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-7">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-8">
+            <div class="user_input">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> All details are provided in the experimental section.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Paper Checklist Answer</h3><b>Discrepancies:</b><ul><li>  The justification claims all details are in the experimental section, but the provided paper excerpt does not contain any information about compute resources (type of workers, memory, time).</li><li>  The paper focuses on creating a dataset for Ethiopic text recognition and evaluating OCR models, not on the proposed multi-objective Bayesian optimization (MoBO) algorithm.</li></ul><b>Actionable Feedback:</b><ol><li>  <b>Include a dedicated section</b>: Clearly describe the computational resources used for each experiment, including:</li></ol>*   <b>Type of compute workers:</b> Specify whether CPUs, GPUs, or TPUs were used, and their specific models (e.g., NVIDIA A100 GPUs).*   <b>Memory:</b> Report the RAM allocated for each experiment.*   <b>Execution time:</b> Provide the runtime for each experiment or an estimated total compute time.*   <b>Compute platform:</b> Indicate if the experiments were run on a local cluster, cloud platform (e.g., Google Cloud), or personal workstations.<ol><li>  <b>Address project-level compute</b>: Disclose if additional compute resources were used for preliminary experiments or model development that are not reported in the paper.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-8">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-9">
+            <div class="user_input">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The workers hired were compensated.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3><b>Discrepancies:</b><ul><li>  The justification provided ("The workers hired were compensated.") does not address the actual question of adherence to the NeurIPS Code of Ethics.</li><li>  The paper mentions the involvement of volunteer high school students in data annotation without compensation, raising potential ethical concerns.</li><li>  There is no evidence in the paper or justification that the authors reviewed and ensured compliance with the NeurIPS Code of Ethics.</li></ul><b>Actionable Feedback:</b><ol><li>  <b>Review and Address Ethical Concerns:</b> Carefully review the NeurIPS Code of Ethics and ensure your research complies with all aspects. Pay particular attention to sections regarding human subjects research, data privacy, and potential biases.</li><li>  <b>Clarify Volunteer Participation:</b>  Explain the nature of the high school students' involvement, the tasks they performed, and justify why they were not compensated. If their participation raises ethical concerns, consider alternative data annotation approaches or collaborating with professionals.</li><li>  <b>Update Justification:</b>  Provide a clear and detailed justification explicitly demonstrating how your research aligns with the NeurIPS Code of Ethics. Reference specific sections of the code and highlight relevant safeguards implemented in your study.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-9">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-10">
+            <div class="user_input">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> All potential impact is positive.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Societal Impact Discussion</h3>The provided "Paper" and "Justification" have critical issues regarding the discussion of societal impact:<ul><li><b>Missing Negative Impacts:</b> The paper and justification only mention positive societal impacts. It's crucial to consider and discuss potential negative impacts, even if the authors believe they are unlikely or minimal.</li><li><b>Justification Discrepancy:</b> The justification claims all impacts are positive, which directly contradicts the guideline's expectation for discussing both positive and negative impacts.</li></ul><h3>Actionable Improvements:</h3><ol><li> <b>Identify Potential Negative Impacts:</b> Thoroughly analyze potential misuse scenarios, biases, privacy concerns, and unintended consequences of the technology. This analysis should consider both intended use cases with incorrect results and scenarios of intentional misuse.</li><li> <b>Discuss Mitigation Strategies:</b>  For each identified negative impact, propose mitigation strategies. These could involve responsible data collection practices, fairness-aware training methods, privacy-preserving techniques, or mechanisms to detect and prevent misuse.</li><li> <b>Revise Justification:</b>  Rewrite the justification to accurately reflect the discussion of both positive and negative societal impacts within the paper. Point to specific sections where these discussions occur.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-10">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-11">
+            <div class="user_input">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> There are no LLMs or GenAI in this paper.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3><b>Discrepancies:</b><ul><li>The justification states "There are no LLMs or GenAI in this paper," implying the paper poses no risks. However, the paper introduces a new dataset, HHD-Ethiopic, containing historical handwritten text. While not explicitly mentioned, potential risks could exist depending on the dataset content and its use.</li></ul><b>Actionable Feedback:</b><ul><li><b>Address potential dataset risks:</b> Consider potential misuse scenarios for the HHD-Ethiopic dataset, especially concerning the sensitive nature of historical documents. Discuss mitigation strategies, potentially including:</li></ul>* <b>Data anonymization:</b> If applicable, anonymize sensitive information within the dataset.* <b>Controlled access:</b> Implement mechanisms to control access and distribution of the dataset, possibly requiring user agreements or outlining ethical usage guidelines.* <b>Content curation:</b> Clearly describe the dataset curation process, explaining how potential biases or harmful content was handled.<ul><li><b>Improve transparency:</b> Even if no significant risks are identified, explicitly state this in the paper. Discuss the evaluation of potential risks and the rationale for concluding minimal risk of misuse.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-11">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-12">
+            <div class="user_input">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> A datasheet for dataset was provided with all license information.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Crediting and Licensing of Assets</h3>While the authors mention a datasheet with license information for the dataset, the provided justification lacks specific details and references as required by the guidelines.<b>Here's how to improve the paper:</b><ul><li><b>Specify the location of the datasheet:</b> Indicate where the datasheet with license information can be found. Is it within the GitHub repository or another source? Provide a clear reference or link.</li><li><b>Cite the original source of the dataset:</b>  If the dataset originates from a specific publication or project, provide a proper citation to acknowledge the creators' work and allow readers to explore the data origin.</li><li><b>Clarify the type of license:</b> Instead of simply stating "license information," explicitly mention the license name (e.g., CC-BY 4.0, MIT License). This clarifies the permitted uses and restrictions associated with the dataset.</li><li><b>Address code and models:</b> The paper mentions code and models in the title and abstract but doesn't discuss their origin or licensing in the justification. If external code or models were used, provide similar details on their source, version, license, and attribution as for the dataset.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-12">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-13">
+            <div class="user_input">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We provide details in appendix and in the datasheet for datasets.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The proposed answer and justification have some discrepancies with the paper content and the NeurIPS guidelines.<b>Issues:</b><ul><li><b>Missing Documentation Location:</b> While the justification mentions an appendix and datasheet with details, it fails to specify the exact sections or appendices containing the relevant information.</li><li><b>Unclear Asset Type:</b> The response assumes the "new assets" refer to the HHD-Ethiopic dataset. However, the paper also mentions code and models. It's unclear if documentation exists for these assets and where it is located.</li><li><b>Data Collection Consent:</b> The paper briefly mentions volunteer annotators but does not explicitly discuss consent procedures, particularly concerning the sensitive nature of historical manuscripts.</li></ul><b>Recommendations:</b><ol><li> <b>Specify Documentation Location:</b> Clearly indicate the appendix or datasheet section(s) providing details about the HHD-Ethiopic dataset. For example, "Appendix B.1 provides detailed statistics about the HHD-Ethiopic dataset, while Appendix A discusses the Ethiopic writing system and data collection procedures."</li><li> <b>Address Other Assets:</b>  If documentation exists for the code and models, specify its location. If not, consider creating documentation or clarifying that these assets are not publicly released.</li><li> <b>Clarify Data Collection Consent:</b> Elaborate on the consent process for data collection, especially regarding the use of historical manuscripts and the involvement of high-school volunteers. Addressing ethical considerations and data privacy concerns is crucial.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-13">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-14">
+            <div class="user_input">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> There were no crowdsourcing experiments conducted.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors' proposed answer of "NA" with the justification "There were no crowdsourcing experiments conducted" appears accurate based on the provided paper excerpt. The paper focuses on developing a multi-objective hyperparameter optimization algorithm and creating a historical handwritten dataset for Ethiopic OCR. There is no indication of any crowdsourcing or human subject research involved in the paper's contributions.However, there is one potential area for improvement:<ul><li>  <b>Volunteer Annotation:</b> The paper mentions that the dataset was annotated by a team of volunteer high school students without compensation. This raises ethical concerns, especially considering the NeurIPS Code of Ethics which mandates fair compensation for data collection efforts.</li></ul><b>Actionable Improvements:</b><ol><li>  <b>Address Ethical Concerns:</b> The authors should clarify the ethical considerations regarding the use of volunteer annotators. If possible, they should consider providing appropriate compensation to the students who contributed to the dataset creation.</li><li>  <b>Transparency:</b>  Even though not directly related to the question, enhancing transparency by providing more details about the data collection process in the appendix would strengthen the paper. This could include information on:</li></ol>*   The process of obtaining consent from the students and their parents/guardians (if applicable).*   Measures taken to ensure the quality and consistency of the annotations (e.g., training, guidelines).</div>
+            <a class="move-to-top" href="#summary-question-14">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-15">
+            <div class="user_input">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This is not needed for this work.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The proposed answer and justification seem accurate. The paper focuses on developing a dataset and evaluating OCR models for historical Ethiopic manuscripts. There is no indication of research involving human subjects or crowdsourcing.Therefore, the answer "NA" with the justification "This is not needed for this work" is appropriate.<h3>Potential Improvements</h3>While the answer to the checklist question is accurate, there are a couple of minor improvements for clarity:<ul><li>  <b>Explicitly state the absence of human subject research:</b> To avoid any ambiguity, consider adding a brief sentence in the paper explicitly stating that the research did not involve human subjects or require IRB approval. This could be placed in the ethics statement or a relevant section like the data collection description.</li><li>  <b>Mention data privacy considerations:</b> Even though the data comes from historical manuscripts, it's good practice to mention any steps taken to ensure data privacy and anonymity, especially if the dataset is publicly released.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-15">↑ Back to summary</a>
+        </div>
+        
+        
+    </div>
+</div>
+
+</body>
+</html>

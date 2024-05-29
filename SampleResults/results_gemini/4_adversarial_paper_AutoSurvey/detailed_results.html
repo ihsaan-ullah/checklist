@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        position: absolute;
+    }
+    .button-top {
+        top: 10px;
+        right: 20px;
+    }
+    .button-bottom {
+        bottom: 10px;
+        right: 20px;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px; /* Adjust according to button height and margin */
+        padding-bottom: 40px; /* Add padding instead of margin */
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0; /* Remove default margin */
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        /* color: #0033ff; */
+        color: #000;
+    }
+    .answer {
+        /* color: #28a745; */
+        color: #000;
+    }
+    .justification {
+        /* color: #de750b; */
+        color: #000;
+    }
+    .user_input {
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #3a3a3a;
+    }
+    .llm_review {
+        color: #000;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .llm_review-red {
+        background-color: #eacfcf;
+        border: 1px solid #FF0000;
+    }
+    .llm_review-green {
+        background-color: #c6e9c6;
+        border: 1px solid #008000;
+
+    }
+    .llm_review-orange {
+        background-color: #ebdecf;
+        border: 1px solid #FF8C00;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .score-red {
+        background-color: #eacfcf;
+        color: #000;
+        border: 1px solid #FF0000;
+    }
+    .score-orange {
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .score-purple {
+        background-color: #cac4e7;
+        color: #271b5e;
+        border: 1px solid #271b5e;
+    }
+    .scroll-button {
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .scroll-button:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content">
+        <h1>Auto-survey Challenge:Advancing the Frontiers of Automated LiteratureReview∗</h1>
+
+        <hr>
+
+        <h2>Scores</h2>
+        <table>
+            <tr>
+                <td><strong>Paper Quality Score:</strong></td>
+                <td><span class="score-label score-blue">0.37</span></td>
+            </tr>
+            <tr>
+                <td><strong>LLM Accuracy:</strong></td>
+                <td><span class="score-label score-purple">0.27</span></td>
+            </tr>
+        </table>
+
+        <hr>
+
+        <h2>Review Summary</h2>
+        <table>
+            <tr>
+              <th>Question</th>
+              <th></th>
+              <th>Details</th>
+            </tr>
+            
+            <tr id="summary-question-1">
+                <td>1. Claims</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-1" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-2">
+                <td>2. Limitations</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-2" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-3">
+                <td>3. Theoritical assumptions and proofs</td>
+                <td>
+                    <span class="score-label score-green">
+                    
+                    Looks Good
+                    
+                    </span>
+                </td>
+                <td><a href="#question-3" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-4">
+                <td>4. Experiments reproducibility</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-4" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-5">
+                <td>5. Code and data accessibility</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-5" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-6">
+                <td>6. Experimental settings/details</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-6" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-7">
+                <td>7. Error bars</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-7" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-8">
+                <td>8. Compute resources</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-8" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-9">
+                <td>9. NeurIPS code of ethics</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-9" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-10">
+                <td>10. Impacts</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-10" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-11">
+                <td>11. Safeguards</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-11" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-12">
+                <td>12. Credits</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-12" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-13">
+                <td>13. Documentation</td>
+                <td>
+                    <span class="score-label score-green">
+                    
+                    Looks Good
+                    
+                    </span>
+                </td>
+                <td><a href="#question-13" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-14">
+                <td>14. Human subjects</td>
+                <td>
+                    <span class="score-label score-green">
+                    
+                    Looks Good
+                    
+                    </span>
+                </td>
+                <td><a href="#question-14" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-15">
+                <td>15. Risks</td>
+                <td>
+                    <span class="score-label score-green">
+                    
+                    Looks Good
+                    
+                    </span>
+                </td>
+                <td><a href="#question-15" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+        </table>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+        
+        
+        <div class="review" id="question-1">
+            <div class="user_input">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The abstract and introduction clearly state the main contributions and scope of the paper</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Authors' Proposed Answer</h3>The authors claim that the abstract and introduction accurately reflect the paper's contributions and scope, and point to these sections as justification. However, upon closer examination, there are discrepancies and areas for improvement:<b>Discrepancies:</b><ul><li><b>Scope Overstatement:</b> The abstract mentions a "vast array of disciplines" including law and education, but the paper focuses primarily on computer science, as evidenced by the prompt examples and baseline results.</li><li><b>Missing Evaluation Details:</b> The introduction mentions the evaluation criteria (clarity, reference appropriateness, etc.), but it doesn't specify how these criteria are measured or which metrics are used.</li></ul><b>Areas for Improvement:</b><ul><li><b>Refine Scope:</b> The authors should either revise the abstract to accurately reflect the focus on computer science or demonstrate the applicability of their approach to other disciplines with concrete examples.</li><li><b>Elaborate on Evaluation:</b> The introduction should briefly explain the evaluation metrics and their significance to provide a clearer picture of the paper's contributions.</li></ul><h3>Recommendations</h3><ol><li> <b>Revise the abstract</b> to accurately reflect the current scope of the paper, focusing primarily on computer science or providing concrete examples of application to other fields.</li><li> <b>Expand the introduction</b> to briefly explain the key evaluation metrics (Relevance, Contribution, Soundness, Clarity, Responsibility) and how they are measured. This would give readers a better understanding of the paper's contributions and methodology.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-1">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-2">
+            <div class="user_input">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> in the conclusion it's mentionned room for improvement but not the limitations</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Limitations Discussion</h3>The authors propose "No" with the justification "in the conclusion it's mentioned room for improvement but not the limitations."  While the paper does mention room for improvement in the conclusion, it doesn't explicitly discuss limitations as recommended by the guidelines.Here are some key areas to improve the paper's discussion of limitations:<ul><li><b>Assumptions and Robustness:</b>  Analyze assumptions made in the paper, such as the reliance on LLMs for generating and evaluating survey papers. Discuss how robust the approach is to violations of these assumptions, for example, if the LLM  generates biased or inaccurate content.</li><li><b>Scope of Claims:</b> Clearly define the scope of the claims being made. Mention that the approach was tested on a specific set of prompts and datasets, and its performance might vary depending on the domain and task.</li><li><b>Performance Factors:</b>  Discuss factors influencing the performance of the proposed approach, including the quality of prompts, the capabilities of the chosen LLMs, and the limitations of automated evaluation metrics.</li><li><b>Computational Efficiency:</b> Analyze the computational cost of the approach, especially considering the training and inference time of LLMs. Discuss how the approach scales with larger datasets and more complex tasks.</li><li><b>Ethical Considerations:</b>  Address potential limitations related to bias, fairness, and plagiarism in using LLMs for generating academic content.</li></ul>Adding a dedicated "Limitations" section would be beneficial for explicitly addressing these points and demonstrating awareness of the potential shortcomings of the proposed approach.</div>
+            <a class="move-to-top" href="#summary-question-2">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-3">
+            <div class="user_input">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This does not apply to our research work because our research is not theoretical.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Feedback for NeurIPS Checklist Question</h3>The authors' proposed answer of "NA" with the justification "This does not apply to our research work because our research is not theoretical" is <b>accurate</b> for this paper. The paper focuses on describing the design and implementation of a challenge for evaluating AI systems in generating and reviewing academic survey papers. It doesn't present any theoretical results or proofs.However, while the "NA" answer is correct, there might be an opportunity to strengthen the paper by including <b>theoretical grounding</b> for the chosen evaluation metrics. Here are some potential improvements:<ul><li><b>Motivation for Evaluation Metrics:</b> While the paper defines the five key metrics (Relevance, Contribution, Soundness, Clarity, and Responsibility), it could benefit from a deeper discussion of why these specific metrics were chosen. Are they based on existing literature or theoretical frameworks for evaluating academic writing or survey papers? Providing theoretical justification would strengthen the methodology and situate the work within the broader research landscape.</li><li><b>Formalization of Metrics:</b>  The paper could explore formalizing the evaluation metrics, especially for Contribution and Soundness, which are identified as areas needing further work. For instance, could Contribution be measured using information-theoretic principles, or Soundness be assessed through citation network analysis?</li><li><b>Connection to Existing Literature:</b>  Even without theoretical results, it would be beneficial to discuss related theoretical work on evaluating AI-generated text or survey papers. This would demonstrate the authors' awareness of the broader research context and show how their work contributes to the field.</li></ul>By incorporating these improvements, the authors could enhance the paper's rigor and provide a more comprehensive understanding of the evaluation methodology.</div>
+            <a class="move-to-top" href="#summary-question-3">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-4">
+            <div class="user_input">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> We don't provide the information to reproduce the experiments, just the information for the challenge.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Reproducibility Disclosure</h3>The authors' proposed answer of "No" accurately reflects the paper's current state. While the paper details the challenge's design and evaluation methods, it does not provide sufficient information to reproduce the main experimental results. Specific areas lacking clarity include:<ul><li><b>Baseline Model Details</b>: The paper mentions using ChatGPT (GPT-3.5) for the AI-Author baseline but lacks specifics on the prompt engineering techniques, fine-tuning procedures, or any additional modifications applied to the model.</li><li><b>AI-Referee-Reviewer Implementation</b>: The paper mentions using ad hoc, publicly available software for the AI-Referee-Reviewer but doesn't specify the exact tools or their configurations.</li><li><b>Evaluation Data</b>:  The origin and specifics of the "good" and "bad" survey papers used for evaluation remain unclear.</li></ul>These missing details hinder researchers from replicating the experiment and verifying the reported results.<h3>Recommendations for Improvement</h3>To enhance reproducibility, the authors should consider incorporating these details:<ul><li><b>Baseline Model Description</b>: Clearly describe the specific version of ChatGPT used, details of prompt engineering, and any fine-tuning strategies employed.</li><li><b>Software and Code</b>: Specify the exact tools and libraries used for the AI-Referee-Reviewer, including version numbers and configuration parameters. Ideally, providing the code or scripts used would further enhance reproducibility.</li><li><b>Data Description</b>: Clearly describe the process of generating or obtaining the "good" and "bad" survey papers used in evaluation. If possible, consider making these  papers accessible to other researchers.</li><li><b>Hyperparameter Settings</b>:  Document the hyperparameter settings used for the models and evaluation metrics.</li></ul>By providing this additional information, the authors can significantly improve the reproducibility of their work and strengthen the paper's overall quality.</div>
+            <a class="move-to-top" href="#summary-question-4">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-5">
+            <div class="user_input">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> The paper does not provides the link to open access to all relevant data and code</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Authors' Proposed Answer and Justification:</h3>The authors are correct in stating that the paper does not provide open access to the data and code needed to reproduce the main experimental results. While the paper discusses using ChatGPT and other publicly available software for baselines and evaluation, it lacks specific instructions and access to the datasets and prompts used in the challenge.<h3>Recommendations for Improvement:</h3><ul><li><b>Release Code and Data:</b> To improve the reproducibility of the research and adhere to NeurIPS guidelines, the authors should strive to release the code for their baselines (AI-Author and AI-Referee-Reviewer) and the data used for training and evaluation (e.g., prompts, "good" and "bad" papers). This could be done via a public repository like GitHub or through supplemental materials.</li><li><b>Detailed Instructions:</b> Provide clear and comprehensive instructions on how to reproduce the experiments, including the exact commands, software versions, and environment setups needed. This will enable others to independently verify the results and build upon the research.</li><li><b>Anonymization:</b> Since the paper is currently under review, ensure that the released code and data are anonymized to comply with NeurIPS double-blind review policy.</li></ul><h3>Addressing Contribution and Soundness Evaluation:</h3>The authors acknowledge that the evaluation methods for "Contribution" and "Soundness" need improvement. Exploring additional techniques like:<ul><li><b>Citation Analysis:</b> Utilize citation analysis tools to assess the quality and relevance of the references used in the generated survey papers.</li><li><b>Expert Review:</b> Consider incorporating human expert reviews for evaluating the comprehensiveness and factual accuracy of the generated content.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-5">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-6">
+            <div class="user_input">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The testing details is mentioned in the baseline result</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Answer to Question about Training and Test Details</h3>The provided "Answer" and "Justification" have discrepancies with the actual paper content:<ul><li><b>Missing Training Details:</b> While the paper mentions using ChatGPT (GPT-3.5) as a baseline for the AI-Author task, it <b>lacks specific details</b> about the training process, hyperparameters, and optimizer used for this model.</li><li><b>Missing Test Split Details:</b> The paper mentions using a "Dummy" baseline for comparison, but it doesn't clarify how the data was split between training and testing for either baseline.</li><li><b>Unclear Evaluation Metrics for AI-Author:</b> While the paper describes evaluation criteria like Relevance, Contribution, Soundness, Clarity, and Responsibility, it doesn't explicitly define the <b>quantitative metrics</b> used to measure these aspects for the AI-Author task.</li></ul><h3>Recommendations for Improvement</h3><ol><li> <b>Include Training Details for Baselines:</b> Add a section describing the training process of the ChatGPT baseline, including hyperparameters, optimizer used, and training data details.</li><li> <b>Specify Data Splits:</b> Clarify how the data was split for training and testing both the ChatGPT and "Dummy" baselines.  If cross-validation was employed, elaborate on the specific methodology.</li><li> <b>Define Quantitative Evaluation Metrics:</b> For each evaluation criterion (Relevance, Contribution, etc.), define the specific quantitative metrics used in the evaluation process.  This will enhance the reproducibility and clarity of the results.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-6">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-7">
+            <div class="user_input">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Error bars are properly reported with clear definitions, capturing variability factors, and the methodology for their calculation is thoroughly explained, supporting the paper's main experimental claims.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Error Bar Reporting</h3>The paper mentions evaluation metrics and scores but does not explicitly discuss error bars, confidence intervals, or statistical significance tests. While the "contrastive evaluation" approach provides some insight into the variability and performance of the models, it doesn't fulfill the requirements for proper error bar reporting as outlined in the guidelines.Here's how the authors can improve the paper:<ul><li><b>Clarify the Use of "Contrastive Evaluation":</b> If the authors intend "contrastive evaluation" to serve as a measure of variability and uncertainty, they need to explicitly state this and explain how it relates to concepts like confidence intervals or standard error.</li><li><b>Report Error Bars for Key Results:</b>  For crucial results, such as the comparison of the ChatGPT baseline and the "Dummy" baseline in Figure 2, the authors should include error bars or confidence intervals. This will provide a clearer picture of the statistical significance of the observed differences.</li><li><b>Explain Variability Factors:</b> The paper should clarify the sources of variability in the experiments. This may include factors like random initialization of models, different train/test splits, or variations in the prompts used.</li><li><b>Describe Calculation Methods:</b>  If error bars or confidence intervals are employed, the paper should explain how they were calculated. This may involve mentioning specific statistical methods, libraries, or formulas used.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-7">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-8">
+            <div class="user_input">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> The paper does not provide any type of information regarding the computer resources</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Paper's Computational Resources Description</h3>The paper's current "Answer" and "Justification" accurately reflect the lack of information regarding computational resources used in the experiments. However, to improve the paper's quality and reproducibility, the following details should be included:<ul><li><b>Hardware specifications:</b> Specify the types of compute workers (CPUs, GPUs, TPUs) used, including their model names and core counts. Also, mention the amount of RAM and available storage. If cloud resources were employed, name the provider and instance types.</li><li><b>Software environment:</b> Describe the software environment, including the operating system, programming language(s), and relevant libraries/frameworks with their version numbers.</li><li><b>Training/execution times:</b> For each experiment, report the approximate execution time or training duration. If possible, provide an estimate of the total compute time required to reproduce the entire set of experiments.</li><li><b>Additional compute resources:</b> Disclose whether the full research project involved significant additional compute resources beyond the reported experiments (e.g., for hyperparameter tuning, preliminary studies).</li></ul>Including this information will enhance the transparency and replicability of the research, which is crucial for scientific progress and building upon existing work.</div>
+            <a class="move-to-top" href="#summary-question-8">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-9">
+            <div class="user_input">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We review the code of ethics and our paper conform with it.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Ethics Checklist Answer</h3>The provided justification for the "Yes" answer is insufficient as it lacks specific references to sections within the paper demonstrating adherence to the NeurIPS Code of Ethics.Here are some actionable improvements to consider:<ul><li><b>Identify relevant sections:</b>  Carefully review the NeurIPS Code of Ethics and identify specific principles relevant to your work. Look for sections in your paper that address these principles, such as data collection procedures, potential biases in your models, or societal implications of your research.</li><li><b>Explicitly reference relevant sections:</b>  In the justification, explicitly mention the sections (e.g., section numbers, paragraph numbers) where you discuss these ethical considerations.</li><li><b>Consider potential issues:</b> Reflect on whether your research could raise any ethical concerns, even if you have taken steps to mitigate them.  Transparency about potential limitations is valuable.</li><li> <b>If necessary, revise your answer:</b>  If upon reflection you find areas where your work may not fully align with the code of ethics, consider revising your answer to "No" and providing a detailed justification explaining the circumstances and the steps taken to address the concerns.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-9">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-10">
+            <div class="user_input">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> The paper comprehensively discusses the potential positive and limitation but not the negative societal impacts</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Societal Impact Discussion</h3>The paper currently focuses on the potential positive impacts and limitations of using LLMs for automated literature review. However, it does not discuss potential negative societal impacts. As per the NeurIPS guidelines, it's important to consider and address these aspects, especially given the increasing capabilities of LLMs and their potential for misuse.Here are some actionable improvements to consider:<ul><li><b>Identify Potential Negative Impacts:</b> Explore potential negative societal impacts related to the proposed technology. This could include:</li></ul>* <b>Misinformation and Bias:</b> Discuss the possibility of LLMs generating biased or inaccurate survey papers, potentially perpetuating misinformation within academic fields.* <b>Loss of Critical Thinking:</b> Explore the potential impact on researchers' critical thinking skills if they become overly reliant on automated literature reviews.* <b>Job displacement:</b> Analyze the potential impact on the job market for researchers and academics, as automated systems may take over certain tasks.<ul><li><b>Discuss Mitigation Strategies:</b>  Propose potential methods to mitigate the identified negative impacts.  Examples include:</li></ul>* <b>Transparency and Explainability:</b> Emphasize the importance of developing transparent and explainable LLMs for literature review, allowing users to understand the reasoning behind generated content.* <b>Human Oversight and Validation:</b>  Highlight the need for human oversight and validation of automatically generated survey papers to ensure accuracy and mitigate bias.* <b>Education and Training:</b>  Suggest incorporating educational initiatives to train researchers on the responsible use of LLMs for literature review and strengthen critical thinking skills.</div>
+            <a class="move-to-top" href="#summary-question-10">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-11">
+            <div class="user_input">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> Our models do not present such risks.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Paper Checklist Answer</h3><b>Discrepancies:</b><ul><li>  The paper does mention the potential for misuse of LLMs in the introduction, highlighting the need for responsible development and application.</li><li>  The paper discusses the "Responsibility" evaluation criteria for generated survey papers, which includes ethical considerations and adherence to moral values.</li></ul><b>Actionable Improvements:</b><ol><li>  <b>Explicitly Address Safeguards:</b>  While the paper touches on responsible AI and ethical considerations, it would benefit from a dedicated section or paragraph explicitly outlining the safeguards implemented to mitigate potential misuse of the LLMs or generated content. This could include:</li></ol>*   <b>Usage Guidelines:</b>  Describe any guidelines or restrictions on how the models can be used, ensuring they are aligned with ethical principles.*   <b>Safety Filters:</b>  Explain any mechanisms implemented to filter outputs and prevent the generation of harmful or offensive content.*   <b>Data Bias Mitigation:</b>   Discuss strategies employed to address potential biases in the training data or model outputs.<ol><li>  <b>Transparency and Accessibility:</b>  Improve transparency by providing details about the training data and model architecture. Consider releasing the code or model weights (if feasible) to allow for scrutiny and reproducibility.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-11">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-12">
+            <div class="user_input">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> The paper doesn't mention the name of the licence</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Asset Credits and Licensing</h3>The authors correctly identified that the paper lacks information about the licenses and terms of use for the assets employed, specifically mentioning the absence of license names. However, the justification and paper content reveal further areas for improvement:<ul><li><b>Missing Asset Versions and URLs:</b> While citing relevant papers for code packages and datasets is good practice, the specific versions used remain unclear. Providing version numbers and URLs (if applicable) would enhance reproducibility.</li><li><b>Unclear Dataset Origins:</b>  The paper mentions using Semantics Scholar survey papers and generating prompts by "reverse engineering" them. However, it's unclear how this data was obtained and under what terms. Clarifying the acquisition process and any associated terms of service is crucial.</li><li><b>Missing Code Licenses:</b>  The paper mentions using publicly available software for clarity and responsibility, but the specific software and their licenses are not named.  Providing this information is essential for understanding the permitted use and distribution of the code.</li><li><b>Publicly Released Assets:</b> If the authors are releasing any assets (e.g., code for the AI-Author or AI-Reviewer baselines), they need to explicitly state the licenses, copyright information, and terms of use within the released package.</li></ul><b>Actionable improvements:</b><ol><li> <b>Identify and List All Assets:</b> Create a comprehensive list of all used assets, including software, datasets, and models.</li><li> <b>Specify Asset Versions and Sources:</b> For each asset, include the version number, URL (if available), and the source (e.g., paper citation, website).</li><li> <b>State Licenses and Terms of Use:</b> Clearly state the license name (e.g., MIT, CC-BY 4.0) and any relevant terms of service for each asset.  For scraped data, include the copyright information and terms of service of the source website.  If the information is not readily available online, consider contacting the asset creators for clarification.</li><li> <b>Address Publicly Released Assets:</b> If releasing any assets, clearly include the chosen license, copyright information, and terms of use within the released package.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-12">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-13">
+            <div class="user_input">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> We don't introduce the new assents.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The proposed answer ("NA") and justification ("We don't introduce the new assents.") are accurate given the paper's content. The paper focuses on evaluating existing Large Language Models (LLMs) and does not introduce any new datasets, codes, or models.However, the paper could benefit from explicitly mentioning this fact in the text to enhance clarity for readers.Here are some suggestions for improvement:<ul><li><b>Explicitly state the absence of new assets:</b> Add a brief statement in the introduction or methodology section, clearly indicating that the paper does not introduce new datasets, codes, or models. This will prevent any ambiguity for readers and reviewers.</li><li><b>Consider referencing existing resources:</b> While not introducing new assets, the paper utilizes existing LLMs and tools. Briefly mentioning these resources (e.g., ChatGPT, Sentence Transformers) with appropriate references would improve transparency and reproducibility.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-13">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-14">
+            <div class="user_input">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This does not apply on our research as we are not doing any crowdsourcing experiments</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Feedback on Authors' Proposed Answer and Justification:</h3>The authors have correctly identified that the question regarding crowdsourcing and human subject research is not applicable (NA) to their paper. The justification accurately reflects this by stating that their research does not involve such experiments.<h3>Recommendations for Improvement:</h3>While the answer and justification are technically correct, there's an opportunity to enhance the paper's clarity and context for readers unfamiliar with the AutoML conference or the specific challenge.<ul><li>  <b>Consider adding a brief statement in the introduction or challenge design section mentioning the absence of human subject research.</b> This would provide upfront context and avoid potential confusion for readers who may initially assume human involvement due to the nature of survey papers and peer review processes.</li><li>  <b>The provided justification could be slightly expanded for better clarity.</b> For instance, instead of "This does not apply to our research as we are not doing any crowdsourcing experiments," consider rephrasing as "This question is not applicable as the research focuses on evaluating AI models for autonomous generation and review of survey papers, without involving human subjects or crowdsourcing."</li></ul><h3>Overall Assessment:</h3>Although a minor improvement opportunity exists, the authors have accurately addressed the checklist question with a valid justification.</div>
+            <a class="move-to-top" href="#summary-question-14">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-15">
+            <div class="user_input">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This does not concerns us as we are not dealing with human subjects in our research.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Feedback on IRB Approval Question</h3>The proposed answer and justification seem appropriate given the paper's content. The research focuses on evaluating Large Language Models (LLMs) and their ability to generate and critique academic content; it does not involve human subjects directly.However, to enhance clarity and transparency, consider adding a brief statement within the paper explicitly mentioning the absence of human subject research and the consequent non-applicability of IRB approval. This addition would prevent any potential confusion and reinforce the ethical considerations of the research.<b>Suggested improvement</b>: Add a sentence in the Introduction or Ethics section (if one exists) stating that the research does not involve human subjects and therefore IRB approval is not applicable.<b>Example</b>: "This research focuses exclusively on the evaluation of artificial intelligence models and does not involve human subjects; therefore, Institutional Review Board (IRB) approval is not applicable."</div>
+            <a class="move-to-top" href="#summary-question-15">↑ Back to summary</a>
+        </div>
+        
+        
+    </div>
+</div>
+
+</body>
+</html>

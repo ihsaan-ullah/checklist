@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px;
+        padding-bottom: 40px;
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0;
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        /* color: #0033ff; */
+        color: #000;
+    }
+    .answer {
+        /* color: #28a745; */
+        color: #000;
+    }
+    .justification {
+        /* color: #de750b; */
+        color: #000;
+    }
+    .user_input {
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #3a3a3a;
+    }
+    .llm_review {
+        color: #000;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .llm_review-red {
+        background-color: #eacfcf;
+        border: 1px solid #FF0000;
+    }
+    .llm_review-green {
+        background-color: #c6e9c6;
+        border: 1px solid #008000;
+
+    }
+    .llm_review-orange {
+        background-color: #ebdecf;
+        border: 1px solid #FF8C00;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .score-red {
+        background-color: #eacfcf;
+        color: #000;
+        border: 1px solid #FF0000;
+    }
+    .score-orange {
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .score-purple {
+        background-color: #cac4e7;
+        color: #271b5e;
+        border: 1px solid #271b5e;
+    }
+    .scroll-button {
+        padding: 5px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: 3px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .button-green{
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .button-orange{
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .button-orange:hover {
+        background-color: #623600;
+        color: #fff;
+        border: none;
+    }
+    .button-green:hover {
+        background-color: #015f01;
+        color: #fff;
+        border: none;
+    }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+    .legend{
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content">
+        <h1>Meta-Album: Multi-domain Meta-Dataset forFew-Shot Image Classification</h1>
+
+        <hr>
+
+        <!-- <h2>Scores</h2>
+        <table>
+            <tr>
+                <td><strong>Paper Quality Score:</strong></td>
+                <td><span class="score-label score-blue">0.63</span></td>
+            </tr>
+            <tr>
+                <td><strong>LLM Accuracy:</strong></td>
+                <td><span class="score-label score-purple">0.33</span></td>
+            </tr>
+        </table>
+
+        <hr> -->
+
+        <h2>Review Summary</h2>
+        <div>
+            <span class="legend score-label score-green">&nbsp; &nbsp;</span> The LLM found no significant concern
+            <br>
+            <span class="legend score-label score-orange">&nbsp; &nbsp;</span> The LLM proposes possible improvements
+        </div>
+        <table>
+            <tr>
+              <th>Question</th>
+              <th></th>
+            </tr>
+            
+            <tr id="summary-question-1">
+                <td>1. Claims</td>
+                <td><a href="#question-1" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-2">
+                <td>2. Limitations</td>
+                <td><a href="#question-2" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-3">
+                <td>3. Theoritical assumptions and proofs</td>
+                <td><a href="#question-3" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-4">
+                <td>4. Experiments reproducibility</td>
+                <td><a href="#question-4" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-5">
+                <td>5. Code and data accessibility</td>
+                <td><a href="#question-5" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-6">
+                <td>6. Experimental settings/details</td>
+                <td><a href="#question-6" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-7">
+                <td>7. Error bars</td>
+                <td><a href="#question-7" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-8">
+                <td>8. Compute resources</td>
+                <td><a href="#question-8" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-9">
+                <td>9. NeurIPS code of ethics</td>
+                <td><a href="#question-9" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-10">
+                <td>10. Impacts</td>
+                <td><a href="#question-10" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-11">
+                <td>11. Safeguards</td>
+                <td><a href="#question-11" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-12">
+                <td>12. Credits</td>
+                <td><a href="#question-12" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-13">
+                <td>13. Documentation</td>
+                <td><a href="#question-13" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-14">
+                <td>14. Human subjects</td>
+                <td><a href="#question-14" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-15">
+                <td>15. Risks</td>
+                <td><a href="#question-15" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+        </table>
+
+        <!-- Survey -->
+        <div>
+            <p>After reading through the LLM’s response below, <strong>please complete the following survey about your experience:</strong></p>
+            <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891=TWV0YS1BbGJ1bTogTXVsdGktZG9tYWluIE1ldGEtRGF0YXNldCBmb3JGZXctU2hvdCBJbWFnZSBDbGFzc2lmaWNhdGlvbg==" target="_blank">Click to submit post submission survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+        
+        
+        <div class="review" id="question-1">
+            <div class="user_input">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The abstract and introduction clearly state the main contributions and scope of the paper</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-1">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-2">
+            <div class="user_input">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have clearly explained the limitations of our work in Section: Discussion and conclusion</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-2">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-3">
+            <div class="user_input">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This does not apply to our research work because our research is not theoretical rather it deals with a meta-dataset creation and experiments executed using this meta-dataset</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-3">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-4">
+            <div class="user_input">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have disclosed all the details of our experiments and provide code and instructions publicly on the Meta-Album GitHub repository (https://github.com/ihsaanullah/meta-album) for reproducibility and results verification</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-4">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-5">
+            <div class="user_input">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have publicly provided the code on our github repository and details about how to access the datasets on our website.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-5">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-6">
+            <div class="user_input">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have explained the experimental settings or details in Section 3.2: Experiments. Additional details can be found in the Meta-Album GitHub repository.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-6">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-7">
+            <div class="user_input">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> In figure-2, figure-3, Appendix E: Within Domain Few-shot learning, and Appendix F: Cross-Domain Few-shot learning, we have reported error bars</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-7">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-8">
+            <div class="user_input">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have provided details about compute resources used in Section 3.2: Experiments, Appendix E: Within Domain Few-shot learning, and Appendix F: Cross-Domain Few-shot learning</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-8">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-9">
+            <div class="user_input">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We completely comply with the NeurIPS Code of Ethics</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-9">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-10">
+            <div class="user_input">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> There are no negative societal impacts. Rather, this meta-dataset can foster progress in the fields of few-shot learning and meta-learning. We have added “recommended use” in Section 1.3.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <b>Feedback</b><br><ol><li> <b>Clarity and Detail in Dataset Description</b>:</li></ol>- Ensure the paper introduces each dataset within Meta-Album with sufficient detail regarding the sources, preprocessing methods, and unique challenges or characteristics. Consider adding a subsection dedicated to each domain, elucidating why these specific datasets were chosen and how they contribute to the diversity and robustness of the Meta-Album.<br><ol><li> <b>Uniformity in Data Preprocessing</b>:</li></ol>- There seems to be inconsistency in how different datasets under Meta-Album were preprocessed. For example, while some datasets underwent cropping and resizing, others also had augmentation techniques applied. It would be beneficial to standardize data preprocessing steps across all datasets to ensure uniformity, making explicit any domain-specific deviations and their justifications.<br><ol><li> <b>Explicit Discussion on Ethical Considerations</b>:</li></ol>- The paper should include a section on ethical considerations, especially pertaining to the data collection processes of the constituent datasets, privacy concerns, and any potential biases within the datasets. This is particularly crucial for datasets involving human subjects, such as the Human Actions domain.<br><ol><li> <b>Thorough Analysis of Societal Impacts</b>:</li></ol>- The paper claims no negative societal impacts, which seems an omission. All AI technologies carry potential for misuse or unintended negative consequences. A deeper analysis is required to identify possible negative societal impacts, especially in terms of privacy, surveillance, or biases that might be perpetuated through the use of these datasets. The paper should explore, even hypothetically, how Meta-Album might be used in ways that could lead to ethical dilemmas or societal harm and propose mitigation strategies.<br><ol><li> <b>Enhanced Documentation and Accessibility</b>:</li></ol>- To improve the usability and accessibility of Meta-Album, the paper should detail the availability of documentation and support resources. This includes clear guidelines on how to use the datasets, access to metadata, and any tools or scripts provided for data manipulation. The aim should be to lower the barrier to entry for researchers, especially those from underrepresented regions or institutions with limited resources.<br><ol><li> <b>Community Engagement and Dataset Contribution Guidelines</b>:</li></ol>- While the paper mentions the dataset’s extensibility, it should provide clearer guidelines on how the broader research community can contribute to Meta-Album. This includes submission protocols, review processes for new datasets, and standards for data formatting and annotation. Engaging the community in this manner can ensure continuous growth and diversity of the Meta-Album.<br><ol><li> <b>Benchmarking and Comparative Analysis</b>:</li></ol>- The paper would benefit from a detailed benchmarking section comparing Meta-Album’s performance against other popular datasets in few-shot learning and meta-learning. This would not only showcase Meta-Album's strengths but also provide insights into areas of improvement or gaps that future iterations of Meta-Album could address.<br></div>
+            <a class="move-to-top" href="#summary-question-10">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-11">
+            <div class="user_input">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Indeed, we are releasing our datasets with proper license and terms of use. We have also provided recommended usage of these datasets.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> Based on the detailed provided information regarding the paper submission for NeurIPS conference about the Meta-Album: Multi-domain Meta-Dataset for Few-Shot Image Classification and the extensive appendices and detailed explanation, here are the areas that need improvement:<br><b>Feedback and Actionable Items:</b><br><ol><li> <b>Data Licensing and Usage Rights:</b> Verify the licensing information for every dataset included in the Meta-Album. The paper promises datasets with verified licenses; ensure explicit documentation in the appendix or a dedicated section to help researchers understand each dataset's usage constraints. Some datasets might have limitations not compatible with open commercial use, making it necessary to clarify these aspects to avoid misuse.</li><br><li> <b>Cross-Domain Generalizability Verification:</b> Enhancing the paper with more robust experiments showcasing the cross-domain few-shot learning capabilities of algorithms trained on Meta-Album can significantly add value. Conduct and report additional experiments to demonstrate how models trained on this meta-dataset perform across vastly different domains not represented within the dataset. This aspect is crucial for showcasing the Meta-Album's versatility and utility in realistic, highly varied tasks.</li><br><li> <b>Inclusion of More Diverse Domains:</b> While Meta-Album already includes a wide array of domains, continually working on expanding this variety can make it even more valuable. Plan for and outline how new domains may be added in the future, providing a roadmap for the dataset's expensibility. This strategy will also support the claim of the Meta-Album being an extendable dataset, encouraging contributions that fulfill emerging needs within the machine learning community.</li><br><li> <b>Benchmarking Against Existing Datasets:</b> The paper benefits from a direct, comprehensive comparison between Meta-Album and existing meta-datasets like Meta-Dataset, VTAB, or CIFAR-100. Include a detailed analysis or a separate section comparing the performance of few-shot learning models across these datasets versus Meta-Album. This comparative analysis should extend beyond dataset size and diversity, focusing on the real-world applicability and learning task performance.</li><br><li> <b>Clearer Guidelines for Contributions:</b> To facilitate community contributions to the Meta-Album, provide clearer, detailed guidelines on how external researchers can contribute new datasets or algorithms. This includes technical requirements, review processes, data quality standards, and ethical considerations. A dedicated section or an easily accessible external document linked within the paper can ensure this.</li><br><li> <b>Enhanced Quality Control and Bias Detection:</b> Expand on the methods used for dataset quality control and bias detection. While the GradCAM visualization technique is mentioned, the paper could benefit from a deeper dive into how biases detected through such techniques are handled or mitigated. Discussing the implications of these biases on model training and proposing strategies for their mitigation will significantly improve the paper's rigor and practical applicability.</li><br></ol><b>Conclusion:</b>The paper submission shows considerable potential in advancing the field of few-shot learning by introducing a diverse, multi-domain meta-dataset. Addressing the areas outlined above can substantially enhance its quality, making it more valuable for researchers and practitioners aiming to push the boundaries of machine learning generalizability across varied domains.<br></div>
+            <a class="move-to-top" href="#summary-question-11">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-12">
+            <div class="user_input">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We are releasing our datasets with proper license, we are also mentioning the original licenses for the original datasets in Appendix B: License information of Meta-Album datasets</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-12">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-13">
+            <div class="user_input">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have properly documented our new datasets using meta-data files and datasheets for datasets (provided in the appendices). We have also designed a website for users to easily get all the datasets and related information</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-13">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-14">
+            <div class="user_input">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This does not apply on our research as we are not doing any crowdsourcing experiments</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-14">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-15">
+            <div class="user_input">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This does not concerns us as we are not dealing with human subjects in our research.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> nan</div>
+            <a class="move-to-top" href="#summary-question-15">↑ Back to summary</a>
+        </div>
+        
+
+        <!-- Survey -->
+        <div>
+            <p>Please complete the following survey about your experience:</p>
+            <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891=TWV0YS1BbGJ1bTogTXVsdGktZG9tYWluIE1ldGEtRGF0YXNldCBmb3JGZXctU2hvdCBJbWFnZSBDbGFzc2lmaWNhdGlvbg==" target="_blank">Click to submit post submission survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+        
+    </div>
+</div>
+
+</body>
+</html>

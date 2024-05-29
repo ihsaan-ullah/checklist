@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px;
+        padding-bottom: 40px;
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0;
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        /* color: #0033ff; */
+        color: #000;
+    }
+    .answer {
+        /* color: #28a745; */
+        color: #000;
+    }
+    .justification {
+        /* color: #de750b; */
+        color: #000;
+    }
+    .user_input {
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #3a3a3a;
+    }
+    .llm_review {
+        color: #000;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .llm_review-red {
+        background-color: #eacfcf;
+        border: 1px solid #FF0000;
+    }
+    .llm_review-green {
+        background-color: #c6e9c6;
+        border: 1px solid #008000;
+
+    }
+    .llm_review-orange {
+        background-color: #ebdecf;
+        border: 1px solid #FF8C00;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .score-red {
+        background-color: #eacfcf;
+        color: #000;
+        border: 1px solid #FF0000;
+    }
+    .score-orange {
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .score-purple {
+        background-color: #cac4e7;
+        color: #271b5e;
+        border: 1px solid #271b5e;
+    }
+    .scroll-button {
+        padding: 5px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: 3px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .button-green{
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .button-orange{
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .button-orange:hover {
+        background-color: #623600;
+        color: #fff;
+        border: none;
+    }
+    .button-green:hover {
+        background-color: #015f01;
+        color: #fff;
+        border: none;
+    }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+    .legend{
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content">
+        <h1>Meta-learning from Learning Curves Challenge: Lessons learned from the First Round and Design of the Second Round</h1>
+
+        <hr>
+
+        <!-- <h2>Scores</h2>
+        <table>
+            <tr>
+                <td><strong>Paper Quality Score:</strong></td>
+                <td><span class="score-label score-blue">0.47</span></td>
+            </tr>
+            <tr>
+                <td><strong>LLM Accuracy:</strong></td>
+                <td><span class="score-label score-purple">0.43</span></td>
+            </tr>
+        </table>
+
+        <hr> -->
+
+        <h2>Review Summary</h2>
+        <div>
+            <span class="legend score-label score-green">&nbsp; &nbsp;</span> The LLM found no significant concern
+            <br>
+            <span class="legend score-label score-orange">&nbsp; &nbsp;</span> The LLM proposes possible improvements
+        </div>
+        <table>
+            <tr>
+              <th>Question</th>
+              <th></th>
+            </tr>
+            
+            <tr id="summary-question-1">
+                <td>1. Claims</td>
+                <td><a href="#question-1" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-2">
+                <td>2. Limitations</td>
+                <td><a href="#question-2" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-3">
+                <td>3. Theoritical assumptions and proofs</td>
+                <td><a href="#question-3" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-4">
+                <td>4. Experiments reproducibility</td>
+                <td><a href="#question-4" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-5">
+                <td>5. Code and data accessibility</td>
+                <td><a href="#question-5" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-6">
+                <td>6. Experimental settings/details</td>
+                <td><a href="#question-6" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-7">
+                <td>7. Error bars</td>
+                <td><a href="#question-7" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-8">
+                <td>8. Compute resources</td>
+                <td><a href="#question-8" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-9">
+                <td>9. NeurIPS code of ethics</td>
+                <td><a href="#question-9" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-10">
+                <td>10. Impacts</td>
+                <td><a href="#question-10" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-11">
+                <td>11. Safeguards</td>
+                <td><a href="#question-11" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-12">
+                <td>12. Credits</td>
+                <td><a href="#question-12" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-13">
+                <td>13. Documentation</td>
+                <td><a href="#question-13" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-14">
+                <td>14. Human subjects</td>
+                <td><a href="#question-14" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-15">
+                <td>15. Risks</td>
+                <td><a href="#question-15" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+        </table>
+
+        <!-- Survey -->
+        <div>
+            <p>After reading through the LLM’s response below, <strong>please complete the following survey about your experience:</strong></p>
+            <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891=TWV0YS1sZWFybmluZyBmcm9tIExlYXJuaW5nIEN1cnZlcyBDaGFsbGVuZ2U6IExlc3NvbnMgbGVhcm5lZCBmcm9tIHRoZSBGaXJzdCBSb3VuZCBhbmQgRGVzaWduIG9mIHRoZSBTZWNvbmQgUm91bmQ=" target="_blank">Click to submit post submission survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+        
+        
+        <div class="review" id="question-1">
+            <div class="user_input">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The abstract and introduction clearly state the paper's main contributions and scope.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer and justification generally align with the contents of the paper; however, there's a noticeable lack of specificity in their justification. According to the guidelines, the authors are required to point to specific sections where related material can be found to substantiate their claims. While they assert that the abstract and introduction clearly state the paper's main contributions and scope, they fail to reference particular sections that elaborate on these points, which is pivotal for reviewers to efficiently verify these claims.<br>Feedback to improve the paper quality:<ol><li> Specify Sections in Justification: Enhance the justification by precisely indicating the sections where the paper elaborates on its main claims, contributions, and scope. For instance, the authors could amend their justification to say, "The paper's main contributions and scope are expanded upon in Sections 2 (Design of the First Round) and 3 (Analyses of the First Round Results), which detail the methodology and findings from applying our novel approach to meta-learning through Genetic Algorithms."</li><li> Align Claims with Content: Ensure that all claims made in the abstract and introduction are directly reflected and supported in the paper's main body. If the introduction mentions a significant step forward in the field of meta-learning, the discussion or conclusion section should elaborate on why this is the case. If this is not currently done to a satisfactory level, the paper should be revised to either adjust the claims or add the necessary supporting arguments and evidence.</li><li> Clarify the Scope: If the paper’s scope is broader or narrower than what typical readers might infer from the abstract and introduction, clarify this within the introduction section. For instance, if the paper focuses on a specific subset of meta-learning strategies, explicitly stating so helps set the right expectations.</li><li> Contributions Listing: Consider adding a bullet-point list of contributions towards the end of the introduction for clearer visibility. This could help readers quickly grasp the paper's value proposition and how it advances the field.</li><li> Address Limitations: While the guidelines suggest that it's acceptable to include aspirational goals, ensure that any limitations or areas where these goals were not fully achieved are transparently discussed in the conclusion section. This honesty enhances the paper's credibility and helps guide future research.</li><br></ol>Concluding, the paper would benefit significantly from explicitly linking its claims to specific sections that bolster these assertions, thereby making it easier for reviewers and readers to understand and evaluate the paper's contributions.<br><br></div>
+            <a class="move-to-top" href="#summary-question-1">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-2">
+            <div class="user_input">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The limitations are discussed in the section “Lessons learned and new design".</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> Upon reviewing the provided "Paper" against the specific "Question" regarding the discussion of the work's limitations, the authors have stated that they address the limitations of their work in the section titled “Lessons learned and new design.” After careful analysis of the paper, their claim holds true as they have identified specific limitations in their original challenge design and proposed adjustments for the new round of the challenge. However, it is crucial to evaluate whether their discussion fully adheres to the guidelines outlined for acknowledging limitations, which emphasize the importance of discussing strong assumptions, the robustness of results, the scope of claims, factors influencing performance, computational efficiency, and considerations of privacy and fairness if applicable.<br>Feedback to improve the paper quality based on the guidelines:<br><ol><li> <b>Expand on Assumptions and Robustness</b>: While the paper discusses the limitations in the design of the challenge, it does not explicitly address the strong assumptions behind their methods or how robust their findings are to the violations of these assumptions. The authors might benefit from reflecting on any assumptions made in the meta-learning approach or in the evaluation metrics, and discuss their potential impact if proven invalid.</li><br><li> <b>Scope of Claims</b>: The paper would benefit from a more critical examination of the scope of its claims, especially concerning the generalizability of the findings beyond the datasets and algorithms tested in the challenge. Discussing the limitations related to the diversity of datasets and algorithms can help in tempering the claims made and setting proper expectations for the readers.</li><br><li> <b>Factors Influencing Performance</b>: The authors should delve deeper into the factors that influence the performance of their meta-learning approach. For instance, how might variations in dataset characteristics or algorithm hyperparameters affect the outcomes? Addressing these considerations can provide a fuller picture of the strengths and weaknesses of their approach.</li><br><li> <b>Computational Efficiency</b>: Although the paper mentions the computational resources used in the challenge, there is a lack of discussion regarding the computational efficiency of their meta-learning approach and its scalability. Including a discussion on this aspect could significantly enhance the understanding of the practical implications of their work, especially in terms of resource consumption and applicability to larger datasets.</li><br><li> <b>Address Limitations on Privacy and Fairness</b>: If applicable, the authors should consider any limitations their approach might have in terms of privacy and fairness. Even if these issues may not be directly relevant to their challenge, acknowledging their potential importance in the broader context of AI systems can contribute to a more comprehensive discussion of limitations.</li><br></ol>By addressing these feedback points, the authors will be able to provide a more thorough and insightful discussion of the limitations of their work, in line with the best practices for scientific reporting. This will not only enhance the quality of the paper but also contribute positively to the transparency and integrity of the research process.<br><br></div>
+            <a class="move-to-top" href="#summary-question-2">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-3">
+            <div class="user_input">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This paper does not include theoretical results.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> The author's proposed answer to the question about including full sets of assumptions and complete proofs for each theoretical result by stating "NA" as their response, with the justification that the paper does not include theoretical results, presents a discrepancy. Upon review of the paper content, the paper indeed embarks on presenting a new approach to meta-learning through Genetic Algorithms, emphasizing an empirical analysis related to optimizing algorithm selection based on performance trajectories. This primarily involves experimentation and analysis rather than theorem-proving or theoretical development in the traditional mathematical sense.<br>Given the nature and content of the paper, which is focused on empirical meta-learning challenges, design iterations, and the application of various strategies for algorithm selection and budget allocation without delving into the formulation and proof of new theoretical results, the author's response aligns with the content and scope of the paper.<br><b>Actionable Feedback:</b><br><ol><li> <b>Clarify Empirical Focus:</b> Reinforce in the introduction or methodology sections that the research emphasis is on empirical exploration and analysis. This clarification will preemptively address expectations related to theoretical contributions.</li><br><li> <b>Explicit Statement:</b> To avoid potential ambiguity, consider adding a brief explicit statement early in the paper noting the empirical nature of the work and specifying that it does not engage with theoretical model derivation or proof formulation. This will directly address the checklist question and prevent misinterpretation of the paper’s scope.</li><br><li> <b>Reference Relevant Work:</b> Even though the paper is empirically focused, if there are theoretical frameworks or assumptions underlying any part of the methodology, ensure these are briefly mentioned and correctly referenced. This acknowledges the theoretical underpinnings without requiring new proofs or derivations.</li><br><li> <b>Supplemental Materials:</b> If there are any theoretical aspects not fully explored in the paper due to its empirical focus, but which could enrich the understanding of your approach (e.g., a mathematical model describing the genetic algorithm's selection process), consider including these in the appendix or supplemental materials. This is optional but can be valuable for readers interested in the theoretical basis of empirical methodologies.</li><br><li> <b>Consistency Check:</b> Verify that all sections of the paper consistently reflect the empirical nature of the research. Any mention of "results" should clearly be contextualized as empirical findings rather than theoretical proofs, to maintain alignment with the answer provided to the checklist question.</li><br></ol>These improvements should help better position the paper within its empirical research domain and ensure that readers clearly understand the nature of its contributions without expecting theoretical results that the paper does not aim to provide.<br></div>
+            <a class="move-to-top" href="#summary-question-3">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-4">
+            <div class="user_input">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Code URLs and all information needed to reproduce the experimental results are given.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> Based on the detailed overview of the "Paper" provided, the authors claim to have fully disclosed all the information needed to reproduce the main experimental results seems plausible. Yet, the authors' justification in their answer does not precisely point to specific sections where detailed reproducibility information, such as exact parameter settings, software versions, and detailed experimental setup instructions, can be found. The provided text describes the design of the challenge, the algorithms used, and some results, but it does not explicitly detail the reproducibility aspect across its sections.<br>Feedback to Improve Paper Quality:<ol><li> <b>Explicit Reproducibility Section</b>: Include a dedicated section or subsection titled "Reproducibility" that clearly outlines all necessary details for reproducing the main experiments, such as exact configurations, hyperparameters, software versions, and any hardware specifications required.</li><br><li> <b>Parameter Details in Experiments Section</b>: In the sections describing the experiments (Sections 2 and 3, as per the structure highlighted in the text), ensure to include detailed parameter settings for each algorithm tested, including any random seed values used to facilitate exact replication.</li><br><li> <b>Data Availability Statement</b>: Enhance the details regarding the availability of datasets used in the study. If any datasets are proprietary or have use restrictions, provide clear guidance on how researchers can request access or alternative means to verify the findings.</li><br><li> <b>Code Availability and Execution Details</b>: While URLs to code are mentioned, ensure these links are accompanied by instructions on how to run the code to replicate the experiments. This includes environment setup, dependency installations, and execution steps. Include version controls for external libraries or frameworks used.</li><br><li> <b>Fulfilling NeurIPS Guidelines</b>: Cross-check the reproducibility section against the NeurIPS guidelines on ensuring reproducibility and verifiability of results. Make certain that the paper adheres not just in spirit but in letter to these guidelines.</li><br><li> <b>Appendix Inclusion for Extended Details</b>: For any reproducibility details that are too voluminous to include in the main body of the paper without disrupting the flow, utilize appendices. This can include extended tables of parameters, additional figures from reproducibility tests, or even pseudocode for complex methodological steps not fully detailed in the main text sections.</li><br></ol>Conclusively, ensuring that these improvements are implemented would significantly elevate the paper's adherence to reproducibility standards, making it easier for peers to verify and build upon the work.<br><br></div>
+            <a class="move-to-top" href="#summary-question-4">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-5">
+            <div class="user_input">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> The code for reproducibility is given, however, some data is saved private for longer benchmark.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' answer to the checklist question regarding providing open access to data and code with sufficient instructions to reproducibly reproduce the main experimental results is "No." The justification states that while code for reproducibility is provided, some data remains private for benchmarking purposes. This response aligns with the NeurIPS guidelines, which allow for a "No" answer with proper justification (e.g., restrictions on data sharing).<br>Based on the guidelines and the content of the paper, the following actionable feedback aims to improve the overall quality and comply with NeurIPS submission requirements:<br><ol><li> <b>Detailed Reproducibility Instructions</b>: Ensure that the supplemental material or an appendix in the paper includes detailed instructions on how to use the provided code to reproduce the experiments. This includes specifying the required software environment, dependencies, and exact commands to run the experiments. If specific datasets are private, provide sample or synthetic data and detailed instructions on how the data format is structured so researchers can generate or use alternative datasets.</li><br><li> <b>Explanation of Data Privacy</b>: Elaborate on the reasons for keeping some datasets private. If the privacy is due to ethical considerations, proprietary constraints, or ongoing benchmarking efforts, clarify these points. Providing a rationale helps the community understand the constraints and fosters trust in the research methodology.</li><br><li> <b>Alternative Access Options</b>: If possible, offer a mechanism for researchers to request access to the private data under specific conditions, e.g., a data usage agreement. This could potentially increase the impact of the work by allowing other researchers to more deeply engage with the research findings.</li><br><li> <b>Mock Data or Synthetic Data</b>: To aid in reproducibility, consider providing synthetic or sample data that mimic the characteristics of the private datasets. This allows other researchers to test the methods and understand the data requirements. Include a detailed comparison of how the synthetic data relates to the real data in terms of structure, domain, and statistical properties.</li><br><li> <b>Detailed Description of Data and Code Availability</b>: Clearly state the location of the public code repository in the paper, including any anonymized links per NeurIPS guidelines for double-blind review. Ensure the repository includes a detailed README with setup and execution instructions, license information for code reuse, and any necessary citations for the datasets used.</li><br><li> <b>Clarification on Benchmarked Results</b>: For experiments that cannot be fully reproduced due to the absence of certain datasets, provide a thorough analysis and discussion of the available results. Include detailed explanations of how these results can be interpreted and to what extent they can be generalized or expected to hold on other similar datasets.</li><br><li> <b>Engagement with the Community</b>: Encourage the community to engage with the available code and data by providing clear channels for feedback, such as issue tracking in the code repository or a project mailing list. This fosters a collaborative environment where improvements and reproductions can be collectively discussed.</li><br><br></ol></div>
+            <a class="move-to-top" href="#summary-question-5">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-6">
+            <div class="user_input">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> These details are given in the section of “Challenge protocol", as well as the public participant code.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer indicates a "Yes" regarding the specification of all training and test details necessary to understand the results. However, the justification provided does not fully substantiate this claim. The authors refer to the "Challenge protocol" section and public participant code for the details but fail to mention explicit sections detailing hyperparameter choices, type of optimizer, or how these were chosen, which are crucial to fulfill the NeurIPS guidelines for complete reporting of experimental methodologies.<br><b>Feedback for Improvement:</b><br><ol><li> <b>Detailed Hyperparameter Reporting</b>: Ensure to explicitly list all hyperparameters used in the experiments, including those for the Genetic Algorithms mentioned, alongside their chosen values. If there are defaults, specify these and provide rationale for any deviations.</li><br><li> <b>Optimizer Specification</b>: Clarify the type of optimizer(s) used throughout the experiments. Include reasons for choosing these specific optimizers and how they affect the meta-learning approach.</li><br><li> <b>Rationale for Choices</b>: For hyperparameters, optimizers, and data splits, provide a detailed rationale behind their selection. If certain choices are empirical or based on previous literature, cite these sources. Where choices are made through experimentation, include a brief explanation or a reference to supplementary materials where these experiments are detailed.</li><br><li> <b>Data Splits Information</b>: The answer mentions that the data splits details are provided in the “Challenge protocol” section. To improve, ensure clear delineation of how training, validation, and test splits were made, ensuring reproducibility. If there are any unique considerations for your meta-learning setup (e.g., folds for cross-validation), these should be highlighted and justified.</li><br><li> <b>Supplementary Material</b>: If space constraints limit the extent of methodological exposition in the main paper body, utilize the supplementary material to provide a thorough breakdown of the experimental setup. This includes detailed tables or charts of hyperparameters, algorithmic adjustments over different datasets, and any additional experiments supporting your methodology choices.</li><br><li> <b>Code Clarity</b>: While referencing public participant code is useful, ensure that the code is well-documented, with comments explaining critical sections relevant to training and test setups. This aids in the translation of methodology from paper to practice.</li><br><li> <b>Preemptive Address of Potential Questions</b>: Anticipate and address potential questions readers might have about your experimental setup — for instance, the rationale behind the selection of certain datasets or why specific algorithms were chosen for comparison.</li><br></ol>By addressing these feedback points, the paper can significantly improve in terms of transparency, reproducibility, and overall integrity of reported results, aligning better with NeurIPS guidelines.<br></div>
+            <a class="move-to-top" href="#summary-question-6">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-7">
+            <div class="user_input">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> We didn't explicitly discuss the error-bars.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer indicates a discrepancy from the "Paper" content as it pertains to the reporting of statistical significance of experiments. The authors' justification mentions that error-bars were not explicitly discussed, suggesting that no statistical measures of variability or significance were included. However, upon examining the paper content, several key points related to the statistical significance of the experiments become apparent:<br><ol><li> In the section titled "Analyses of the first round results," the paper reports ALC scores with accompanying standard deviations (e.g., "0.43±0.01") for the top methods. This indicates that some form of error measurement and variability indication is indeed reported.</li><li> The computation of the average ALC score and the standard deviation of ALC scores across datasets are mathematically outlined. This provides a methodological basis for assessing the variability of the results, directly challenging the authors' justification for their 'No' answer.</li><li> Given the reporting of standard deviations, it appears there has been an attempt to convey the statistical variation of the experiment results, which is in contradiction with the authors' proposed justification.</li><br></ol><b>Actionable Feedback:</b><br><ol><li> <b>Clarify Statistical Reporting:</b> The authors should revise the justification to accurately reflect the inclusion of standard deviations in the results. This corresponds to a form of error bar, which captures the variability of the results across different datasets.</li><br><li> <b>Expand on Statistical Significance Reporting:</b> While standard deviations are a step in the right direction, the authors could improve the paper by also including confidence intervals or conducting hypothesis tests to provide a clearer picture of the statistical significance of their results. This would align more closely with best practices in reporting experimental results.</li><br><li> <b>Clearly State the Factors of Variability:</b> The paper should explicitly mention the factors contributing to the variability captured by the reported standard deviations. Clarifying whether these factors include different train/test splits, algorithm initializations, or other conditions would enhance the reader's understanding of the results’ robustness.</li><br><li> <b>Discuss the Assumptions:</b> If the error bars (standard deviations) are used, the authors should discuss any assumptions made, such as the normality of errors. This is particularly important if the authors later consider expanding their statistical analysis to include confidence intervals or other measures that rely on specific distributional assumptions.</li><br><li> <b>Reference Error Bars in the Text:</b> To improve clarity, the authors should ensure that any mentions of variability, error bars, or statistical significance in the results sections are directly linked to the corresponding figures or tables where these are reported. This aids in reader comprehension and highlights the attention paid to statistical robustness.</li><br></ol>By addressing these points, the paper would provide a clearer and more comprehensive account of the statistical significance and variability of the results, thereby improving its quality and alignment with the conference submission guidelines.<br></div>
+            <a class="move-to-top" href="#summary-question-7">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-8">
+            <div class="user_input">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> The compute resource is not explicitly discussed, we only gave the fact that the competition is running on Codabench platform, and all methods are imposed under a given time limit.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> Feedback:<br><ol><li> Clarify Compute Resources: The authors mention that all experiments were conducted on a cloud-based setup featuring ten NVIDIA Tesla V100 GPUs (Section 3), which slightly contradicts the initial "No" answer. This discrepancy needs addressing by updating the justification section of the checklist question to reflect this information accurately.</li><br><li> Detail Compute Usage Per Experiment: While the paper mentions the hardware used, it lacks detailed information on the compute resources required for each individual experimental run, such as memory usage, time of execution, and whether these resources vary across experiments. The authors should include these specifics to comply with the guidelines fully.</li><br><li> Estimate Total Compute: The paper does not provide an estimate of the total compute used, including for preliminary or failed experiments that didn't make it into the final paper. The authors should add a section estimating the total compute, adhering to the guideline that suggests disclosing if the full research project required more compute than the experiments reported.</li><br><li> Adding References to Sections: For better clarity and adherence to the guidelines, the authors should explicitly reference the section in the paper where the hardware specification is mentioned within their justification for the checklist question. This aids in navigating the paper and verifying the statements made in the justification.</li><br><li> Consideration for Failed Experiments: If applicable, the authors should disclose compute resources used in preliminary or failed experiments to provide a complete view of the computational expense incurred during the research project. This could be mentioned briefly in the paper or more detailed in an appendix.</li><br></ol>Actionable Items:<br><ul><li>Revise the justification to accurately reflect the hardware information provided in the paper and ensure it addresses the checklist question directly.</li><li>Add specifics on compute resources (CPU/GPU usage, memory, execution time) for each experiment.</li><li>Estimate and disclose the total compute for the project, including preliminary or failed experiments.</li><li>Reference the specific section(s) in the paper where the compute resources are discussed in the justification.</li><li>Consider including information on computational resources used for preliminary or failed experiments as part of the disclosure.</li><br><br></ul></div>
+            <a class="move-to-top" href="#summary-question-8">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-9">
+            <div class="user_input">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We reviewed the code of ethics and our paper conforms with it.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The Authors' Proposed Answer and Justification lack specificity and direct reference to the sections of the paper that would substantiate compliance with the NeurIPS Code of Ethics. According to the Guidelines, when answering "Yes," the justification needs to point to specific sections where related material for the question can be found, which the provided justification fails to do.<br><h3>Actionable Feedback</h3><br><ol><li> <b>Specify Compliance</b>: Explicitly state in the justification the sections that demonstrate compliance with the NeurIPS Code of Ethics. For example, if there's a section discussing ethical considerations, fairness, transparency, or the societal impact of the work, these should be referenced.</li><br><li> <b>Ethical Considerations Section</b>: If not already included, add a dedicated "Ethical Considerations" section that discusses the direct implications of the paper's research on society, any potential for harm, how data was handled, secured, and any biases that were addressed or may still exist. This will provide a clear reference point for demonstrating ethical compliance.</li><br><li> <b>Data Privacy and Consent</b>: Make sure there is a clear reference to the section(s) discussing the handling of human data, if applicable, including privacy considerations and how consent was obtained. This is crucial for demonstrating adherence to ethical standards regarding human subjects.</li><br><li> <b>Societal Impact Discussion</b>: Ensure there is a specific section or statement regarding the societal impact of your research. This discussion should cover both the potential positive impacts and any negative consequences that could arise from the application of your research findings. Explicitly linking this discussion to the broader ethical guidelines will strengthen your paper’s compliance claim.</li><br><li> <b>Reproducibility and Transparency</b>: Confirm and make it explicit where in the paper you discuss efforts to ensure reproducibility and transparency, such as sharing code and data (when possible), and providing clear documentation of methodologies. This transparency is a key part of ethical research practices.</li><br><li> <b>AI Safety and Fairness</b>: If your research involves AI or machine learning models, include discussion around the safety and fairness of these models. This includes addressing potential biases in the models, the robustness of the models against adversarial attacks, and any measures taken to ensure the responsible use of AI.</li><br><li> <b>Review and Revise</b>: After adding or ensuring these sections are included and properly referenced, review the NeurIPS Code of Ethics again to ensure that no aspect has been overlooked. Compare each guideline with the relevant section of your paper to confirm compliance.</li><br></ol>By meticulously addressing these points and making sure the paper clearly references specific sections that align with the NeurIPS Code of Ethics, the authors can significantly improve their justification for ethical compliance, thereby strengthening the overall quality of the paper.<br></div>
+            <a class="move-to-top" href="#summary-question-9">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-10">
+            <div class="user_input">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Our paper explores the domain of meta-learning, a collection of methodologies designed to rapidly identify the most effective algorithm for a given task. We discuss its positive social impact as it reduces human intervention and computational cost.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer states that both potential positive and negative societal impacts of meta-learning from learning curves are discussed. However, upon careful examination of the paper, while positive impacts such as reducing human intervention and computational costs are mentioned, there is a noticeable lack of discussion regarding potential negative societal impacts. This omission directly contrasts the guidelines that require addressing both aspects.<br><h3>Actionable Feedback:</h3><br><ol><li> <b>Explicitly Address Negative Societal Impacts</b>: The paper should be revised to include a section that explicitly discusses the potential negative societal impacts of the presented meta-learning methodologies. Examples may include ethical considerations, the potential for job displacement, or how the technology might be misused.</li><br><li> <b>Refer to Guidelines for Negative Impacts</b>: Leverage the examples provided in the guidelines, such as potential malicious uses (e.g., AI-generated disinformation), fairness considerations, privacy, and security issues. This can serve as a starting point to enhance the discussion on negative societal impacts.</li><br><li> <b>Societal Impact Section Reference</b>: The justification in the checklist response does not point to specific sections where these discussions are located, as required by the guidelines. Once the negative impacts are addressed in the revision, ensure that the justification cites the exact sections where both positive and negative impacts are discussed.</li><br><li> <b>Mitigation Strategies</b>: Besides discussing potential negative impacts, consider incorporating a subsection that outlines possible mitigation strategies. This may include ethical AI practices, transparency in algorithmic decision-making, and safeguards against misuse.</li><br><li> <b>Broaden the Discussion on Societal Impacts</b>: Integrate a more comprehensive analysis of the societal implications, considering the technology's potential reach and impact on various demographics, especially underrepresented or marginalized groups.</li><br></ol>Implementing these suggestions will not only align the paper with the conference guidelines but also enrich the discourse on the responsible development and deployment of meta-learning technologies. This holistic approach will likely make the paper more informative and impactful for a broader audience.<br><br></div>
+            <a class="move-to-top" href="#summary-question-10">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-11">
+            <div class="user_input">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> Our paper poses no such risks.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer to the checklist question regarding the description of safeguards for responsible release of data or models is marked as "NA" with the justification that their paper poses no such risks. Given the content of the paper, which primarily deals with the development and insights from a meta-learning challenge without direct mention of releasing specific pretrained models, datasets, or potentially sensitive algorithms, this response seems initially reasonable. However, the absence of a detailed analysis or discussion on the potential misuse of the methodologies, tools, or data could be considered a missed opportunity to address broader ethical considerations inherent in AI research, especially concerning meta-learning systems that might be applied to or derived from various data sources with different privacy or security implications.<br><b>Feedback:</b><br><ol><li> <b>Clarification on Data and Model Release:</b> Even though the primary scope of the paper does not involve direct release of models or datasets, it would enhance the paper's alignment with responsible AI practices if the authors included a brief discussion on the nature of data (e.g., public datasets, synthetic data generation) and any potential for misuse if the methodologies were applied outside of the controlled challenge environment. This could be added as a subsection in the "Software and Data" or "Conclusions" sections.</li></ol><ol><li> <b>Ethical Considerations and Safeguards:</b> Integrate a section that outlines general ethical considerations relevant to the development, publication, and potential application of the meta-learning methods described. This might include considerations on how the methodology could be adapted or misused if applied to different contexts, datasets, or tasks. Such a discussion would not only respond preemptively to concerns about misuse but also demonstrate awareness of the broader implications of the research.</li><br><li> <b>Broader Impact Statement:</b> Although the answer to the checklist question is "NA", including a "Broader Impact Statement" or a similar section that addresses potential positive and negative societal impacts of the research provides a platform for discussing the safeguards or lack thereof. This can encompass data privacy, algorithm fairness, and dual-use concerns, providing clarity and insight into the authors' perspectives on these critical issues.</li><br><li> <b>Future Safeguards for Challenge Designs:</b> Since the paper discusses the challenge design and insights from its rounds, a reflective discussion on how future challenges could incorporate safeguards against misuse of the proposed tools or data would be valuable. For instance, guidelines for participants on ethical use, checks for bias or fairness in algorithm development, and the secure handling of data can be discussed.</li><br><li> <b>Transparency and Reproducibility:</b> Maintain high standards of transparency and reproducibility, as mentioned under "Software and Data". Clarify any restrictions on data or model access and provide detailed justifications. This helps in contextualizing the 'NA' response by underscoring the controlled, ethical framework within which the research operates.</li><br></ol>By addressing these points, the paper would not only clarify its stance on the responsible release of AI technologies but also contribute to a broader understanding and discussion of ethical considerations in AI research and application domains.<br></div>
+            <a class="move-to-top" href="#summary-question-11">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-12">
+            <div class="user_input">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> creators or original owners of assets (e.g., code, data, models), used in the paper are cited.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer indicates compliance with crediting creators or original owners of assets and mentions the inclusion of citations. However, the justification fails to specifically point to the section(s) where these details can be found, as required by the guidelines. It is essential for the justification to include direct references to the paper sections where the related material can be located to validate the authors' claims of proper attribution and license adherence.<br><b>Feedback for Improvement:</b><br><ol><li> <b>Explicit Section Reference:</b> Revise the justification to include precise references to the section(s) of the paper where the citations and licensing details for used assets (e.g., code, data, models) are discussed. This will align the justification with the guidelines and make it easier for readers and reviewers to verify compliance.</li><br><li> <b>License Details:</b> Ensure that each asset cited in the paper, including datasets, code, and models, is accompanied by specific information about its license. If this information is currently not provided in the paper, add a sentence or a footnote next to each citation detailing the license type (e.g., CC-BY 4.0, MIT, GPL-3.0).</li><br><li> <b>URLs for Assets:</b> Wherever possible, include URLs or DOIs for the datasets and code repositories directly in the citations or in a dedicated section for resources. This not only aids in giving proper credit but also facilitates access to these assets for readers.</li><br><li> <b>Acknowledgment of Scraped Data:</b> If any data were scraped from websites or obtained through methods other than direct downloads from a repository, clearly state this and include an acknowledgment of the source's terms of service or copyright policies, ensuring that such data usage complies with those terms.</li><br><li> <b>Version Information:</b> For assets like software libraries or datasets where specific versions are critical for reproducibility, ensure the paper mentions these details explicitly. If this is currently omitted, update the relevant sections to include version numbers.</li><br><li> <b>Supplemental Materials:</b> If any assets were created as part of the research (e.g., synthetic datasets, software tools), and are made available to the public, ensure that the paper mentions the licensing under which these assets are released and provide a link to access them.</li><br></ol>Correctly integrating these improvements will make the paper more transparent, reproducible, and in full compliance with ethical standards and copyright laws, which is crucial for the acceptance of work at conferences like NeurIPS.<br></div>
+            <a class="move-to-top" href="#summary-question-12">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-13">
+            <div class="user_input">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> This is given in the challenge website, whose link is given in the paper.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The author's proposed answer to the question regarding whether new assets introduced in the paper are well documented and if the documentation is provided alongside the assets is "Yes", with the justification that this is provided on the challenge website, linked within the paper. However, this justification does not strictly adhere to the guidelines specified for answering this question. According to the guidelines, if the answer is "Yes", the authors should point to the specific sections within the paper where related material for the question can be found.<br><b>Actionable Feedback:</b><br><ol><li> <b>Direct Reference to Asset Documentation in the Paper:</b> For improved compliance with the guidelines, the authors should include specific references to the sections within the paper where the assets (e.g., datasets, code, models) are described, even if detailed documentation is hosted externally. This will help readers understand the assets' context, application, or limitation directly from the paper without needing to visit the external link initially.</li><br><li> <b>Include Summary of Documentation in the Paper:</b> While it is understandable that detailed documentation might be too extensive to fully include in the paper and is more appropriate for an accompanying website, a brief summary or overview of what the documentation covers should be provided within the paper. For instances, details on dataset characteristics, models' architecture specifics, code functionalities, or a high-level summary of the assets can be very useful for readers.</li><br><li> <b>Clarify Asset Access and Anonymization:</b> Given the conference's requirement for anonymization at submission time, the paper should explicitly state how the assets have been anonymized for the review process and how readers can access them. If the assets are hosted on a challenge website, clarify within the paper that this link is anonymized or how it will be updated post-review process.</li><br><li> <b>Ethical Considerations and Consent for Assets Involving Human Data:</b> If any new asset involves data from human subjects, the paper should briefly discuss ethical considerations, consent process, and institutional review board (IRB) approval if applicable. Although this might be detailed in the external documentation, a summary within the paper itself will assure readers of adherence to ethical standards.</li><br><li> <b>Data and Software Section:</b> It is recommended to have a dedicated section or subsection in the paper, such as a "Software and Data" section, that addresses the availability, documentation, and any relevant information about newly introduced assets. This section should, at the very least, mention the types of documentation available (e.g., code comments, usage guides, dataset descriptions) and where to find them.</li><br></ol>By incorporating these improvements, the paper would provide clearer, more direct information about the new assets introduced, their documentation, and accessibility, aligning better with the expectations set by the question guidelines.<br></div>
+            <a class="move-to-top" href="#summary-question-13">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-14">
+            <div class="user_input">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This paper does not involve crowdsourcing nor research with human subjects.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The discrepancy here is between the author's proposed answer to the checklist question regarding crowdsourcing experiments and research with human subjects and the content in the paper itself. The proposed answer was "NA," with the justification that the paper does not involve crowdsourcing nor research with human subjects. However, within the software and data section of the paper, it mentions, "In our study, one dataset was generated through the involvement of human subjects...". This clearly indicates that human subjects were involved in a part of the research, contrary to the NA response to the checklist question.<br>Here's the actionable feedback to improve the paper quality based on this discrepancy:<br><ol><li> <b>Revise the Checklist Response</b>: The authors need to update their response to the checklist question. Since the paper mentions the involvement of human subjects in dataset generation, the appropriate answer to the checklist question is "Yes," accompanied by a reference to the section that details the procedure, compensation, and ethical considerations involved with the human subjects.</li><br><li> <b>Detail Participant Interaction</b>: Ensure the section that discusses the involvement of human subjects in dataset generation includes full text instructions provided to participants, along with screenshots if applicable. This should cover the recruitment process, the instructions given, tasks performed, and any user interface they interacted with.</li><br><li> <b>Compensation Transparency</b>: Clearly detail the compensation provided to the human subjects. This includes not only stating the amount but also the rationale for the chosen compensation scheme, aligning with the NeurIPS Code of Ethics standards.</li><br><li> <b>Ethical Approval and Consent</b>: Although mentioned briefly, it would benefit from a more detailed description of the ethical approval process, including the name of the IRB that provided approval and the consent procedure followed. Clarify how participants were briefed and their rights to withdraw without penalty.</li><br><li> <b>Clarify the Impact on Results</b>: Provide a discussion on how the data collected from human subjects impacted the research outcomes. This could include the significance of the human-generated dataset in the overall research and any insights derived specifically from this data.</li><br><li> <b>Supplemental Material</b>: If there's more detailed information on the interaction with human subjects, such as detailed instructions or data collection protocols that were not included in the main body due to space constraints, consider adding this to the supplemental material.</li><br></ol>By addressing these points, the authors will enhance the clarity, ethical transparency, and completeness of their submission, aligning it with the guidelines provided.<br><br></div>
+            <a class="move-to-top" href="#summary-question-14">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-15">
+            <div class="user_input">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> This paper does not involve crowdsourcing nor research with human subjects.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer indicates that the paper does not involve crowdsourcing nor research with human subjects, suggesting that risks to participants, consent disclosures, and Institutional Review Board (IRB) approvals are not applicable (NA). However, there is a discrepancy in the actual content of the paper, specifically under the "Software and Data" section. The paper mentions the generation of one dataset through the involvement of human subjects, detailing adherence to ethical guidelines, informed consent procurement, the opportunity for withdrawal without penalty, and compensation for participation, alongside securing IRB approvals.<br>Given this discrepancy, here is the itemized, actionable feedback aiming to improve the quality of the paper:<br><ol><li> <b>Correct the Proposed Answer</b>: Since the paper does involve human subjects in dataset generation, the appropriate answer to the question should not be "NA". The authors should correct this to "Yes" to reflect the involvement of human subjects as described.</li><br><li> <b>Clarify the Involvement of Human Subjects</b>: The explanation regarding the involvement of human subjects in the generation of a dataset is buried under the "Software and Data" section. This information should be more prominently placed or referenced in the methodology or ethical considerations sections, making the paper's adherence to ethical guidelines and IRB procedures transparent early on.</li><br><li> <b>Detailed Ethical Considerations Section</b>: Given the involvement of human subjects, the authors should include a dedicated section on Ethical Considerations. This section should detail the process of securing informed consent, the measures taken to ensure participant anonymity and data security, the compensation provided to participants, and any potential risks or discomforts, even if minimal.</li><br><li> <b>Evidence of IRB Approval</b>: While mentioning IRB approval is necessary, offering a statement or reference about the approval (without breaking the anonymity requirements for NeurIPS submissions) would provide stronger evidence of the paper's adherence to ethical research practices. If direct statements cannot be made due to anonymity, a general statement on the process and standards met can be helpful.</li><br><li> <b>Review and Update Risk Assessment</b>: The authors need to critically review and possibly update their risk assessment related to the involvement of human subjects, considering any physical, psychological, social, legal, or other risks, even if perceived as minimal. This reassessment should be documented in the paper, providing readers with a clear understanding of any potential impacts on participants.</li><br><li> <b>Consent Process Documentation</b>: More detailed documentation of the consent process should be provided, either in the main text or appendix, ensuring that readers understand how participant autonomy was respected and informed decisions were made to participate in the study.</li><br></ol>Improving these aspects will strengthen the paper's ethical considerations, transparency, and adherence to research integrity principles, addressing an essential component of conducting research involving human subjects.<br><br></div>
+            <a class="move-to-top" href="#summary-question-15">↑ Back to summary</a>
+        </div>
+        
+
+        <!-- Survey -->
+        <div>
+            <p>Please complete the following survey about your experience:</p>
+            <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891=TWV0YS1sZWFybmluZyBmcm9tIExlYXJuaW5nIEN1cnZlcyBDaGFsbGVuZ2U6IExlc3NvbnMgbGVhcm5lZCBmcm9tIHRoZSBGaXJzdCBSb3VuZCBhbmQgRGVzaWduIG9mIHRoZSBTZWNvbmQgUm91bmQ=" target="_blank">Click to submit post submission survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+        
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px;
+        padding-bottom: 40px;
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0;
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        /* color: #0033ff; */
+        color: #000;
+    }
+    .answer {
+        /* color: #28a745; */
+        color: #000;
+    }
+    .justification {
+        /* color: #de750b; */
+        color: #000;
+    }
+    .user_input {
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #3a3a3a;
+    }
+    .llm_review {
+        color: #000;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .llm_review-red {
+        background-color: #eacfcf;
+        border: 1px solid #FF0000;
+    }
+    .llm_review-green {
+        background-color: #c6e9c6;
+        border: 1px solid #008000;
+
+    }
+    .llm_review-orange {
+        background-color: #ebdecf;
+        border: 1px solid #FF8C00;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .score-red {
+        background-color: #eacfcf;
+        color: #000;
+        border: 1px solid #FF0000;
+    }
+    .score-orange {
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .score-purple {
+        background-color: #cac4e7;
+        color: #271b5e;
+        border: 1px solid #271b5e;
+    }
+    .scroll-button {
+        padding: 5px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: 3px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .button-green{
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .button-orange{
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .button-orange:hover {
+        background-color: #623600;
+        color: #fff;
+        border: none;
+    }
+    .button-green:hover {
+        background-color: #015f01;
+        color: #fff;
+        border: none;
+    }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+    .legend{
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content">
+        <h1>Lessons learned from the AutoML challenge</h1>
+
+        <hr>
+
+        <!-- <h2>Scores</h2>
+        <table>
+            <tr>
+                <td><strong>Paper Quality Score:</strong></td>
+                <td><span class="score-label score-blue">0.57</span></td>
+            </tr>
+            <tr>
+                <td><strong>LLM Accuracy:</strong></td>
+                <td><span class="score-label score-purple">0.33</span></td>
+            </tr>
+        </table>
+
+        <hr> -->
+
+        <h2>Review Summary</h2>
+        <div>
+            <span class="legend score-label score-green">&nbsp; &nbsp;</span> The LLM found no significant concern
+            <br>
+            <span class="legend score-label score-orange">&nbsp; &nbsp;</span> The LLM proposes possible improvements
+        </div>
+        <table>
+            <tr>
+              <th>Question</th>
+              <th></th>
+            </tr>
+            
+            <tr id="summary-question-1">
+                <td>1. Claims</td>
+                <td><a href="#question-1" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-2">
+                <td>2. Limitations</td>
+                <td><a href="#question-2" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-3">
+                <td>3. Theoritical assumptions and proofs</td>
+                <td><a href="#question-3" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-4">
+                <td>4. Experiments reproducibility</td>
+                <td><a href="#question-4" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-5">
+                <td>5. Code and data accessibility</td>
+                <td><a href="#question-5" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-6">
+                <td>6. Experimental settings/details</td>
+                <td><a href="#question-6" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-7">
+                <td>7. Error bars</td>
+                <td><a href="#question-7" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-8">
+                <td>8. Compute resources</td>
+                <td><a href="#question-8" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-9">
+                <td>9. NeurIPS code of ethics</td>
+                <td><a href="#question-9" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-10">
+                <td>10. Impacts</td>
+                <td><a href="#question-10" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-11">
+                <td>11. Safeguards</td>
+                <td><a href="#question-11" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-12">
+                <td>12. Credits</td>
+                <td><a href="#question-12" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-13">
+                <td>13. Documentation</td>
+                <td><a href="#question-13" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-14">
+                <td>14. Human subjects</td>
+                <td><a href="#question-14" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-15">
+                <td>15. Risks</td>
+                <td><a href="#question-15" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+        </table>
+
+        <!-- Survey -->
+        <div>
+            <p>After reading through the LLM’s response below, <strong>please complete the following survey about your experience:</strong></p>
+            <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891=TGVzc29ucyBsZWFybmVkIGZyb20gdGhlIEF1dG9NTCBjaGFsbGVuZ2U=" target="_blank">Click to submit post submission survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+        
+        
+        <div class="review" id="question-1">
+            <div class="user_input">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The abstract and introduction clearly state the paper's main contributions and scope.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The proposed answer from the authors states that the main claims in the abstract and introduction accurately reflect the paper's contributions and scope. However, the justification provided by the authors does not specifically point to sections in the paper where these claims are directly supported or evidenced. This oversight does not align with the guidelines requiring clear references to specific sections substantiating the claims.<br><h3>Actionable Feedback:</h3><br><ol><li> <b>Directly Link Claims to Specific Sections:</b> Revise the justification to include explicit references to the sections of the paper where the main claims are discussed in detail. This could involve pointing out where in the paper the contributions of the AutoML challenge are enumerated, where detailed findings from the challenge are presented, and where the implications of these findings for future research are discussed.</li><br><li> <b>Clarify Scope and Contributions in the Abstract:</b> Ensure that the abstract clearly summarizes the key contributions and scope. If the abstract currently does not explicitly state the main findings from the AutoML challenge or how these findings advance the field of machine learning, consider revising for clarity and specificity.</li><br><li> <b>Enhance the Introduction for Better Context:</b> In the introduction, aside from covering the background, objectives, and the significance of the AutoML challenge, it would be helpful to briefly mention the paper's contributions to providing insights or lessons learned from the challenge. This sets the reader's expectations correctly for what is covered in the subsequent sections.</li><br><li> <b>Address Any Overstatements or Aspirational Goals:</b> If the paper includes aspirational goals or hypotheses as part of its claims, clarify in the introduction or abstract which specific goals were met and which remain aspirational. This ensures that claims accurately reflect the paper’s content and contribute to setting realistic expectations for the readers.</li><br><li> <b>Summarize Findings in the Conclusion:</b> Ensure that the concluding section of the paper clearly restates the paper’s main contributions and findings, aligning them with the claims made in the abstract and introduction. This helps reinforce how the paper's contents fulfill the initial promises made to the reader.</li><br></ol>By implementing these improvements, the paper will be better aligned with the guidelines and ensure that the claims made in the abstract and introduction are accurately supported by the content within the specific sections of the document.<br></div>
+            <a class="move-to-top" href="#summary-question-1">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-2">
+            <div class="user_input">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The limitations are discussed in section "Discussion: challenge and benchmark design"</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors correctly state that the limitations are discussed in the section titled "Discussion: challenge and benchmark design". However, to fully align with the NeurIPS guidelines on discussing limitations, the paper should also cover assumptions made during the research, robustness to violations of these assumptions, the scope of the claims made, and factors influencing the performance of the proposed approach, among others. Based on the content provided, it is not clear if these aspects are fully covered in the mentioned section.<br>Itemized, actionable feedback for improvement:<ul><li>Ensure that the discussion of limitations includes a reflection on strong assumptions made during the research. Identify any assumptions about data distribution, feature representation, or computational resources that could limit the generalizability of the findings.</li><li>Discuss the robustness of the proposed AutoML solutions to violations of the assumptions mentioned. For example, how would changes in data distribution or quality impact the performance of the winning algorithms?</li><li>Clarify the scope of the claims made in the paper. Given that the challenge focused on a specific set of tasks under controlled conditions, caution should be exercised in generalizing the results to all AutoML scenarios.</li><li>Reflect on the factors that influence the performance of the approach. Given the complexity of AutoML challenges, certain algorithms may perform better under specific conditions (e.g., data size, feature types). This discussion can add depth and context to the limitations section.</li><li>If not already included, the paper should mention the computational efficiency of different AutoML solutions and their scalability, which is crucial for real-world application.</li><br></ul>Addressing these points can strengthen the paper by providing a more comprehensive overview of its limitations and ensuring transparency about the work's scope and applicability. This, in turn, supports the integrity of the research and fosters trust within the scientific community.<br><br></div>
+            <a class="move-to-top" href="#summary-question-2">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-3">
+            <div class="user_input">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> [TODO]</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> The authors' proposed answer is "NA," implying that the paper does not include theoretical results such as theorems, formulas, or proofs. However, an examination of the paper content is necessary to verify this claim accurately. Given the detailed nature of the paper's content focused on the analysis of an AutoML challenge, findings, and discussions on methodologies including heuristic searches, Bayesian optimization, meta-learning, and the effectiveness of ensemble methods, the paper primarily presents empirical results and analysis rather than deriving theoretical results or proofs. Thus, the answer provided by the authors aligns well with the content presented in the paper, as the primary focus is on empirical analysis and summarization of findings from the AutoML challenge, without an explicit focus on developing or proving new theoretical results.<br>Based on the guidelines provided for authors, if a paper does not include theoretical results, answering "NA" to the question regarding the provision of a full set of assumptions and complete proofs is appropriate. The paper is structured to discuss methodologies, empirical findings, and analyses derived from the AutoML challenge, rather than developing or proving theoretical concepts from a mathematical standpoint. It did not delve into theoretical formulations that require assumptions, theorems, or mathematical proofs, thus making "NA" a suitable answer.<br>Itemized, actionable feedback to improve the paper quality could involve:<ol><li> Clarification within the paper to explicitly state the absence of theoretical results, ensuring readers are aware that the focus is on empirical analysis and insight derived from the AutoML challenge.</li><li> Providing a section that discusses the implications of the empirical findings on existing theoretical frameworks or a brief discussion on how these findings could inspire future theoretical investigation.</li><li> Including a disclaimer or a brief paragraph in the methodology or conclusion sections regarding the scope of the paper focusing on empirical results and lessons learned without delving into theoretical proof development.</li><br></ol>These improvements can help to set clear expectations for readers regarding the content of the paper and its contributions to the field of AutoML, reinforcing the rationale behind the "NA" response to the question about theoretical results and proofs.<br><br></div>
+            <a class="move-to-top" href="#summary-question-3">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-4">
+            <div class="user_input">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Yes. These details can be found in the provided url in abstract, and information given through the paper.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer indicates that full details necessary for reproducing the main experimental results are disclosed, referencing the paper's content and a provided URL in the abstract. However, the justification doesn't specifically point to the sections where these reproducibility details can be found, which doesn't fully align with the provided guidelines requesting explicit references to sections for related material.<br><h3>Actionable Feedback:</h3><ol><li> <b>Specify Sections for Reproducibility Details:</b> Revise the justification to include specific section numbers or headings where the reader can find details necessary for reproducing the experiments. This ensures clarity and ease of access to this information.</li><br><li> <b>Clarify External Resource Accessibility:</b> Confirm the availability and accessibility of the provided URL in the abstract. If this URL hosts code, data, or additional experimental details, explicitly mention what can be found at the URL and how it contributes to the paper's reproducibility.</li><br><li> <b>Detail Experimental Conditions:</b> Ensure the paper clearly describes the experimental setup, including hardware and software environments, in a dedicated section. This is critical for reproducing results under similar conditions.</li><br><li> <b>Code and Data Release:</b> If code and data are essential for reproducing the results and have been released, provide clear instructions in the paper for accessing them. Include any requirements or dependencies needed to run the code successfully.</li><br><li> <b>Discuss Any Limitations:</b> If there are any limitations that might prevent full reproducibility (e.g., proprietary datasets, computational resource requirements), these should be clearly discussed in the paper. Offering alternatives or approximate solutions can be helpful.</li><br><li> <b>Highlight Key Parameters:</b> Ensure that all hyperparameters and model configurations critical to reproducing the results are thoroughly documented in the paper. This should include both the rationale behind their selection and their specific values.</li><br><li> <b>Address Error Bars Reporting:</b> If applicable, clarify the decision on error bars reporting, especially in the context of computational expense or other constraints, to align with the guidelines that allow for exceptions with proper justification.</li><br></ol>By directly addressing these areas, the paper's alignment with NeurIPS guidelines on reproducibility would be significantly improved, enhancing its utility to readers and future researchers.<br></div>
+            <a class="move-to-top" href="#summary-question-4">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-5">
+            <div class="user_input">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Yes, all necessary code, datasets, and instructions are provided at the URL mentioned in the abstract.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The proposed author's answer and justification appear to closely align with the guidelines provided for NeurIPS conference submissions. However, upon careful examination of the answer and justification against the actual content of the paper, several key points need to be addressed to ensure clarity, completeness, and compliance with the guidelines:<br><ol><li> <b>Precise Location of Material</b>: The authors stated that all necessary material (code, datasets, and instructions) is provided at a URL mentioned in the abstract. According to the guidelines, while mentioning the URL can be helpful, it is crucial to also point out specific sections within the paper where related material for reproduction can be found. Merely pointing to an external URL in the abstract might not suffice for reproducibility if the paper itself does not elaborate on how the experiments can be reproduced based on the provided resources.</li><br><li> <b>Reproducibility Details</b>: Even though the URL for accessing the code and datasets is stated, the paper should also discuss any prerequisites, environment details (software versions, operating systems, hardware requirements), and exact commands or scripts that are needed to reproduce the results. This is essential to fulfill the reproducibility criteria defined in the guidelines.</li><br><li> <b>Clarity on Reproducible Components</b>: The authors must clarify if all experimental results presented in the paper can be reproduced with the provided code and datasets. If there are any exceptions (e.g., some results are based on proprietary data or require computational resources that might not be widely accessible), these should be explicitly stated.</li><br><h3>Actionable Feedback:</h3><br><li> <b>Section References</b>: Amend the paper to include references to specific sections discussing the open access of data and code, and the reproducibility of the experiments. If such sections do not exist, they should be created to detail the content and instructions necessary for replication.</li><br><li> <b>Reproducibility Instructions</b>: Enhance the supplemental material or an appendix within the paper to offer detailed instructions for reproducing the experiments. This includes environment setup, data preparation steps, and execution commands.</li><br><li> <b>Clarify Reproducibility Scope</b>: Clearly specify which parts of the experimental analysis are reproducible with the provided resources and disclose any limitations, such as experiments needing proprietary datasets or significant computational resources.</li><br><li> <b>External Resources</b>: Besides providing a URL in the abstract, consider embedding supplementary files or an appendix within the paper submission that contains necessary scripts, with proper anonymization to adhere to the double-blind review process.</li><br><li> <b>Environment Details</b>: Include detailed information about the software and hardware used for the experiments to assist with the accurate replication of the results. This might involve specifying versions of programming languages, libraries, operating systems, and the computational capacity needed.</li><br></ol>Following this feedback to address the noted discrepancies and making the paper more aligned with NeurIPS guidelines will enhance the clarity, completeness, and reproducibility of the research presented.<br></div>
+            <a class="move-to-top" href="#summary-question-5">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-6">
+            <div class="user_input">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> These are discussed through the paper, complete details are given in our website with url provided in abstract.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer asserts that all necessary training and test details are specified within the paper and provides a URL to their website for complete details. However, the justification deviates from the guidelines which require specific sections of the paper to be cited where this information can be found. Since the location within the paper is not specified and the reliance on external sources (website) for complete details does not align with the guidelines, discrepancies are observed.<br><b>Itemized Actionable Feedback:</b><ol><li> <b>Incorporate Essential Details in the Paper</b>: Include a concise summary of all relevant training and test details within the body of the paper itself. This includes data splits, hyperparameters, the type of optimizer used, etc. If space is a concern, consider adding an appendix or supplemental material that is directly part of the submission.</li><br><li> <b>Direct Citations</b>: Revise the justification to cite the specific sections or appendices of the paper where these details can be found, in accordance with the guidelines. This helps reviewers and readers to quickly verify the information.</li><br><li> <b>Clarify External References</b>: While providing a URL for additional resources is helpful, clarify the need for external references in the justification. Explicitly state what information is available online that complements but does not replace the necessary details within the paper. Make sure this supplementary online material is stable and will remain accessible.</li><br><li> <b>Ensure Reproducibility</b>: Ensure that the information provided, both in the paper and on the website, is sufficient for reproducing the results presented. This includes clear documentation of data processing steps, model configurations, and any software dependencies.</li><br><br></ol></div>
+            <a class="move-to-top" href="#summary-question-6">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-7">
+            <div class="user_input">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The significance of experiments is discussed in footnote 5. Other error bars are included in our website (url given in abstract).</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The proposed Answer and Justification provided by the authors do not fully align with the Guidelines and expectations for reporting statistical significance and error bars in the context of the NeurIPS conference. Specifically, the Justification indicates that the significance of experiments is discussed in one part of the manuscript (footnote 5) and refers to external resources (a website) for additional details on error bars. This approach does not comply with the Guidelines that emphasize the need for in-text, comprehensively detailed demonstrations of statistical treatments directly within the manuscript. The Guidelines suggest that details concerning the calculation of error bars, the nature of the error bars (standard deviation or standard error of the mean), the assumptions made, and the factors of variability captured should be clearly stated in the paper.<br><h3>Actionable Feedback</h3><br><ol><li> <b>Incorporate Error Bars Directly into the Manuscript</b>: The authors should revise the manuscript to include error bars directly in the main text or as part of the supplementary materials, rather than referring readers to an external website. This will ensure that the statistical significance and variability of the experimental results are readily accessible to readers and reviewers, enhancing the paper's transparency and credibility.</li><br><li> <b>Clarify the Calculation and Nature of Error Bars</b>: The manuscript should include a clear description of how the error bars were calculated (e.g., closed-form formula, bootstrap), specifying whether they represent standard deviations, standard errors, or confidence intervals. It is also essential to mention if the hypothesis of normally distributed errors was tested or assumed.</li><br><li> <b>Detail Variability Factors and Assumptions</b>: Explicitly state the factors of variability that the error bars are capturing, such as differences in train/test splits, model initialization, or parameter settings. Additionally, any assumptions made during the statistical analysis should be clearly outlined to inform readers of the conditions under which the conclusions hold.</li><br><li> <b>Address Asymmetric Distributions</b>: If the data or errors are asymmetrically distributed, the authors need to ensure that the error bars reported do not suggest implausible values (e.g., negative error rates). If applicable, asymmetric error bars or other suitable statistical representations should be employed and described.</li><br><li> <b>Directly Reference Error Bars in Text</b>: Ensure that wherever error bars are reported in figures or tables, there is corresponding text in the manuscript that explains what these error bars represent and how they were derived. This will assist readers in accurately interpreting the results.</li><br><li> <b>Revise the Footnote and Abstract References</b>: The footnote and the abstract mention regarding the statistical significance and error bars should be revised to point directly to the sections where these are elaborated upon, rather than redirecting to external resources.</li><br></ol>Implementing these recommendations will ensure that the statistical analyses supporting the paper's claims are transparent, rigorously justified, and self-contained within the manuscript, adhering to the NeurIPS Guidelines and improving the overall quality of the submission.<br></div>
+            <a class="move-to-top" href="#summary-question-7">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-8">
+            <div class="user_input">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> We didn't explicitly give compute resource information, all is given in our website (url provided in abstract).</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer acknowledges that information regarding computer resources needed to reproduce the experiments is not included directly in the paper. Instead, the authors refer readers to an external website for details. This response, while providing a path to the required information, does not follow the NeurIPS guidelines, which suggest that the paper itself should contain necessary details for reproducibility, including the type of compute workers (CPU/GPU), memory, storage, and computation time estimates.<br><b>Actionable Feedback:</b><br><ol><li> <b>Include Detailed Compute Information in the Paper:</b> Directly incorporate a section or a table in the paper detailing the computer resources used for each experiment. Specifically, provide information about the compute workers (CPU/GPU), the specific internal cluster or cloud provider (if applicable), memory, storage, and the execution time for each experimental run.</li><br><li> <b>Estimate Total Compute:</b> Offer an estimate of the total compute required for each experimental setup, including preliminary or failed experiments if they consumed significant resources. This will give readers a clearer picture of the computational cost of replicating your results.</li><br><li> <b>Mention Compute in Limitation Section (if applicable):</b> If applicable, discuss in the limitations section how the computational requirements might limit the reproducibility of your experiments in resource-constrained environments. This reflection can help readers better plan their replication studies.</li><br><li> <b>Justify External Resources (if retaining):</b> If you decide to retain external links for supplementary information like detailed compute resource configurations, provide a clear justification in the paper. Explain why this approach was chosen and ensure that the external links are stable and likely to remain accessible for a reasonable future period. This could be part of a broader discussion on data and code accessibility.</li><br><li> <b>Clarify Resource Constraints of the AutoML Challenge:</b> Given that the paper outlines lessons from the AutoML challenge, include a discussion on how the computational limits imposed by the challenge itself (e.g., execution times of less than 20 minutes per dataset) influenced the choice of models and strategies. This provides context to the computational resource information and aligns with the paper’s subject matter.</li><br><li> <b>Document the Reproducibility Effort:</b> Briefly describe any efforts made to ensure that the experiments are reproducible with the provided compute resources. This might include mentioning any software optimization, code efficiency, or algorithmic adjustments made to fit the computational constraints.</li><br></ol>Incorporating this feedback will strengthen the reproducibility of your paper and align it more closely with NeurIPS guidelines and expectations around empirical research.<br></div>
+            <a class="move-to-top" href="#summary-question-8">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-9">
+            <div class="user_input">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Authors have read the Code of Ethics and confirm the research presented in this paper conforms with it.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer and justification, while affirmative, does not precisely point to specific sections within the paper that substantiate adherence to the NeurIPS Code of Ethics. Without specific references to segments that demonstrate compliance with the ethical guidelines, the answer remains too general and lacks the detail needed for thorough verification.<br>Feedback:<br><ol><li> <b>Specify Sections Addressing Ethical Elements</b>: The authors should explicitly reference sections of the paper that specifically address how the research adheres to the NeurIPS Code of Ethics. This includes demonstrating the responsible use of data, ensuring no harm, consideration for societal impact, and how biases in AutoML challenges have been addressed or mitigated.</li><br><li> <b>Discuss Data Usage and Privacy</b>: Given the usage of datasets from a variety of sources (e.g., medical diagnostics, credit rating), the paper should elaborate on any privacy and data handling considerations, ensuring compliance with ethical guidelines on data privacy and security.</li><br><li> <b>Highlight Fairness and Bias Mitigation Efforts</b>: Autonomously created machine learning models can inherit or amplify biases present in the data or algorithms. The paper should detail efforts taken to identify, mitigate, and discuss the potential biases within the AutoML challenge and the solutions proposed.</li><br><li> <b>Address the Societal Impact</b>: The research should examine the broader societal implications of automating ML tasks, potentially reducing the barrier for ML application but also considering job displacement or misuse. A section dedicated to societal impact could enrich the paper and align it with ethical considerations.</li><br><li> <b>Transparency and Reproducibility</b>: Given the claim that all code is open-sourced, the paper should emphasize transparency and reproducibility of research results, which is an essential aspect of ethical scientific conduct. Specifically mention how other researchers can access the data, replicate the experiments, and verify the findings.</li><br><li> <b>Include a Limitations Section</b>: A thoughtful discussion on the limitations of the research, including technical limitations, potential for misuse, and any assumptions that may raise ethical concerns, would demonstrate a responsible approach to AI research.</li><br></ol>Ensure that the feedback provided is incorporated into the relevant sections of the manuscript and clearly pointed out in the revised version's response letter to the reviewers.<br><br></div>
+            <a class="move-to-top" href="#summary-question-9">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-10">
+            <div class="user_input">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Discussed in introduction.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The paper's authors claim that the discussion of both potential positive and negative societal impacts of their work is included in the introduction. However, upon a detailed review of the introduction and other related sections, it becomes clear that while the paper elaborately discusses the potential positive impacts of AutoML, particularly in terms of making machine learning accessible to non-experts and advancing the state of research in the field, it falls short in explicitly discussing the negative societal impacts.<br><b>Actionable Feedback:</b><br><ol><li> <b>Clearly Outline Negative Impacts:</b> The authors should explicitly outline potential negative societal impacts of their work, adhering to the conference guidelines. They should consider whether the advancements in AutoML could lead to misuse, such as exacerbating biases in automated decision-making or enabling malicious actors to deploy sophisticated machine learning models with minimal expertise.</li><br><li> <b>In-Depth Discussion on Mitigation Strategies:</b> After identifying potential negative impacts, the authors should discuss mitigation strategies. This could include recommendations for ethical use guidelines, development of mechanisms to detect and mitigate bias in AutoML-generated models, and suggestions for regulatory oversight specific to automatic machine learning applications.</li><br><li> <b>Refer to Specific Sections:</b> The authors should ensure that their claim about the discussion of societal impacts points to specific sections within the paper. If the discussion is indeed within the introduction, the referenced sections should be explicitly labeled and detailed to facilitate easy location by readers and reviewers.</li><br><li> <b>Expand the Introduction or Create a Dedicated Section:</b> Considering the complexity and importance of societal impact discussions, the authors might find it beneficial either to expand the introduction to include a balanced view on both positive and negative impacts or to create a dedicated section for societal impacts. This section should tackle ethical, privacy, and security considerations of AutoML technologies succinctly but comprehensively.</li><br><li> <b>Incorporate Examples or Hypothetical Scenarios:</b> To make the discussion more relatable and grounded, the authors could incorporate examples or construct hypothetical scenarios illustrating how AutoML could potentially have negative societal impacts. This approach would not only highlight the authors’ understanding and consideration of such impacts but also engage the readers in critical thinking about future implications.</li><br><li> <b>Engage with Current Research on Societal Impacts:</b> The paper should engage with current research and discussions on the societal impacts of AI and machine learning technologies. Citing studies that have investigated similar issues could add depth to the discussion and embed the paper within ongoing scholarly conversations about responsible AI development.</li><br></ol>By implementing these changes, the paper would not only adhere more closely to the conference guidelines but also contribute meaningfully to the discourse on the societal implications of machine learning advancements.<br></div>
+            <a class="move-to-top" href="#summary-question-10">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-11">
+            <div class="user_input">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> The paper poses no such risks.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer of "NA" with the justification that the paper poses no such risks seemingly overlooks the NeurIPS guidelines which prompt for a thoughtful consideration of potential misuse of data or models, particularly when the submission involves releasing code, models, or datasets as is the case mentioned in the paper where datasets and code from the AutoML challenge winners are openly shared. This oversight indicates a critical issue in evaluating and addressing the responsible release section of the NeurIPS checklist.<br><ol><li> <b>Evaluate Potential Risks of Misuse</b>: The authors should thoroughly assess the potential risks associated with the release of AutoML challenge models and datasets. This includes scrutinizing not just the content itself but how it might be used or misused once made publicly available. For instance, models capable of automated decision-making can be repurposed in ways that the authors might not have intended.</li><br><li> <b>Describe Safeguards in Detail</b>: If after careful consideration, the authors conclude certain risks are associated with their release, these should be explicitly stated alongside the safeguards that have been put in place. This could involve restrictions on use, ethical guidelines for use, or mechanisms to monitor the usage of released data or models. If external datasets have been utilized, the terms of their licenses and any compliance measures should also be described.</li><br><li> <b>Clarification in Text</b>: The section in the paper discussing the release (all datasets, code of the winners, and challenge results are found at an openly accessible URL) should include a paragraph explicitly addressing the absence or presence of safeguards related to responsible data and model release. This ensures the transparency and responsibility of research dissemination are upheld.</li><br><li> <b>Link to Policy or Legal Considerations</b>: If applicable, the paper could benefit from referencing general policy, ethical standards, or legal frameworks guiding their decisions regarding data and model release. Providing a rationale grounded in broader standards can strengthen the justification for their approach to releasing machine learning artifacts.</li><br><li> <b>Involve Ethics Review if Necessary</b>: Given the potentially broad use of the models and datasets released, consultation with an ethics review board or similar body could be beneficial to preempt any oversight in evaluating possible misuse.</li><br></ol>While the AutoML challenge's nature and context might initially suggest a low risk of misuse, a comprehensive review addressing the above points could either validate this stance with more clarity or uncover areas that require mitigation strategies to ensure the responsible dissemination of AI research.<br>---<br></div>
+            <a class="move-to-top" href="#summary-question-11">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-12">
+            <div class="user_input">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Yes, the creators of the assets referenced in the paper, such as code, data, and models, are properly credited. Additionally, the licensing terms and conditions of use for these assets are explicitly acknowledged and adhered to throughout our work. Check our website for more information (url given in abstract)</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer and justification seem to acknowledge the importance of crediting the creators or original owners of assets and adhering to licensing terms. However, there are several crucial improvements needed based on the guidelines provided:<br><ol><li> <b>Specific Section Reference</b>: The justification states that relevant details are on the paper's website (given in the abstract), which is not fully in line with the guidelines. Guidelines demand that the section(s) where the related material can be found should be mentioned explicitly within the paper itself. Authors should amend their justification to include specific references to the section(s) of the paper where asset crediting and licensing terms are discussed.</li><br><li> <b>Detailed Asset Information</b>: Although the authors mention acknowledging creators and adhering to licensing terms, there is no explicit mention of whether the names of the licenses (e.g., CC-BY 4.0) for each asset are included in the paper. Including the name of the license for each used asset directly in the paper or in an accompanying supplementary material is crucial for clarity and is recommended in the guidelines.</li><br><li> <b>Version and URL</b>: For completeness and to allow for exact replication of results, the authors should state which version of the assets is used and include a URL for each. This is missing in their justification and should be added. If the paper's website is intended to host this information, it should be explicitly stated in the paper that the website contains detailed crediting, versioning, and URLs for all assets used.</li><br><li> <b>Scraped Data and Copyright Information</b>: If any data were scraped from websites or otherwise collected in a manner that could possess copyright considerations, the paper should provide the copyright status and terms of service of those sources, as per the guidelines.</li><br><li> <b>Derived Asset Licensing</b>: In cases where existing datasets are re-packaged or otherwise modified, the paper should discuss both the original license and the license of the derived asset (if it has changed). This is not mentioned in the justification.</li><br></ol>Actionable Feedback:<br><ul><li>Include specific section references in the paper where asset crediting and licensing terms can be found.</li><li>Explicitly list the names of licenses for all used assets within the paper or supplementary materials.</li><li>Add detailed asset information, including version numbers and URLs, either in the paper or on the provided website, and ensure this is clearly referenced within the paper.</li><li>Provide copyright information for any scraped or similarly collected data.</li><li>Discuss licensing for both original and derived assets if datasets have been modified.</li><br></ul>This feedback addresses significant gaps between the authors' proposed answer/justification and the paper's content based on the provided guidelines, aiming to enhance transparency and reproducibility.<br><br></div>
+            <a class="move-to-top" href="#summary-question-12">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-13">
+            <div class="user_input">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Yes, all new assets introduced in the paper are thoroughly documented. The documentation is provided alongside the assets to ensure clarity and ease of use for future research and application. See our website for more information (url given in abstract)</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The Authors' Proposed Answer appears to conform to the question asked about documentation for new assets introduced in the paper. However, there are discrepancies in terms of detailed guidance adherence related to asset documentation based on the provided guidelines.<br><ol><li> <b>Specific Sections Missing</b>: The Justification fails to point to specific sections in the paper where the asset documentation can be found. Simply referring to a website in the abstract is not sufficient per the guidelines. The guidelines explicitly request authors to point to the section(s) within which related material for the question can be found.</li><br><li> <b>Structured Template Information</b>: The guidelines suggest that researchers should communicate details of the dataset/code/model using structured templates, including training, license, limitations, etc. The authors' justification does not confirm if such structured template information is available, either within the paper or accompanying the assets online.</li><br><li> <b>Anonymization Not Addressed</b>: During submission, assets need to be anonymized. The authors have not confirmed whether the assets made available adhere to this recommendation. Although this point is more relevant to the submission process rather than the documentation of assets, it would have been beneficial for the authors to confirm adherence to all aspects of the guidelines.</li><br><h3>Actionable Feedback</h3><br><li> <b>Specify Sections in Paper</b>: Amend the Justification to include specific sections or appendices in the paper where each introduced asset (datasets, code, etc.) is documented. This helps readers and reviewers to locate the documentation easily without needing to leave the paper.</li><br><li> <b>Incorporate Structured Asset Information</b>: Ensure that the online documentation or supplement materials accompanying the paper follow a structured template recommended by NeurIPS. This includes clearly stating the source, training details, license information, limitations of the assets, and how consent was obtained for their use if applicable. Confirm the presence of this structured information both in the revised Justification and the paper or its supplementary materials.</li><br><li> <b>Clarify Anonymization Process</b>: If applicable, briefly describe how the assets were made anonymous during the review process to comply with NeurIPS guidelines. If this process is described on the website, guide the reader to where they can find this information, preferably in an appendix or the methodology section.</li><br><li> <b>License and Accessibility</b>: Clearly specify the license under which the assets are released and confirm their accessibility. If the assets are stored on a website, ensure the URL is anonymized if required by the conference at the submission stage, and ensure this URL is included in the paper's appropriate section.</li><br><li> <b>Limitations and Ethical Considerations</b>: Address any limitations of the assets and any ethical considerations directly in the paper, specifically in the discussion or conclusion sections. This will reinforce the transparency and reproducibility of the research.</li><br><li> <b>Update Website Information</b>: If the documentation is primarily hosted on an external website, ensure this site is reliably maintained and the documentation is updated to reflect any changes or updates to the assets used or produced by the research.</li><br></ol>By addressing these feedback points, the paper will likely meet NeurIPS requirements more closely and increase its utility for future researchers.<br><br></div>
+            <a class="move-to-top" href="#summary-question-13">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-14">
+            <div class="user_input">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> The paper does not involve crowdsourcing nor research with human subjects.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> Itemized, actionable feedback based on the guidelines and given the provided content:<br><ol><li> Clarify Involvement of Human Subjects or Data: Given the nature of the "AutoML challenge," the answer "NA" to the question regarding the involvement of crowdsourcing or research with human subjects seems appropriate. However, it is essential to explicitly state whether any part of the challenge or the analysis involved indirect use of human-generated data, even if participants did not directly interact with human subjects. If there was any use of datasets derived from human subjects, this should be clarified, even though direct interaction was not part of the research methodology.</li><br><li> Detail on Datasets Used: While the paper discusses the AutoML challenge, including the datasets used in the challenge, the authors need to ensure that there is clear information on the origin of these datasets, especially if any could potentially include data derived from human subjects. This could involve a brief statement on the nature and sourcing of the datasets to preclude ethical or privacy concerns.</li><br><li> Ethical Considerations and Acknowledgment: Given that the paper deals with an analysis of a challenge that likely involved many participants and potentially datasets derived from human contributions, it would strengthen the paper to include a statement on ethical considerations. This could cover both the treatment of data and the acknowledgment of participants' efforts in a manner that respects their contributions and privacy.</li><br><li> Compensation Disclosure: Even if the question seems not applicable, if there was any form of compensation or recognition given to participants of the AutoML challenge, it should be disclosed. This could include awards, recognition in publications, or other forms of incentives. A brief note on this aspect would address the guideline's requirement regarding compensation.</li><br><li> Supplement Material for Comprehensive Understanding: If there are any instructional materials, competition guidelines, or additional resources that were provided to the challenge participants, considering including these in the supplementary materials for the paper. This would provide readers with a comprehensive view of the challenge's setup and execution, adding depth to the paper's analysis.</li><br><li> Transparency and Reproducibility: Ensure that the paper maintains a high level of transparency about the methods used in analyzing the AutoML challenge. This includes clear references to any code, algorithms, or analytical tools derived from the challenge. The objective is to allow others in the research community to understand, replicate, or extend the work done in analyzing the AutoML challenge outcomes.</li><br><br></ol></div>
+            <a class="move-to-top" href="#summary-question-14">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-15">
+            <div class="user_input">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> The paper does not involve crowdsourcing nor research with human subjects.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> The authors' proposed answer of "NA" seems to be justified and correct based on the content of the paper, which describes an AutoML challenge that involves code submissions rather than human participation or crowdsourcing. Since the focus is on algorithmic challenges and automated processes for solving machine learning tasks, there does not appear to be direct involvement of human subjects or participants in a manner that would typically necessitate IRB review or the identification of potential risks to study participants.<br>Given that the paper strictly discusses the results and analyses of an AutoML challenge, and unless there are undisclosed elements of human research or data collection that could pose risks to individuals (not evident from the provided text), the authors' response aligns well with the guidelines for disclosing potential risks and obtaining IRB approval.<br><b>Feedback for Improvement:</b><ol><li> Clarify Involvement of Human Data: Even though the paper centers on algorithmic development and benchmarking within an AutoML challenge, if any datasets employed in the challenge or for the purpose of testing the algorithms involve human subjects indirectly (e.g., datasets containing personal data collected from individuals), it would enhance the paper to clarify the ethical considerations around the use of such data. The authors should affirm whether all datasets comply with ethical standards and legal requirements concerning the privacy and consent of any individuals whose data might have been included.</li><br><li> Transparency on Dataset Origins and Permissions: While not directly related to risks to study participants, offering detailed transparency regarding the origins of datasets, permissions to use them, and any anonymization or privacy-preserving measures taken would strengthen the ethical rigor of the study. This also indirectly ties to participant risk if any of the datasets were derived from human subjects.</li><br><li> Detailed Ethics Statement: Even for studies marked "NA" concerning direct human participation, including a detailed ethics statement regarding the broader implications of the research, such as potential societal impacts and misuse of the technology, adds depth to the manuscript. This could cover considerations beyond direct participant risks, looking at how the developed algorithms might be used or misused in practice.</li><br><li> Risk Assessment of Indirect Effects: Briefly assess any indirect risks or consequences of the automated systems being developed, including biases in algorithmic decisions or impacts on job sectors. While outside the purview of traditional IRB considerations, these acknowledgments reflect thoughtfulness about the broader impacts of AutoML developments.</li><br></ol><b>Conclusion:</b>The justification provided by the authors for marking the IRB question as "NA" is appropriate given the information available. However, incorporating the recommended enhancements could augment the paper’s acknowledgment of ethical considerations, ensuring comprehensive coverage of both direct and indirect implications of the research.<br></div>
+            <a class="move-to-top" href="#summary-question-15">↑ Back to summary</a>
+        </div>
+        
+
+        <!-- Survey -->
+        <div>
+            <p>Please complete the following survey about your experience:</p>
+            <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891=TGVzc29ucyBsZWFybmVkIGZyb20gdGhlIEF1dG9NTCBjaGFsbGVuZ2U=" target="_blank">Click to submit post submission survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+        
+    </div>
+</div>
+
+</body>
+</html>

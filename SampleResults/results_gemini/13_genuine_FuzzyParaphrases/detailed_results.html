@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        position: absolute;
+    }
+    .button-top {
+        top: 10px;
+        right: 20px;
+    }
+    .button-bottom {
+        bottom: 10px;
+        right: 20px;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px; /* Adjust according to button height and margin */
+        padding-bottom: 40px; /* Add padding instead of margin */
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0; /* Remove default margin */
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        /* color: #0033ff; */
+        color: #000;
+    }
+    .answer {
+        /* color: #28a745; */
+        color: #000;
+    }
+    .justification {
+        /* color: #de750b; */
+        color: #000;
+    }
+    .user_input {
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #3a3a3a;
+    }
+    .llm_review {
+        color: #000;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .llm_review-red {
+        background-color: #eacfcf;
+        border: 1px solid #FF0000;
+    }
+    .llm_review-green {
+        background-color: #c6e9c6;
+        border: 1px solid #008000;
+
+    }
+    .llm_review-orange {
+        background-color: #ebdecf;
+        border: 1px solid #FF8C00;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .score-red {
+        background-color: #eacfcf;
+        color: #000;
+        border: 1px solid #FF0000;
+    }
+    .score-orange {
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .score-purple {
+        background-color: #cac4e7;
+        color: #271b5e;
+        border: 1px solid #271b5e;
+    }
+    .scroll-button {
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .scroll-button:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content">
+        <h1>Fuzzy paraphrases in learning word representationswith a corpus and a lexicon</h1>
+
+        <hr>
+
+        <h2>Scores</h2>
+        <table>
+            <tr>
+                <td><strong>Paper Quality Score:</strong></td>
+                <td><span class="score-label score-blue">0.43</span></td>
+            </tr>
+            <tr>
+                <td><strong>LLM Accuracy:</strong></td>
+                <td><span class="score-label score-purple">0.27</span></td>
+            </tr>
+        </table>
+
+        <hr>
+
+        <h2>Review Summary</h2>
+        <table>
+            <tr>
+              <th>Question</th>
+              <th></th>
+              <th>Details</th>
+            </tr>
+            
+            <tr id="summary-question-1">
+                <td>1. Claims</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-1" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-2">
+                <td>2. Limitations</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-2" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-3">
+                <td>3. Theoritical assumptions and proofs</td>
+                <td>
+                    <span class="score-label score-green">
+                    
+                    Looks Good
+                    
+                    </span>
+                </td>
+                <td><a href="#question-3" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-4">
+                <td>4. Experiments reproducibility</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-4" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-5">
+                <td>5. Code and data accessibility</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-5" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-6">
+                <td>6. Experimental settings/details</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-6" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-7">
+                <td>7. Error bars</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-7" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-8">
+                <td>8. Compute resources</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-8" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-9">
+                <td>9. NeurIPS code of ethics</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-9" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-10">
+                <td>10. Impacts</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-10" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-11">
+                <td>11. Safeguards</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-11" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-12">
+                <td>12. Credits</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-12" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-13">
+                <td>13. Documentation</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-13" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-14">
+                <td>14. Human subjects</td>
+                <td>
+                    <span class="score-label score-green">
+                    
+                    Looks Good
+                    
+                    </span>
+                </td>
+                <td><a href="#question-14" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-15">
+                <td>15. Risks</td>
+                <td>
+                    <span class="score-label score-green">
+                    
+                    Looks Good
+                    
+                    </span>
+                </td>
+                <td><a href="#question-15" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+        </table>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+        
+        
+        <div class="review" id="question-1">
+            <div class="user_input">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The Introduction states the claims.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The proposed answer and justification have some discrepancies with the paper and guidelines:<ul><li><b>Justification is insufficient:</b> Simply stating "The Introduction states the claims" is not enough. The justification should point to specific sections and claims made in the Introduction and Abstract to demonstrate alignment with the paper's contributions.</li><li><b>Missing scope discussion:</b> The provided text doesn't mention if the Abstract and Introduction adequately discuss the scope of the work, including limitations and assumptions.</li><li><b>Overlooking experimental results:</b> It's unclear if the justification considers the alignment between the main claims and the actual experimental results presented in the paper.</li></ul><h3>Recommendations for Improvement:</h3><ol><li> <b>Expand Justification:</b> Clearly identify the key claims from the Abstract and Introduction, and link them to the relevant sections in the paper that substantiate these claims. For instance, mention how Section 3 introduces the proposed method addressing the identified problem, and Section 4 demonstrates its effectiveness through experiments.</li><li> <b>Address Scope:</b>  Ensure the Abstract and Introduction explicitly discuss the scope of the work. This includes mentioning the specific types of word representations and lexicons used, the range of tasks evaluated (e.g., sentiment analysis), and any limitations of the proposed approach.</li><li> <b>Connect Claims to Results:</b> Verify that the main claims are supported by the experimental results. For example, if the paper claims to outperform previous methods in semantic tasks, highlight the specific results in Section 4 that demonstrate this improvement.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-1">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-2">
+            <div class="user_input">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> In Sections 4.5 and 5 (Conclusion) some limitations are presented.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Limitations Discussion</h3>The author's proposed answer indicates the paper discusses limitations in sections 4.5 and 5. However, a closer examination reveals potential areas for improvement:<ul><li><b>Specificity</b>: The justification lacks specific details about the discussed limitations. Simply mentioning sections is insufficient.</li><li><b>Scope</b>:  The paper might benefit from a dedicated "Limitations" section for clarity and organization.</li><li><b>Depth</b>: While the paper acknowledges the issue of polysemy and its impact on paraphrase reliability, it's unclear if other limitations are addressed, such as:</li></ul>* <b>Dataset size dependence</b>: The paper mentions needing a large corpus for optimal performance, but it could elaborate on the implications of using smaller datasets.* <b>Assumptions</b>: The paper could explicitly state any assumptions made during model development and analyze their potential impact on results.* <b>Computational efficiency</b>: While the paper compares training speed, it could provide a more comprehensive analysis of computational cost and scalability with larger datasets.* <b>Generalizability</b>: Discussing the performance across different types of tasks and datasets would strengthen the paper.* <b>Fairness and Privacy</b>:  If applicable, potential biases and privacy concerns related to the used data and methods should be considered.<h3>Recommendations</h3><ol><li> <b>Expand the Justification</b>: Briefly summarize the key limitations discussed in sections 4.5 and 5. This will provide reviewers with a clearer understanding of the addressed limitations.</li><li> <b>Consider a "Limitations" Section</b>:  This would provide a central location for a comprehensive discussion of limitations, enhancing readability and organization.</li><li> <b>Address Further Limitations</b>: Analyze and discuss additional limitations as mentioned above. This will demonstrate a thorough understanding of the work's limitations and potential weaknesses.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-2">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-3">
+            <div class="user_input">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> No theoretical results are presented.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Response</h3>The authors' proposed answer and justification seem accurate. The paper does not present any theoretical results like formal theorems or proofs. However, there are some potential areas for improvement based on the guidelines:<ul><li><b>Clarify Algorithm Details:</b> While the paper describes the high-level idea of using fuzzy paraphrases and membership estimation, the specific details of the algorithm and its implementation could be more transparent. Consider including a more detailed  algorithmic description, possibly in the appendix, to enhance reproducibility.</li><li><b>Introduce Intuition for Membership Function:</b>  The paper mentions using bilingual similarity scores from PPDB 2.0 as a proxy for paraphrase membership but does not elaborate on the intuition behind this choice. Providing a brief explanation or justification for this approach would improve the paper's clarity.</li><li><b>Discuss Limitations of Membership Estimation:</b> The paper acknowledges the limitation of not considering the full context for membership estimation. Expanding on the potential implications of this limitation and discussing possible future work to address it would strengthen the paper.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-3">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-4">
+            <div class="user_input">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The experimental section provides a corpus and baselines.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Reproducibility</h3>The provided "Justification" only mentions the corpus and baselines used. While this information is relevant, it doesn't fully address the question of reproducibility.  The paper needs to explicitly state the following details to ensure others can reproduce the results:<ul><li>  <b>Paraphrase Database (PPDB) version</b>: Specify the exact version of PPDB 2.0 used, as different versions may have variations in paraphrase sets and similarity scores.</li><li>  <b>Membership Function Details</b>:  Provide the specific equation or algorithm used to calculate the membership function g(Sjk) based on PPDB similarity scores.</li><li>  <b>Hyperparameters</b>: Clearly list all hyperparameters used in the model training, including the embedding dimension (mentioned as 200), context window size (mentioned as 8), number of negative samples (mentioned as 25), training iterations (mentioned as 15), and any other relevant settings.</li><li>  <b>Training procedure</b>: Describe the specific training process, including optimization algorithms, loss functions, and any data preprocessing steps.</li><li>  <b>Evaluation Details</b>:  Explain the evaluation methodology for the word analogy task, including the specific dataset version used and how the accuracy was calculated. .</li></ul><b>Additionally, consider the following improvements:</b><ul><li>  <b>Code and Data Availability</b>: While not mandatory for NeurIPS, releasing the code and preprocessed data would significantly enhance reproducibility and allow others to directly build upon your work.</li><li>  <b>Paraphrase Selection Criteria</b>: Explain why "equivalence," "forward entailment," and "reverse entailment" relationships were chosen from PPDB and the rationale behind excluding other relationships.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-4">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-5">
+            <div class="user_input">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The corpus is open and the code is provided on Github.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The proposed answer and justification have some discrepancies with the information presented in the paper and the NeurIPS guidelines:<ul><li><b>Missing Specifics:</b> While the justification mentions open access to the corpus and code on Github, it lacks specific details like URLs or section references within the paper where these resources are discussed.</li><li><b>Reproducibility Concerns:</b> The justification doesn't address the availability of instructions to reproduce the main experimental results. The guidelines emphasize the importance of clear instructions, including commands, environment setup, and data preparation steps.</li></ul><h3>Recommendations for Improvement</h3><ol><li> <b>Provide precise resource location:</b></li></ol>* Include the URL to the Github repository containing the code.* If applicable, mention the specific section in the paper (e.g., Appendix) where data access and instructions are provided.<ol><li> <b>Address reproducibility:</b></li></ol>*  Elaborate on the instructions available for reproducing the main experimental results.*  If only a subset of results can be reproduced, clearly state the limitations and reasons.*  Describe the environment setup, commands, and data preparation steps needed to run the code.</div>
+            <a class="move-to-top" href="#summary-question-5">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-6">
+            <div class="user_input">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> All details are given in the experiment section.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Discrepancies and Actionable Feedback:</h3>The paper mentions the use of specific hyperparameters and datasets but does not comprehensively detail all aspects of the training and testing process.  Here's a breakdown:<ul><li><b>Data Splits:</b> The paper mentions using "enwiki9" as the corpus and "PPDB2.0" as the lexicon. However, it doesn't explicitly state how the data was split into training, validation, and test sets. This information is crucial for understanding the generalizability of the results and potential overfitting.</li><li><b>Hyperparameter Choices:</b> While the paper mentions specific hyperparameter values (e.g., embedding dimension, context window size, negative sample size), it lacks justification for these choices. Explaining the rationale behind these values or mentioning any hyperparameter optimization process would strengthen the paper.</li><li><b>Optimizer Details:</b> The paper mentions using "negative sampling" for training but doesn't provide specifics about the optimizer used (e.g., SGD, Adam) or its parameters (e.g., learning rate). This information is essential for reproducibility and understanding the training dynamics.</li></ul><h3>Recommendations:</h3><ol><li> <b>Clarify Data Splitting:</b>  Clearly describe how the "enwiki9" corpus was divided into training, validation, and test sets. If cross-validation was employed, elaborate on the specific methodology.</li><li> <b>Justify Hyperparameters:</b>  Explain the reasoning behind the choice of hyperparameter values or discuss any hyperparameter tuning experiments conducted. This demonstrates the robustness and reliability of the chosen configuration.</li><li> <b>Provide Optimizer Details:</b> Specify the optimizer algorithm used and its parameters, including learning rate, momentum (if applicable), and any scheduling strategies.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-6">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-7">
+            <div class="user_input">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> The result tables include error bars.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Error Bar Reporting</h3>The paper mentions the inclusion of error bars in result tables but falls short of providing crucial details regarding their calculation and interpretation, as required by the NeurIPS guidelines. Here's how the authors can improve the paper:<ul><li><b>Explain Error Bar Calculation:</b> The paper should explicitly state the method used for calculating error bars (e.g., standard deviation, standard error, confidence intervals). If a library function is used, specify the function and library.</li><li><b>Clarify Variability Factors:</b>  Describe the factors contributing to the variability captured by the error bars. This could include aspects like train/test splits, initialization methods, random sampling, or experimental conditions.</li><li><b>State Assumptions and Error Type:</b>  Mention any assumptions made during error bar calculation, such as normality of errors. Additionally, clarify whether the error bars represent 1-sigma or 2-sigma variations.</li><li><b>Address Asymmetric Distributions:</b> For cases with asymmetric distributions, ensure that the presentation of error bars (e.g., in tables or figures) accurately reflects the data and avoids displaying values outside the possible range (e.g., negative error rates).</li><li><b>Reference and Explain in Text:</b>  Directly reference the figures or tables containing error bars within the text and provide a clear explanation of their calculation and interpretation in that context.</li></ul>By addressing these points, the authors can significantly enhance the transparency and reproducibility of their results, aligning with the NeurIPS guidelines for reporting statistical significance.</div>
+            <a class="move-to-top" href="#summary-question-7">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-8">
+            <div class="user_input">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Learning speed is discussed in Section 4.5.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors' proposed answer and justification for the question regarding computer resources have discrepancies with the paper content and do not meet the guidelines.<b>Issues:</b><ul><li><b>Missing Information:</b> The paper only mentions the dimensionality of the word embeddings (200) and the training iterations (15).  It does not provide details on the type of compute workers (CPU, GPU), memory usage, execution time, or the computing platform used.</li><li><b>Misinterpretation of Learning Speed:</b> The justification refers to Section 4.5, which discusses "learning speed" in the context of comparing the training time of different models, not the computational resources required to reproduce the experiments.</li></ul><b>Suggested Improvements:</b><ol><li> <b>Add a section or subsection dedicated to experimental setup and computational resources.</b>  This section should explicitly state the hardware used (CPU/GPU type, memory, etc.), software environment, and cloud platform (if applicable).</li><li> <b>Report the execution time for each experiment and estimate the total compute time for the entire research project.</b> This information helps other researchers assess the feasibility of replicating the experiments and understand the computational cost involved.</li><li> <b>Clarify if the reported experiments represent the full extent of the computational work.</b> If additional experiments were conducted but not included in the paper, it's important to disclose this information to give a more complete picture of the project's resource requirements.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-8">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-9">
+            <div class="user_input">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We are aware of the code of Ethics and read it. All is conform.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback for NeurIPS Paper Checklist Question</h3>The authors' proposed answer and justification regarding adherence to the NeurIPS Code of Ethics are insufficient. While claiming awareness and conformity, the response lacks specific evidence or examples from the paper to support this assertion.Here's how to improve the paper and address this issue:<b>Actionable Feedback:</b><ol><li> <b>Demonstrate Ethical Considerations:</b>  Clearly describe how the research aligns with the NeurIPS Code of Ethics in a dedicated section (e.g., Broader Impact or Ethical Considerations). Address potential biases in the dataset or methodology, discuss data privacy and security measures, and consider the potential societal implications of the work.</li><li> <b>Provide Concrete Examples:</b>  Reference specific sections within the paper that showcase commitment to ethical principles.</li><li> <b>Transparency and Openness:</b>  If applicable, discuss limitations and potential negative consequences of the research.  Encourage open access to code and data (if feasible) to promote reproducibility and further research.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-9">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-10">
+            <div class="user_input">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We discuss this in the Related Work section.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Societal Impact Discussion</h3>The provided "Paper" focuses on improving word embeddings using fuzzy paraphrases and lexicons. While the "Justification" claims a discussion on societal impacts in the Related Work section, the actual paper content does not seem to address this aspect adequately.Here are the key areas for improvement:<ul><li><b>Missing discussion:</b> The paper needs explicit sections or paragraphs dedicated to discussing both potential positive and negative societal impacts of the proposed method.</li><li><b>Positive impacts:</b>  While the paper mentions potential improvements in natural language processing tasks, it could expand on the specific downstream applications and their positive societal benefits (e.g., improved machine translation leading to better cross-cultural communication).</li><li><b>Negative impacts:</b> The paper should address potential risks and harms, such as:</li></ul>* <b>Bias amplification:</b>  Discuss how the use of lexicons and fuzzy paraphrases could perpetuate or amplify existing societal biases present in the training data.* <b>Misinformation:</b> Explore the possibility of malicious actors using the improved word embeddings for generating more convincing and subtle disinformation campaigns.* <b>Privacy concerns:</b>  If the trained word embedding models are publicly released, discuss potential privacy risks like deanonymization or profiling individuals based on their language use.<b>Additionally, consider discussing possible mitigation strategies for the identified negative impacts, such as:</b><ul><li><b>Bias mitigation techniques:</b>  Explore methods to debias the training data or the model itself to ensure fairness and inclusivity.</li><li><b>Robustness and detection methods:</b>  Discuss research on detecting and mitigating the spread of misinformation generated using such models.</li><li><b>Privacy-preserving techniques:</b>  Investigate methods like differential privacy or federated learning to protect individual privacy when using or releasing the models.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-10">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-11">
+            <div class="user_input">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> Our research does not present such risks.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors' proposed answer of "NA" to the question regarding safeguards for data and model release is <b>not accurate</b>. While the paper itself may not directly present high-risk data or models, the methodology involves utilizing the PPDB2.0 paraphrase database. This database, scraped from the internet, could potentially contain biases or harmful associations, which could be perpetuated and amplified through the proposed word embedding model.Here are some actionable improvements to address this issue:<ul><li>  <b>Acknowledge potential risks</b>: Modify the answer to "Yes" and add a section in the paper discussing potential biases and risks associated with using PPDB2.0.</li><li>  <b>Transparency and data curation</b>: Describe the steps taken to mitigate these risks, such as filtering or curating the paraphrase data.</li><li>  <b>Ethical considerations</b>: Discuss the ethical implications of using scraped data and potential societal impacts of the word embeddings generated.</li><li>  <b>Limitations</b>: Acknowledge the limitations of the current approach and suggest avenues for future research to address them.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-11">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-12">
+            <div class="user_input">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> All is conform.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Discrepancies and Feedback</h3>The provided "Answer" and "Justification" claim everything is compliant with the guidelines. However, upon reviewing the paper, several discrepancies exist regarding proper credit and licensing of assets:<ul><li><b>Missing citations:</b> The paper mentions using "enwiki9" and "PPDB2.0" but does not provide citations to the original sources or papers describing these resources.</li><li><b>Missing versions and URLs:</b> While the paper mentions using "PPDB2.0," it does not specify the exact version or provide a URL for accessibility and reproducibility.</li><li><b>Missing license information:</b>  The paper does not mention the licenses for  "enwiki9" and "PPDB2.0," which is crucial for understanding usage rights and restrictions.</li><li><b>Unclear scraping details:</b> The paper doesn't specify whether any data was scraped from websites. If so, copyright and terms of service information for those websites are missing.</li></ul><h3>Actionable Feedback:</h3><ol><li> <b>Cite the assets:</b> Add proper citations for "enwiki9" and "PPDB2.0" with author names, publication titles, and years.</li><li> <b>Specify versions and URLs:</b> Provide the specific version used for "PPDB2.0" and include a URL for access.</li><li> <b>State licenses:</b> Clearly state the licenses under which "enwiki9" and "PPDB2.0" are distributed (e.g., CC-BY 4.0).</li><li> <b>Address scraped data (if applicable):</b> If data was scraped from websites, add a section detailing the source websites and their respective copyright and terms of service information.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-12">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-13">
+            <div class="user_input">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> No new assets are provided.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Checklist Answer</h3>The authors' proposed answer of "NA" with the justification "No new assets are provided" seems accurate given the guidelines and the paper's content.  However, despite not introducing new assets, the paper could benefit from improvements related to the usage and documentation of existing assets:<ul><li><b>Specify PPDB License:</b> Although the paper utilizes the existing PPDB 2.0, it would be beneficial to explicitly mention the license under which PPDB is used. This demonstrates responsible research practices and transparency.</li><li><b>Clarify PPDB Usage:</b> The paper describes using specific subsets of PPDB based on paraphrase relationships.  Clearly state the criteria used for filtering and the final size of the utilized subset. This allows for better reproducibility and understanding of the methodology.</li><li><b>Mention enwiki9 License:</b>  Similar to PPDB, explicitly mentioning the license under which enwiki9 is used enhances transparency and demonstrates responsible handling of data.</li></ul>These additions would improve the paper's clarity and adherence to responsible research practices without significantly altering the content.******</div>
+            <a class="move-to-top" href="#summary-question-13">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-14">
+            <div class="user_input">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> No research using crowdsourcing.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Feedback for Question on Crowdsourcing and Human Subjects Research</h3>The authors have correctly answered "NA" to the question about crowdsourcing and human subjects research, as the paper focuses solely on computational methods for learning word representations using existing corpora and lexicons. The justification provided is also accurate and concise.However, to further enhance the paper's clarity and adherence to NeurIPS guidelines, consider the following minor improvements:<ul><li><b>Explicitly state the absence of human subject research</b>: While the "NA" answer and justification are clear, adding a brief statement in the main paper explicitly stating the absence of human subject research would eliminate any potential ambiguity. This statement could be placed in the introduction or a dedicated section on data and methodology.</li><li><b>Consider mentioning ethical considerations for future work</b>: If applicable, the authors could briefly discuss potential ethical considerations for future extensions of their work that might involve human subjects, demonstrating an awareness of responsible research practices.</li></ul>These improvements would provide additional clarity and context regarding the paper's scope and adherence to ethical guidelines.</div>
+            <a class="move-to-top" href="#summary-question-14">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-15">
+            <div class="user_input">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> No human subjects.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors' proposed answer of "NA" with the justification "No human subjects" is <b>correct and appropriate</b> for the given question regarding potential risks to study participants and IRB approval.The paper clearly focuses on developing a computational method for learning word representations using a corpus and lexicon. There is no mention of involving human subjects in data collection, experimentation, or any other aspect of the research.Therefore, the checklist item is not applicable to this study.</div>
+            <a class="move-to-top" href="#summary-question-15">↑ Back to summary</a>
+        </div>
+        
+        
+    </div>
+</div>
+
+</body>
+</html>

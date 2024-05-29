@@ -311,13 +311,18 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
             raise ValueError(f"[-] Error in extracting answers and justifications: {e}")
 
     def check_incomplete_questions(self, checklist_df):
+        count_not_found = 0
         for i, row in checklist_df.iterrows():
 
-            if row["Answer"] in ["TODO", "[TODO]"] or row["Justification"] in ["TODO", "[TODO]"]:
-                print(f"\t [!] You haven't filled the answer or justificaiton for Question #: {i+1}")
+            if row["Answer"] in ["TODO", "[TODO]"] or row["Justification"] in ["TODO", "[TODO]"] or row["Justification"] is None:
+                print(f"[!] You haven't filled the answer or justificaiton for Question #: {i+1}")
 
             if row["Answer"] == "Not Found" or row["Justification"] == "Not Found":
-                print(f"\t [!] There seems to be a problem with your answer or justificaiton for Question #: {i+1}. Please make sure that you haven't changed the question in the checklist.")
+                count_not_found += 1
+                print(f"[!] There seems to be a problem with your answer or justificaiton for Question #: {i+1}. Please make sure that\n - you haven't changed the question in the checklist\n - you haven't removed the guidelines prodived for each question")
+
+        if count_not_found == 15:
+            raise ValueError("[-] All your answers or justifications are not found!. Please check that you have filled the checklist properly. If the problem is still there, please contact the organizers.")
 
     def print_prompt(self):
         print(f"[*] Prompt version: {PAPER_PROMPT['name']}")
@@ -351,6 +356,8 @@ While "Yes" is generally preferable to "No", it is perfectly acceptable to answe
 
             paper_prompt = paper_prompt.replace("{q}", q)
             paper_prompt = paper_prompt.replace("{a}", a)
+            if j is None:
+                j = ""
             paper_prompt = paper_prompt.replace("{j}", j)
             paper_prompt = paper_prompt.replace("{g}", g)
             paper_prompt = paper_prompt.replace("{paper}", paper)

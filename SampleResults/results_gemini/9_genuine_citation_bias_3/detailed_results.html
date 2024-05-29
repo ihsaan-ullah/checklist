@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        position: absolute;
+    }
+    .button-top {
+        top: 10px;
+        right: 20px;
+    }
+    .button-bottom {
+        bottom: 10px;
+        right: 20px;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px; /* Adjust according to button height and margin */
+        padding-bottom: 40px; /* Add padding instead of margin */
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0; /* Remove default margin */
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        /* color: #0033ff; */
+        color: #000;
+    }
+    .answer {
+        /* color: #28a745; */
+        color: #000;
+    }
+    .justification {
+        /* color: #de750b; */
+        color: #000;
+    }
+    .user_input {
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #3a3a3a;
+    }
+    .llm_review {
+        color: #000;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .llm_review-red {
+        background-color: #eacfcf;
+        border: 1px solid #FF0000;
+    }
+    .llm_review-green {
+        background-color: #c6e9c6;
+        border: 1px solid #008000;
+
+    }
+    .llm_review-orange {
+        background-color: #ebdecf;
+        border: 1px solid #FF8C00;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .score-red {
+        background-color: #eacfcf;
+        color: #000;
+        border: 1px solid #FF0000;
+    }
+    .score-orange {
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .score-purple {
+        background-color: #cac4e7;
+        color: #271b5e;
+        border: 1px solid #271b5e;
+    }
+    .scroll-button {
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .scroll-button:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content">
+        <h1>Cite-seeing and Reviewing:A Study on Citation Bias in Peer Review</h1>
+
+        <hr>
+
+        <h2>Scores</h2>
+        <table>
+            <tr>
+                <td><strong>Paper Quality Score:</strong></td>
+                <td><span class="score-label score-blue">0.5</span></td>
+            </tr>
+            <tr>
+                <td><strong>LLM Accuracy:</strong></td>
+                <td><span class="score-label score-purple">0.47</span></td>
+            </tr>
+        </table>
+
+        <hr>
+
+        <h2>Review Summary</h2>
+        <table>
+            <tr>
+              <th>Question</th>
+              <th></th>
+              <th>Details</th>
+            </tr>
+            
+            <tr id="summary-question-1">
+                <td>1. Claims</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-1" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-2">
+                <td>2. Limitations</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-2" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-3">
+                <td>3. Theoritical assumptions and proofs</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-3" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-4">
+                <td>4. Experiments reproducibility</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-4" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-5">
+                <td>5. Code and data accessibility</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-5" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-6">
+                <td>6. Experimental settings/details</td>
+                <td>
+                    <span class="score-label score-green">
+                    
+                    Looks Good
+                    
+                    </span>
+                </td>
+                <td><a href="#question-6" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-7">
+                <td>7. Error bars</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-7" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-8">
+                <td>8. Compute resources</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-8" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-9">
+                <td>9. NeurIPS code of ethics</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-9" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-10">
+                <td>10. Impacts</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-10" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-11">
+                <td>11. Safeguards</td>
+                <td>
+                    <span class="score-label score-green">
+                    
+                    Looks Good
+                    
+                    </span>
+                </td>
+                <td><a href="#question-11" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-12">
+                <td>12. Credits</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-12" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-13">
+                <td>13. Documentation</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-13" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-14">
+                <td>14. Human subjects</td>
+                <td>
+                    <span class="score-label score-green">
+                    
+                    Looks Good
+                    
+                    </span>
+                </td>
+                <td><a href="#question-14" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-15">
+                <td>15. Risks</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-15" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+        </table>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+        
+        
+        <div class="review" id="question-1">
+            <div class="user_input">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Yes they do in the introduction and abstract.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The proposed answer and justification have several discrepancies and require improvement:<ul><li><b>Justification Lacks Specific References:</b> The justification simply states "Yes they do in the introduction and abstract" without pointing to specific sections or claims as required by the guidelines.</li><li><b>Claim Matching Needs Evaluation:</b> The justification doesn't address if the claims match the results and generalize to other settings.</li><li><b>Potential for Overclaiming:</b> The paper investigates citation bias in two specific conferences. The abstract claims detection of bias "in both venues we consider," which may be accurate but could be overclaiming generalizability.</li></ul><h3>Actionable Improvements</h3><ol><li> <b>Reference Specific Sections:</b>  Revise the justification to explicitly reference the sections within the introduction and abstract where the main claims and contributions are stated. This demonstrates clarity and adherence to guidelines.</li><li> <b>Address Generalizability:</b> In the discussion section, explicitly analyze the extent to which the observed citation bias in the two conferences can be generalized to other venues and research areas. Discuss limitations and potential variations across different communities.</li><li> <b>Moderate Claim Strength (Optional):</b> Consider revising the abstract to slightly moderate the claim about detecting bias. For instance, instead of "in both venues we consider," use "in the two flagship conferences studied." This maintains accuracy while acknowledging the specific scope.</li></ol><h3>Score</h3></div>
+            <a class="move-to-top" href="#summary-question-1">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-2">
+            <div class="user_input">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Yes, in the final section (Section 5)</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Limitations Discussion</h3>The paper provides a discussion on limitations, primarily focusing on the observational nature of the study and potential unobserved confounding factors. However, several aspects could be expanded upon for a more comprehensive analysis:<ul><li><b>Genuinely Present Citations:</b> While the justification for not explicitly addressing this factor is reasonable, acknowledging its potential impact on the observed effect would strengthen the discussion. Consider adding a sentence or two on how controlling for this factor might affect the results.</li><li><b>Fidelity of Citation Relationship:</b> The paper thoroughly addresses the concerns regarding false positives and negatives in identifying cited reviewers. However, it would be beneficial to briefly mention the potential impact of misidentified citations on the estimated effect size.</li><li><b>Generalizability:</b> The paper acknowledges the limitations of generalizability for the EC 2021 data due to the intervention in the assignment process. Consider expanding on the potential implications of this for the overall conclusions, particularly in comparison to the ICML 2020 results.</li><li><b>Reviewer Identity Correlations:</b>  The paper clarifies the assumption of independence among evaluations by the same reviewer and acknowledges the potential for spurious correlations. To strengthen this section, consider mentioning the average number of reviews per reviewer in each conference explicitly.</li><li><b>Counteracting Citation Bias:</b> The paper briefly touches upon potential strategies to mitigate citation bias, such as awareness campaigns and balancing the number of cited reviewers. Expanding on these or proposing additional solutions with a discussion of their feasibility and potential effectiveness would be valuable.</li></ul><b>Additional Considerations:</b><ul><li><b>Computational Efficiency:</b> While the paper focuses on observational data, discussing the computational aspects of the citation identification process and its scalability for larger conferences would contribute to the technical depth of the paper.</li><li><b>Privacy and Fairness:</b> Exploring potential concerns around privacy and fairness, particularly in relation to reviewer anonymity and the impact of citation bias on underrepresented groups, would broaden the scope of the discussion.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-2">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-3">
+            <div class="user_input">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> There is no theory.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors' proposed answer of "NA" with the justification "There is no theory" aligns with the paper's content. The paper focuses on an empirical investigation of citation bias and does not present any theoretical results or proofs.However, despite the answer being accurate, the paper could benefit from the following improvements to enhance its quality and potential impact:<ul><li><b>Formalize the definition of citation bias:</b> While the paper explains the concept of citation bias, a formal definition using mathematical notation would improve clarity and enable further analysis.</li><li><b>Explore potential theoretical frameworks:</b> Consider incorporating theoretical frameworks from social psychology or behavioral economics to provide a deeper understanding of the mechanisms behind citation bias.</li><li><b>Hypothesize about factors influencing citation bias:</b>  Develop hypotheses about factors that might moderate the effect of citation bias, such as reviewer seniority, research area, or citation prominence.</li><li><b>Discuss limitations due to observational nature</b>:  Explicitly acknowledge and discuss the limitations of the observational study design and potential unobserved confounding factors.</li></ul>While adding theoretical elements is not necessary for this paper, it could elevate the work by providing a more comprehensive understanding of the phenomenon and paving the way for future research.</div>
+            <a class="move-to-top" href="#summary-question-3">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-4">
+            <div class="user_input">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> In Section 3.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Reproducibility Answer</h3>The authors claim their paper is reproducible and point to Section 3 for justification. However, Section 3 primarily describes the experimental setup and analysis of citation bias, not the specific details required for reproducing the results.Here are some key areas of improvement to ensure reproducibility:<ul><li><b>Data Availability:</b> The paper analyzes data from ICML 2020 and EC 2021. While referencing these conferences provides context, it doesn't offer access to the data itself. The authors should clarify whether the data can be publicly shared and, if so, provide clear instructions on how to access it. If data sharing isn't possible due to privacy concerns, the authors should explore alternative avenues such as releasing anonymized or aggregated datasets.</li><li><b>Code Availability:</b> The paper mentions custom parsing tools and statistical analysis methods. Sharing the code for these tools would significantly improve reproducibility. This allows other researchers to understand the specific implementation details and conduct their own analyses. If code sharing isn't feasible, the authors should provide detailed descriptions of the algorithms and methodologies employed.</li><li><b>Reviewer Expertise Metrics:</b> The paper relies on measures of reviewer expertise for the analysis. While the authors describe the general approach (e.g., self-reported expertise, textual overlap), more specific details are needed. This includes explaining how textual overlap is calculated, what specific questions were used to assess self-reported expertise, and how these measures were combined for the analysis.</li><li><b>Data Filtering Process:</b> The paper mentions excluding certain submissions based on missing data or potential confounding factors. The authors should provide a comprehensive list of exclusion criteria and justify their choices. This ensures transparency and allows other researchers to replicate the data filtering process accurately.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-4">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-5">
+            <div class="user_input">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> We have extensively detailed our experimental procedure in section 3 and the appendix, sufficient for anyone to reproduce it. However, the peer review data is extremely sensitive and we do not have permissions from the participants nor from the IRB to release anything except the aggregate statistics.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Analysis of Discrepancies and Actionable Feedback:</h3>The authors' proposed answer of "No" is <b>accurate</b>. While they provide extensive details on the experimental procedure, the justification correctly points out the inability to release the peer review data due to sensitivity and lack of permissions.  However, there are potential areas for improvement based on the guidelines:<b>1. Clarify Data Availability:</b><ul><li>  <b>Action:</b> Explicitly state in the paper and supplemental materials that the raw peer review data cannot be shared due to  privacy and ethical concerns.</li><li>  <b>Benefit:</b> This transparency reinforces reproducibility efforts within the constraints of ethical considerations.</li></ul><b>2. Explore Synthetic Data Options:</b><ul><li>  <b>Action:</b>  Investigate the feasibility of creating and releasing anonymized or synthetic data that preserves the statistical properties of the original dataset while protecting participant privacy.</li><li>  <b>Benefit:</b>  Synthetic data, if feasible, could allow researchers to validate findings and explore the data independently.</li></ul><b>3. Emphasize Procedural Transparency:</b><ul><li>  <b>Action:</b> In the supplemental materials, provide detailed descriptions and justifications for data filtering and exclusion criteria. Include precise definitions of variables like "expertise" and "preference," along with their calculation methods.</li><li>  <b>Benefit:</b> This level of detail increases the replicability of the analysis and ensures understanding of the applied methodology.</li></ul><b>4. Consider Alternative Bias Mitigation Strategies:</b><ul><li>  <b>Action:</b> Discuss potential methods for mitigating citation bias in the peer review process, drawing on existing literature and the insights from this study. This could include blinding reference lists, awareness campaigns, or modified reviewer assignment algorithms.</li><li>  <b>Benefit:</b> By acknowledging the implications of the findings and proposing solutions, the paper contributes more actively to improving the peer-review process.</li></ul>Focusing on these improvements will significantly enhance the paper's quality and contribution to the field.</div>
+            <a class="move-to-top" href="#summary-question-5">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-6">
+            <div class="user_input">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> We do not train or test any ML models and hence there are no hyperparameters or data splits etc.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors' proposed answer of "NA" with the justification "We do not train or test any ML models and hence there are no hyperparameters or data splits etc." is <b>correct and appropriate</b>. The paper clearly focuses on an observational study of citation bias in peer review and does not involve any machine learning model training or testing.However, there are a few potential improvements that could be made to enhance clarity and understanding of the experimental methodology:<ul><li><b>Explicitly state the observational nature of the study:</b> While the paper discusses observational data analysis and confounding factors, explicitly stating in the methods section that the study is observational would further clarify the research design for readers unfamiliar with the terminology.</li><li><b>Elaborate on data collection and variable definitions:</b> Provide more details on how data was collected (e.g., from review forms, conference management systems) and how variables like "expertise" and "preference" were operationalized using specific questions or metrics.</li><li><b>Consider including a data availability statement.</b> Although not directly related to this question, providing information on data availability would enhance reproducibility and transparency of the research.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-6">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-7">
+            <div class="user_input">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Section 4</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Error Bars Reporting</h3>The paper focuses on an observational study of citation bias in peer review, analyzing the relationship between citing a reviewer's work and the score they assign. While the paper investigates potential biases and confounding factors, it doesn't seem to report error bars or confidence intervals for the observed effects.Here's how to improve the paper:<ul><li>  <b>Report Confidence Intervals:</b> For the estimated effect sizes of citation bias (0.23 for EC and 0.16/0.42 for ICML), the paper should provide 95% confidence intervals. This will give readers a better understanding of the uncertainty associated with these estimates.</li><li>  <b>Explain Statistical Significance Tests:</b>  The paper mentions using  statistical significance tests to analyze the results.  However, it lacks details about the specific tests used (e.g., t-test, ANOVA).  Clearly state the chosen test and its assumptions for transparency.</li><li>  <b>Discuss Variability Sources:</b>  The paper should elaborate on the sources of variability in the data, such as differences in reviewer harshness/leniency or paper quality within topic areas. This will help readers understand the context of the reported effects and their potential limitations.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-7">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-8">
+            <div class="user_input">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> Not applicable. We do not have experiments that depend on compute.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors' proposed answer of "NA" with the justification "Not applicable. We do not have experiments that depend on compute" is inaccurate and misleading. The paper clearly describes a large-scale observational study involving data collection and analysis, which inherently require computational resources.Here are the key issues and actionable suggestions for improvement:<ul><li>  <b>Misinterpretation of "Experiments":</b> The authors seem to have misinterpreted the term "experiments" to only include controlled experiments with interventions. They need to broaden their understanding to encompass observational studies and data analysis, which also require computational resources.</li><li>  <b>Missing Information on Compute Resources:</b> The paper lacks crucial details about the computational resources used for data processing, analysis, and model training. This information is essential for reproducibility and understanding the feasibility of the study.</li><li>  <b>Transparency Regarding Compute Requirements:</b>  The authors should be transparent about the total amount of compute used throughout the research project, including preliminary or failed experiments that didn't make it into the paper. This gives a more complete picture of the computational demands of the research.</li></ul><b>Specific Actions:</b><ol><li>  <b>Revise the Answer and Justification:</b> Change the answer to "No" and provide a justification that acknowledges the use of computational resources for data analysis.</li><li>  <b>Add a Section on Compute Resources:</b> Include a dedicated section or paragraph detailing the type of compute workers (CPUs, GPUs), memory usage, execution time for key tasks, and whether the resources were from an internal cluster or a cloud provider.</li><li>  <b>Estimate Total Compute Usage:</b> Provide an estimate of the total compute resources used for the entire research project, including any work beyond the reported experiments.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-8">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-9">
+            <div class="user_input">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> It conforms to the code of ethics.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors' proposed answer of "Yes" to the question of ethical compliance with the NeurIPS Code of Ethics is insufficiently justified. While claiming conformity, the justification lacks specific references to sections within the paper demonstrating adherence to the code.<h3>Suggested Improvements:</h3><ol><li> <b>Identify Relevant Ethical Considerations</b>: Carefully review the NeurIPS Code of Ethics and identify the specific principles relevant to the research conducted. This may include aspects like:</li></ol>* <b>Anonymity and Confidentiality</b>: Discuss how the study ensured the anonymity of authors and reviewers throughout the data collection and analysis process.* <b>Data Collection and Usage</b>: Explain how the data was collected with consent and used responsibly, particularly regarding participant privacy.* <b>Bias and Fairness</b>: Address how potential biases in the peer review process were mitigated and how the study aimed to promote fairness in academic evaluations.<ol><li> <b>Reference Specific Sections</b>: For each identified ethical consideration, explicitly reference the sections within the paper where the corresponding safeguards and procedures are described. For example:</li></ol>* "We ensured the anonymity of authors and reviewers by utilizing the double-blind review process of both conferences (Section 3.1)."* "The data used in this study was collected with the approval of the conferences' organizers and Institutional Review Board (Acknowledgements)."* "To mitigate potential biases, our analysis accounted for several confounding factors such as paper quality and reviewer expertise (Section 3.2)."<ol><li> <b>Address Potential Concerns</b>: If any aspects of the research raise ethical questions or present challenges in fully adhering to the code, acknowledge and discuss these openly. Explain the rationale behind any deviations and the steps taken to minimize potential harm.</li></ol>By addressing these points, the authors can provide a more comprehensive and convincing justification for their ethical compliance, strengthening the overall quality of the paper.</div>
+            <a class="move-to-top" href="#summary-question-9">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-10">
+            <div class="user_input">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Yes, in section 5</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Societal Impact Discussion</h3>The paper currently lacks a discussion on the potential societal impacts, both positive and negative, of the research on citation bias in peer review.<b>Here's how to improve:</b><ul><li>  <b>Add a new section (e.g., Section 6) dedicated to societal impact.</b> This section should explicitly address both potential benefits and harms of the research.</li><li>  <b>Discuss potential negative impacts:</b></li></ul>*   <b>Misuse by authors:</b> Authors might strategically cite reviewers to manipulate the review process, further exacerbating existing biases or creating new ones.*   <b>Increased pressure on reviewers:</b>  Reviewers might feel pressured to be lenient towards papers citing their work, leading to unfair evaluations.*   <b>Focus on "big names":</b> Increased awareness of citation bias could lead to even more emphasis on citations and "big names" in the field, potentially hindering innovation and diversity.<ul><li>  <b>Discuss potential positive impacts:</b></li></ul>*   <b>Increased awareness:</b> Bringing attention to citation bias could lead to fairer and more objective peer review processes.*   <b>Improved review practices:</b>  The research could inform the development of interventions and policies to mitigate citation bias  (e.g.,  masking reviewer identities in citations,  developing guidelines for appropriate citation practices).*   <b>Promote research integrity:</b> The findings can contribute to promoting ethical research practices and responsible authorship.<ul><li>  <b>Consider mitigation strategies:</b> Explore ways to counteract the potential negative societal impacts, such as those mentioned above.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-10">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-11">
+            <div class="user_input">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> There is no release of any data or models.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors' proposed answer of "NA" with the justification "There is no release of any data or models" seems accurate based on the paper's content. The research focuses on analyzing existing peer review data and doesn't involve releasing new data or models.However, there are potential areas for improvement and clarification:<ul><li><b>Transparency:</b> While not strictly required for a "NA" answer, it would be beneficial to briefly mention in the paper that no data or models are being released and thus no specific safeguards are needed. This would enhance transparency and avoid any potential confusion for readers.</li><li><b>Future Considerations:</b> If the authors plan on releasing the analyzed data or any derived models in the future, they should proactively consider the guidelines for responsible release of potentially sensitive information.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-11">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-12">
+            <div class="user_input">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have used algorithms such as TPMS and PeerReview4All. We have cited</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Discrepancies and Actionable Feedback:</h3>The author's proposed answer states that they have used algorithms like TPMS and PeerReview4All and have cited them. However, the justification provided only mentions the algorithms used and does not point to the specific sections where these citations occur. This is a discrepancy with the provided guidelines.<b>Actionable Feedback:</b><ul><li><b>Clearly indicate citation locations:</b>  In the justification section, explicitly state the section(s) or reference number(s) where TPMS and PeerReview4All are cited.</li><li><b>Version and URL (if possible):</b>   For both TPMS and PeerReview4All, specify the version used (if applicable) and include a URL or DOI for easy reference.</li><li><b>License information:</b>  If available, mention the specific license under which each algorithm is distributed (e.g., MIT License, GPLv3).</li><li><b>Additional assets:</b>  Carefully review the paper to ensure all other used assets (datasets, software libraries, etc.) are properly credited and their licenses are mentioned. This information should also be added to the justification section with appropriate section/reference pointers.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-12">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-13">
+            <div class="user_input">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> No new assets</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Paper Checklist Answer</h3>The authors' proposed answer of "NA" with the justification "No new assets" seems accurate based on the provided paper abstract and introduction. The paper focuses on analyzing existing data from conferences and does not introduce any new datasets, models, or code.However, the paper could benefit from some improvements regarding transparency and reproducibility:<ul><li><b>Data Availability:</b> While the paper analyzes existing conference data, it would be beneficial to clarify the accessibility of this data. Explicitly state whether the data is publicly available and if so, provide information on how to access it. If the data is not public, explain the reasons and consider potential alternatives like data sharing agreements.</li><li><b>Analysis Code:</b>  Even though no new models are introduced, the analysis likely involves custom scripts for data processing and statistical tests. Sharing this code would significantly improve the reproducibility of the findings and allow other researchers to build upon the work. Consider platforms like GitHub for hosting the code with a permissive license.</li><li><b>Pre-registration:</b>  To further enhance the credibility of the observational study, consider mentioning if the research question and analysis plan were pre-registered before conducting the study. This demonstrates a commitment to transparency and reduces concerns about potential bias in data analysis.</li></ul>Addressing these points would improve the overall quality and impact of the paper.</div>
+            <a class="move-to-top" href="#summary-question-13">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-14">
+            <div class="user_input">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> No crowdsourcing. The experiment was on observational data.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors' proposed answer of "NA" with the justification "No crowdsourcing. The experiment was on observational data" seems <b>accurate and appropriate</b> given the paper's content. The paper clearly focuses on an observational study of citation bias in peer review using existing conference data, with no involvement of crowdsourcing or direct research with human subjects.However, to further improve the paper and ensure complete transparency, here are a few suggestions:<ul><li><b>Mention Data Collection Ethics:</b> While not directly related to the question, it would be beneficial to briefly mention in the paper (perhaps in the acknowledgments or ethics statement) that the study involved analysis of existing data and adhered to ethical guidelines for data usage and anonymization.  This demonstrates awareness of potential ethical considerations even with observational data.</li><li><b>Consider Supplemental Material:</b> If the authors have access to any additional information regarding the data collection process of the original conferences (e.g., consent forms, anonymization procedures), including it as supplemental material could be valuable for transparency and reproducibility.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-14">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-15">
+            <div class="user_input">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We got IRB approval as mentioned in the Acknowledgments.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Authors' Proposed Answer</h3>The authors' proposed answer and justification seem incomplete and do not fully address the question regarding potential risks to study participants and IRB approval.<b>Discrepancies and Issues:</b><ul><li><b>Missing Information on Risks:</b> The paper and justification do not mention anything about potential risks incurred by study participants.</li><li><b>IRB Approval Mention:</b> While the justification mentions IRB approval in the acknowledgments section, the guidelines recommend explicitly stating this within the paper itself.</li></ul><h3>Actionable Feedback</h3><ol><li> <b>Include a section discussing potential risks:</b>  Add a section (e.g., under "Methods" or a separate "Ethics Statement") addressing potential risks to participants. If there are no foreseeable risks, clearly state this.</li><li> <b>Explicitly state IRB approval:</b>  Move the statement about obtaining IRB approval from the acknowledgments to the main body of the paper, preferably within the section discussing potential risks.  Avoid mentioning the specific institution to maintain anonymity.</li></ol><h3>Score</h3></div>
+            <a class="move-to-top" href="#summary-question-15">↑ Back to summary</a>
+        </div>
+        
+        
+    </div>
+</div>
+
+</body>
+</html>

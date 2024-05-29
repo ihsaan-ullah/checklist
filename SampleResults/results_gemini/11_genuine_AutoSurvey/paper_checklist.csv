@@ -1,0 +1,371 @@
+Question,Question_Title,Answer,Justification,Guidelines,Review,Score
+Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?,Claims,Yes,The abstract and introduction clearly state the main contributions and scope of the paper,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that the abstract and introduction do not include the claims made in the paper.
+The abstract and/or introduction should clearly state the claims made, including the contributions made in the paper and important assumptions and limitations. A No or NA answer to this question will not be perceived well by the reviewers. 
+The claims made should match theoretical and experimental results, and reflect how much the results can be expected to generalize to other settings. 
+It is fine to include aspirational goals as motivation as long as it is clear that these goals are not attained by the paper. 
+","## Discrepancies and Actionable Feedback:
+
+The authors' proposed answer asserts that the abstract and introduction accurately reflect the paper's contributions and scope. While this is mostly true, there are areas for improvement:
+
+* **Overly Strong Claims:** The abstract mentions ""AI systems undertake a simulated peer-review mechanism akin to traditional scholarly journals."" This might be interpreted as implying a fully automated peer-review process, which is not the case, as human organizers maintain editorial oversight. 
+* **Missing Limitations:** The introduction lacks clear discussion of limitations.  For instance, the paper focuses on survey papers, not all types of academic papers. Additionally, the evaluation metrics, while well-defined, might not capture all aspects of high-quality academic work.
+* **Aspirational Goals:** Phrases like ""paradigm shift"" and ""unprecedented level of proficiency"" set high expectations that the paper's results might not fully meet.
+
+## Suggested Improvements:
+
+1. **Tone Down Claims:** Replace overly strong statements with more accurate descriptions of the competition and its goals. For example, instead of ""simulated peer-review mechanism akin to traditional scholarly journals,"" consider  ""a novel platform inspired by the peer-review process, with human oversight.""
+2. **Explicitly State Limitations:** Devote a paragraph in the introduction to discuss the limitations of the current work, such as the focus on survey papers and the potential limitations of the defined evaluation metrics.
+3. **Clarify Aspirational Goals:** When discussing the potential of LLMs, clearly distinguish between the current capabilities demonstrated in the paper and the future aspirations that motivate the research. 
+
+## ",0.5
+Does the paper discuss the limitations of the work performed by the authors?,Limitations,No,in the conclusion it's mentionned room for improvement but not the limitations,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that the paper has no limitation while the answer No means that the paper has limitations, but those are not discussed in the paper. 
+The authors are encouraged to create a separate ""Limitations"" section in their paper.
+The paper should point out any strong assumptions and how robust the results are to violations of these assumptions (e.g., independence assumptions, noiseless settings, model well-specification, asymptotic approximations only holding locally). The authors should reflect on how these assumptions might be violated in practice and what the implications would be.
+The authors should reflect on the scope of the claims made, e.g., if the approach was only tested on a few datasets or with a few runs. In general, empirical results often depend on implicit assumptions, which should be articulated.
+The authors should reflect on the factors that influence the performance of the approach. For example, a facial recognition algorithm may perform poorly when image resolution is low or images are taken in low lighting. Or a speech-to-text system might not be used reliably to provide closed captions for online lectures because it fails to handle technical jargon.
+The authors should discuss the computational efficiency of the proposed algorithms and how they scale with dataset size.
+If applicable, the authors should discuss possible limitations of their approach to address problems of privacy and fairness.
+While the authors might fear that complete honesty about limitations might be used by reviewers as grounds for rejection, a worse outcome might be that reviewers discover limitations that aren't acknowledged in the paper. The authors should use their best judgment and recognize that individual actions in favor of transparency play an important role in developing norms that preserve the integrity of the community. Reviewers will be specifically instructed to not penalize honesty concerning limitations.
+","## Feedback on Limitations Discussion
+
+The authors' proposed answer of ""No"" is accurate. While the conclusion briefly mentions ""room for improvement,"" it does not explicitly discuss the limitations of the proposed approach and models. 
+
+Here are some key areas for improvement based on the guidelines:
+
+* **Dedicated Limitations Section:** Create a separate section titled ""Limitations"" to clearly address the shortcomings and potential issues.
+* **Assumptions and Robustness:** Discuss the key assumptions made in the paper, such as the reliance on specific language models and evaluation metrics. Analyze the robustness of the results if these assumptions are violated. For example, how would the performance change with different language models or evaluation criteria?
+* **Scope of Claims:** Clearly define the scope of the claims made in the paper. Acknowledge that the approach was tested on a specific set of prompts and datasets, and generalize with caution.
+* **Factors Influencing Performance:** Analyze and discuss the factors that could influence the performance of the AI-Author and AI-Reviewer models. For example, how sensitive are the models to prompt phrasing or domain-specific terminology?
+* **Computational Efficiency:** Discuss the computational resources required for training and running the models, and how they scale with increasing dataset sizes. 
+
+Addressing these points will significantly improve the paper's quality and transparency.
+
+**",0
+"For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?",Theoritical assumptions and proofs,Not Applicable,This does not apply to our research work because our research is not theoretical.,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that the paper does not include theoretical results. 
+All the theorems, formulas, and proofs in the paper should be numbered and cross-referenced.
+All assumptions should be clearly stated or referenced in the statement of any theorems.
+The proofs can either appear in the main paper or the supplemental material, but if they appear in the supplemental material, the authors are encouraged to provide a short proof sketch to provide intuition. 
+Inversely, any informal proof provided in the core of the paper should be complemented by formal proofs provided in appendix or supplemental material.
+Theorems and Lemmas that the proof relies upon should be properly referenced. 
+","## Feedback on NeurIPS Paper Checklist Answer
+
+The authors' proposed answer and justification seem appropriate for the given question. The paper focuses on the design and implementation of a competition for assessing large language models (LLMs) in generating and reviewing survey papers, rather than presenting theoretical results. 
+
+However, there are a few areas where the paper could be improved for clarity and completeness:
+
+* **Explicitly state the absence of theoretical results:** While the ""NA"" answer and justification are reasonable, consider adding a brief statement in the paper's introduction or methodology section explicitly mentioning the absence of theoretical contributions. This would prevent any potential confusion for readers expecting theoretical analyses. 
+* **Clarify evaluation metrics:** The paper introduces five evaluation metrics but could benefit from further elaboration.  Provide more detailed definitions and explanations for each metric, particularly ""Contribution"" and ""Soundness.""  Consider including examples of how these metrics are applied in the evaluation process. 
+* **Strengthen discussion of limitations:** While the conclusion acknowledges room for improvement, expanding the discussion on the limitations of the proposed approach and baseline models would enhance the paper's quality. This could involve addressing potential biases, limitations of the evaluation metrics, and challenges associated with LLM-based survey generation and review.
+
+**",1
+Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?,Experiments reproducibility,No,"We don't provide the information to reproduce the experiments, just the information for the challenge.","If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that the paper does not include experiments.
+If the paper includes experiments, a No answer to this question will not be perceived well by the reviewers: Making the paper reproducible is important, regardless of whether the code and data are provided or not.
+If the contribution is a dataset and/or model, the authors should describe the steps taken to make their results reproducible or verifiable. 
+Depending on the contribution, reproducibility can be accomplished in various ways. For example, if the contribution is a novel architecture, describing the architecture fully might suffice, or if the contribution is a specific model and empirical evaluation, it may be necessary to either make it possible for others to replicate the model with the same dataset, or provide access to the model. In general. releasing code and data is often one good way to accomplish this, but reproducibility can also be provided via detailed instructions for how to replicate the results, access to a hosted model (e.g., in the case of a large language model), releasing of a model checkpoint, or other means that are appropriate to the research performed.
+While NeurIPS does not require releasing code, the conference does require all submissions to provide some reasonable avenue for reproducibility, which may depend on the nature of the contribution. For example
+    - If the contribution is primarily a new algorithm, the paper should make it clear how to reproduce that algorithm.
+    - If the contribution is primarily a new model architecture, the paper should describe the architecture clearly and fully.
+    - If the contribution is a new model (e.g., a large language model), then there should either be a way to access this model for reproducing the results or a way to reproduce the model (e.g., with an open-source dataset or instructions for how to construct the dataset).
+    - We recognize that reproducibility may be tricky in some cases, in which case authors are welcome to describe the particular way they provide for reproducibility. In the case of closed-source models, it may be that access to the model is limited in some way (e.g., to registered users), but it should be possible for other researchers to have some path to reproducing or verifying the results.
+
+","## Feedback on Reproducibility
+
+The authors clearly state they **do not provide information to reproduce the experiments**, focusing solely on the challenge itself. This is a critical issue for a NeurIPS submission. While the challenge format is interesting, the inability to replicate results severely hinders the paper's contribution and scientific value.
+
+Here are some key actionable improvements based on the guidelines:
+
+* **Describe the AI-Author baseline in detail:** Instead of simply mentioning ChatGPT and GPT-3.5, explain the specific model configuration, prompts used, and any training or fine-tuning procedures.
+* **Share the AI-Referee-Reviewer implementation:**  Open-source the code or provide clear instructions on how to replicate its functionality. Explain the specific features and software used for evaluation, especially for Clarity and Responsibility. 
+* **Clarify the ""contrastive evaluation"" method:** Provide a detailed description of how good and bad papers are generated and how the comparison is performed.
+* **Consider releasing the dataset of prompts and generated papers:** This would allow others to build upon your work and develop new AI-Author and AI-Reviewer models.
+
+**",0
+"Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?",Code and data accessibility,No,The paper does not provides the link to open access to all relevant data and code,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that paper does not include experiments requiring code.
+Please see the NeurIPS code and data submission guidelines (https://nips.cc/public/guides/CodeSubmissionPolicy) for more details.
+While we encourage the release of code and data, we understand that this might not be possible, so “No” is an acceptable answer. Papers cannot be rejected simply for not including code, unless this is central to the contribution (e.g., for a new open-source benchmark).
+The instructions should contain the exact command and environment needed to run to reproduce the results. See the NeurIPS code and data submission guidelines (https://nips.cc/public/guides/CodeSubmissionPolicy) for more details.
+The authors should provide instructions on data access and preparation, including how to access the raw data, preprocessed data, intermediate data, and generated data, etc.
+The authors should provide scripts to reproduce all experimental results for the new proposed method and baselines. If only a subset of experiments are reproducible, they should state which ones are omitted from the script and why.
+At submission time, to preserve anonymity, the authors should release anonymized versions (if applicable).
+Providing as much information as possible in supplemental material (appended to the paper) is recommended, but including URLs to data and code is permitted.
+","## Feedback on Paper's Response to Data and Code Availability Question:
+
+**Discrepancies:**
+
+* The paper mentions using various tools and datasets, including ChatGPT, Sentence Transformers, and Semantics Scholar survey papers. However, the justification only states that ""the paper does not provide the link to open access to all relevant data and code,"" which is vague and doesn't specify which resources are missing. 
+
+**Actionable Feedback:**
+
+1. **Specify Missing Resources:** Clearly list which data and code components are not publicly available. Be specific, mentioning the tools (e.g., ChatGPT version), datasets (e.g., Semantics Scholar subset), and code (e.g., AI-Referee-Reviewer implementation).
+
+2. **Explain Unavailability Reasons:** For each unavailable resource, provide a brief justification explaining why it cannot be open-sourced. This could include licensing restrictions, privacy concerns, or computational limitations.
+
+3. **Offer Alternatives (if possible):** If applicable, suggest alternative publicly available resources that could be used to replicate the results or conduct similar experiments. 
+
+4. **Consider Partial Release:** If releasing all data and code is impossible, consider releasing a subset that allows for partial reproducibility or demonstrates the core methodology. Clearly state which experiments or components are reproducible with the released resources.
+
+**",0.5
+"Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?",Experimental settings/details,Yes,The testing details is mentioned in the baseline result,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that the paper does not include experiments.
+The experimental setting should be presented in the core of the paper to a level of detail that is necessary to appreciate the results and make sense of them.
+The full details can be provided either with the code, in appendix, or as supplemental material.
+","## Analysis of Author's Response to Question Regarding Training and Test Details
+
+The authors claim to have provided all necessary training and test details by stating ""Yes"" and pointing to ""the baseline result"" as justification. However, upon reviewing the paper, several critical details are missing, making it difficult to fully understand and reproduce the results. 
+
+### Missing Information:
+
+* **Specifics about data splits:** While the paper mentions using prompts derived from Semantic Scholar and creating ""good"" and ""bad"" versions of papers, it lacks details on the exact number of prompts used for training, validation, and testing. 
+* **Hyperparameter choices and optimization:** The paper does not explain the hyperparameters used for the AI-Author (ChatGPT) and AI-Referee-Reviewer models, nor does it describe the process for choosing or optimizing these hyperparameters. 
+* **Training process details:**  Information about the training process is completely absent. This includes the number of epochs, batch size, learning rate schedule, and any data augmentation techniques used.
+
+### Suggested Improvements:
+
+1. **Clearly describe the data splitting strategy:**  Specify the number of prompts used for training, validation, and testing, and explain the rationale behind the chosen split ratios.
+2. **Provide a table of hyperparameters:** Include a comprehensive table that lists  all hyperparameters used for the AI-Author and AI-Referee-Reviewer models, along with justifications for their selection. 
+3. **Explain the training process:**  Describe the training process in detail, including specifics about the optimizer used, learning rate schedule, number of epochs, batch size, and any data augmentation techniques. 
+
+**",0
+Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?,Error bars,Yes,"Error bars are properly reported with clear definitions, capturing variability factors, and the methodology for their calculation is thoroughly explained, supporting the paper's main experimental claims.","If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that the paper does not include experiments.
+The authors should answer ""Yes"" if the results are accompanied by error bars, confidence intervals, or statistical significance tests, at least for the experiments that support the main claims of the paper.
+The factors of variability that the error bars are capturing should be clearly stated (for example, train/test split, initialization, random drawing of some parameter, or overall run with given experimental conditions).
+The method for calculating the error bars should be explained (closed form formula, call to a library function, bootstrap, etc.)
+The assumptions made should be given (e.g., Normally distributed errors).
+It should be clear whether the error bar is the standard deviation or the standard error of the mean.
+It is OK to report 1-sigma error bars, but one should state it. The authors should preferably report a 2-sigma error bar than state that they have a 96% CI, if the hypothesis of Normality of errors is not verified.
+For asymmetric distributions, the authors should be careful not to show in tables or figures symmetric error bars that would yield results that are out of range (e.g. negative error rates).
+If error bars are reported in tables or plots, The authors should explain in the text how they were calculated and reference the corresponding figures or tables in the text.
+","## Feedback on Error Bar Reporting
+
+The paper mentions using evaluation scores and comparing distributions of scores for different systems and categories. However, there is no explicit discussion of error bars or confidence intervals. While Figure 1 visually presents boxes representing quartiles and whiskers for 10th and 90th percentiles, the text lacks a proper explanation of how these are calculated or what they represent statistically.
+
+Here's how the authors can improve the paper:
+
+* **Clarify Variability Factors:** Explain what factors contribute to the variability observed in the evaluation scores (e.g., different prompts, random seeds, variations in model responses). 
+* **Explain Error Bar Calculation:** Describe how the boxes and whiskers in Figure 1 are calculated. Specify whether they represent standard deviations, standard errors, or some other measure of variability.
+* **Report Confidence Intervals:** Consider reporting 95% confidence intervals for key results, especially when comparing different systems or categories.
+* **Discuss Statistical Significance:** If appropriate, perform statistical significance tests to determine if observed differences are statistically meaningful.
+* **Reference Figures and Tables:** When mentioning evaluation scores or distributions in the text, explicitly reference the corresponding figures and tables.
+
+**",0
+"For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?",Compute resources,No,The paper does not provide any type of information regarding the computer resources,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that the paper does not include experiments.
+The paper should indicate the type of compute workers CPU or GPU, internal cluster, or cloud provider, including relevant memory and storage.
+The paper should provide the amount of compute required for each of the individual experimental runs as well as estimate the total compute. 
+The paper should disclose whether the full research project required more compute than the experiments reported in the paper (e.g., preliminary or failed experiments that didn't make it into the paper). 
+","## Feedback on Authors' Proposed Answer and Justification
+
+The authors have correctly identified that their paper lacks information on the computational resources used for the experiments. However, the justification could benefit from more detail. 
+
+### Suggested Improvements:
+
+1. **Expand Justification:** While stating the absence of information is accurate, it would be helpful to mention the specific details missing, such as:
+    * Types of compute workers (CPU, GPU)
+    * Memory and storage requirements
+    * Execution times for individual experiments and the total compute time
+    *  Whether additional compute was used beyond the reported experiments
+
+2. **Plan for Revision:** Authors should clearly state their intention to include a section describing the missing computational resources in the final paper.  This demonstrates their commitment to addressing the issue and improving reproducibility.
+
+3. **Consider Adding a Table:** A table summarizing the computational resources for each experiment can enhance clarity and accessibility for readers. 
+
+4. **Potential Section for Inclusion:** The authors could consider adding a section titled ""Experimental Setup"" or ""Computational Resources"" where they can comprehensively detail the missing information.
+
+## Conclusion
+
+Addressing these points will significantly improve the paper's quality and reproducibility. By providing a detailed account of the computational resources, the authors enable other researchers to better understand the experimental setup and potentially replicate the results.
+
+**",0
+"Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?",NeurIPS code of ethics,Yes,We review the code of ethics and our paper conform with it.,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that the authors have not reviewed the NeurIPS Code of Ethics.
+If the authors answer No, they should explain the special circumstances that require a deviation from the Code of Ethics.
+The authors should make sure to preserve anonymity (e.g., if there is a special consideration due to laws or regulations in their jurisdiction).
+","## Discrepancies and Feedback
+
+The authors claim to conform with the NeurIPS Code of Ethics but fail to provide specific evidence or point to relevant sections within the paper. This is a crucial requirement for justifying a ""Yes"" answer. 
+
+Several potential ethical concerns arise from the paper's content, which are not addressed:
+
+* **Bias and Fairness:** The paper lacks discussion on potential biases in the data or LLMs used for generating and reviewing survey papers. This could lead to biased or unfair evaluation of submissions.
+* **Transparency and Reproducibility:** While the paper mentions evaluation methods, it lacks details on the specific implementation and data used for training/evaluating the AI models. This hinders reproducibility and transparency of the research.
+* **Misuse Potential:** The paper briefly mentions ""Responsibility"" as a criterion but does not elaborate on potential misuse of the technology, such as generating fake academic content or manipulating peer review processes.
+
+## Recommendations
+
+1. **Address Ethical Concerns:**
+    * Discuss potential biases in the data and LLMs, and propose mitigation strategies.
+    * Explain how fairness is ensured in the evaluation process.
+    * Elaborate on the potential misuse of the technology and propose safeguards.
+2. **Improve Transparency and Reproducibility:**
+    * Provide detailed information on the datasets used, including their sources and potential limitations.
+    * Describe the implementation of AI models and evaluation methods with sufficient detail for reproducibility.
+    * Make code and data publicly available, if feasible.
+3. **Strengthen Justification for Ethics Compliance:**
+    * Identify specific sections in the paper that demonstrate adherence to each principle of the NeurIPS Code of Ethics.
+    * Explain how the research design and methodology uphold ethical considerations. 
+    * If deviations from the code exist, provide clear justifications and explain mitigating actions.
+
+
+## Score
+
+**",0
+Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?,Impacts,No,The paper comprehensively discusses the potential positive and limitation but not the negative societal impacts,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that there is no societal impact of the work performed.
+If the authors answer NA or No, they should explain why their work has no societal impact or why the paper does not address societal impact.
+Examples of negative societal impacts include potential malicious or unintended uses (e.g., disinformation, generating fake profiles, surveillance), fairness considerations (e.g., deployment of technologies that could make decisions that unfairly impact specific groups), privacy considerations, and security considerations.
+The conference expects that many papers will be foundational research and not tied to particular applications, let alone deployments. However, if there is a direct path to any negative applications, the authors should point it out. For example, it is legitimate to point out that an improvement in the quality of generative models could be used to generate deepfakes for disinformation. On the other hand, it is not needed to point out that a generic algorithm for optimizing neural networks could enable people to train models that generate Deepfakes faster.
+The authors should consider possible harms that could arise when the technology is being used as intended and functioning correctly, harms that could arise when the technology is being used as intended but gives incorrect results, and harms following from (intentional or unintentional) misuse of the technology.
+If there are negative societal impacts, the authors could also discuss possible mitigation strategies (e.g., gated release of models, providing defenses in addition to attacks, mechanisms for monitoring misuse, mechanisms to monitor how a system learns from feedback over time, improving the efficiency and accessibility of ML).
+","## Feedback on Societal Impact Discussion 
+
+The authors' proposed answer of ""No"" with the justification ""The paper comprehensively discusses the potential positive and limitation but not the negative societal impacts"" is not entirely accurate. While the paper doesn't explicitly address negative societal impacts, it does touch upon potential limitations and issues related to the use of LLMs for generating academic content. 
+
+Here's how the authors can improve the paper:
+
+* **Explicitly acknowledge potential negative societal impacts:**  While the paper discusses limitations of LLMs, it would be beneficial to explicitly mention potential negative societal impacts, even if briefly.  
+* **Examples of potential negative impacts:** The paper could mention potential misuse of the technology for generating misleading or biased academic content, issues with plagiarism and intellectual property, and the potential for perpetuating existing biases in academic literature.
+* **Mitigation strategies:**  Consider discussing possible ways to mitigate these negative impacts, such as developing guidelines for responsible use of LLMs in academic writing, implementing plagiarism detection tools, and incorporating bias detection and mitigation techniques into LLM training and development. 
+* **Point to relevant sections:** If the authors choose to incorporate a discussion on negative societal impacts and mitigation strategies, they should update the justification to point to the specific sections where this information is addressed. 
+
+**",0.5
+"Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?",Safeguards,Not Applicable,Our models do not present such risks.,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+""
+The answer NA means that the paper poses no such risks.
+Released models that have a high risk for misuse or dual-use should be released with necessary safeguards to allow for controlled use of the model, for example by requiring that users adhere to usage guidelines or restrictions to access the model or implementing safety filters. 
+Datasets that have been scraped from the Internet could pose safety risks. The authors should describe how they avoided releasing unsafe images.
+We recognize that providing effective safeguards is challenging, and many papers do not require this, but we encourage authors to take this into account and make a best faith effort.
+","## Feedback on NeurIPS Checklist Answer
+
+The provided justification for answering ""NA"" to the question about safeguards for responsible release seems insufficient. While the paper focuses on evaluating the ability of LLMs to generate and review academic content in a simulated environment, there's still potential for misuse even within this context. For instance:
+
+* **Biased or misleading content generation:** LLMs trained on biased data can generate survey papers containing biased or misleading information, impacting the perceived credibility of certain research areas or schools of thought. 
+* **Misuse of evaluation metrics:** The paper proposes evaluation metrics like ""Soundness"" and ""Contribution."" Malicious actors could exploit these metrics by manipulating the generated content to score highly, even if the content is factually incorrect or plagiarized.
+
+Therefore, the paper should discuss potential risks and consider implementing safeguards like:
+
+* **Transparency and documentation:** Clearly outline the limitations of the LLMs used in the challenge, including potential biases and the risk of generating misleading information.
+* **Human oversight and control:** Describe the role of human organizers in the challenge, including their involvement in selecting prompts, reviewing generated content, and addressing potential ethical concerns.
+* **Data and model access controls:** If the trained models or generated data are released, establishing access controls and usage guidelines can mitigate risks of misuse.
+
+**",0
+"Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?",Credits,No,The paper doesn't mention the name of the licence,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that the paper does not use existing assets.
+The authors should cite the original paper that produced the code package or dataset.
+The authors should state which version of the asset is used and, if possible, include a URL.
+The name of the license (e.g., CC-BY 4.0) should be included for each asset.
+For scraped data from a particular source (e.g., website), the copyright and terms of service of that source should be provided.
+If assets are released, the license, copyright information, and terms of use in the package should be provided. For popular datasets, paperswithcode.com/datasets has curated licenses for some datasets. Their licensing guide can help determine the license of a dataset.
+For existing datasets that are re-packaged, both the original license and the license of the derived asset (if it has changed) should be provided.
+If this information is not available online, the authors are encouraged to reach out to the asset's creators.
+","## Feedback on Asset Licensing
+
+The provided justification accurately reflects the paper's lack of information regarding licenses for used assets, including datasets and software tools. Here are some actionable improvements to address this issue:
+
+* **Identify and list all used assets:**  This includes datasets (e.g., Semantics Scholar), software libraries (e.g., Sentence Transformer), and models (e.g., ChatGPT).
+* **Cite the original source for each asset:** Provide proper citations for the papers or documentation associated with each asset.  
+* **Specify versions and URLs (if applicable):** Indicate the specific version of each asset used and include a URL whenever possible to facilitate reproducibility.
+* **State the license for each asset:** Clearly state the license under which each asset is distributed (e.g., MIT License, CC-BY 4.0).  For datasets with unclear licensing, consult resources like paperswithcode.com/datasets or contact the creators directly for clarification. 
+* **Address scraped data concerns:** If data was scraped from websites, provide the copyright and terms of service information for those sources. 
+* **Include licensing information in released code:** If the authors are releasing code associated with the paper, ensure the license, copyright, and terms of use are included within the code package.
+
+**",0
+Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?,Documentation,Not Applicable,We don't introduce the new assents.,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that the paper does not release new assets.
+Researchers should communicate the details of the dataset/code/model as part of their submissions via structured templates. This includes details about training, license, limitations, etc. 
+The paper should discuss whether and how consent was obtained from people whose asset is used.
+At submission time, remember to anonymize your assets (if applicable). You can either create an anonymized URL or include an anonymized zip file.
+","## Analysis of Authors' Proposed Answer and Justification:
+
+The authors have answered ""NA"" to the question of whether new assets are well documented and provided alongside the paper. Their justification states, ""We don't introduce the new assents.""
+
+**Discrepancies**: 
+
+There seems to be a typo in the justification (""assents"" instead of ""assets""). However, the overall meaning is clear: the paper does not introduce any new datasets, models, or code. 
+
+**Alignment with Guidelines**:
+
+The answer and justification align with the guidelines since they clearly indicate the absence of new assets.  
+
+## Feedback and Suggestions:
+
+While no critical issues are present, here are some potential improvements to consider:
+
+*   **Clarify Terminology:**  While ""assets"" is generally understood within the machine learning community, consider briefly defining it within the paper for broader accessibility, especially given the interdisciplinary nature of the challenge.
+*   **Mention Data Sources:** Although no new assets are introduced, briefly mention the source and nature of the datasets used for evaluation, even if publicly available. This enhances transparency and reproducibility. 
+
+## Conclusion:
+
+The authors have accurately addressed the question regarding new assets. However, minor clarifications regarding terminology and data sources could further improve the paper's clarity and transparency. 
+
+**",1
+"For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?",Human subjects,Not Applicable,This does not apply on our research as we are not doing any crowdsourcing experiments,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that the paper does not involve crowdsourcing nor research with human subjects.
+Including this information in the supplemental material is fine, but if the main contribution of the paper involves human subjects, then as much detail as possible should be included in the main paper. 
+According to the NeurIPS Code of Ethics, workers involved in data collection, curation, or other labor should be paid at least the minimum wage in the country of the data collector. 
+","## Feedback on Author's Proposed Answer
+
+The authors have correctly identified that the question regarding crowdsourcing and human subjects research is **not applicable (NA)** to their paper. The justification accurately reflects that the research presented does not involve these aspects. 
+
+However, there are a few potential areas for improvement to enhance the overall quality of the paper:
+
+* **Clarify Evaluation Process:** While the paper describes the evaluation metrics and baseline results, a more detailed explanation of the evaluation process, especially for the human jury in the final test phase, would strengthen the paper. This could include information on the jury's composition, expertise, and the specific criteria used for evaluation. 
+* **Expand on Ethical Considerations:**  Although the paper mentions ""Responsibility"" as an evaluation criterion,  further elaboration on the specific ethical considerations addressed in the challenge design and evaluation would be beneficial.  This could involve discussing potential biases in LLMs, data privacy,  and responsible use of AI-generated content. 
+* **Potential for Human Evaluation in Future Work:**  While the current focus is on automated evaluation, the paper could briefly mention the potential for incorporating human evaluation in future iterations of the challenge. This could involve human experts assessing the quality and validity of the AI-generated survey papers.  
+
+## Score
+
+**",1
+"Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?",Risks,Not Applicable,This does not concerns us as we are not dealing with human subjects in our research.,"If you answer Yes to a question, in the justification please point to the section(s) where related material for the question can be found.
+While ""Yes"" is generally preferable to ""No"", it is perfectly acceptable to answer ""No"" provided a proper justification is given (e.g., ""error bars are not reported because it would be too computationally expensive"" or ""we were unable to find the license for the dataset we used"").
+
+The answer NA means that the paper does not involve crowdsourcing nor research with human subjects.
+Depending on the country in which research is conducted, IRB approval (or equivalent) may be required for any human subjects research. If you obtained IRB approval, you should clearly state this in the paper. 
+We recognize that the procedures for this may vary significantly between institutions and locations, and we expect authors to adhere to the NeurIPS Code of Ethics and the guidelines for their institution. 
+For initial submissions, do not include any information that would break anonymity (if applicable), such as the institution conducting the review.
+","## Feedback on IRB Approval Question
+
+The provided ""Answer"" (NA) and ""Justification"" seem appropriate given the paper's focus on evaluating AI systems rather than involving human subjects directly. However, there are a few points to consider for improved clarity and adherence to the guidelines:
+
+* **Specificity:** While the justification mentions not dealing with human subjects, it could be more specific by stating that the research involves evaluating AI models on automatically generated data (survey papers) and therefore does not require IRB approval. 
+* **Ethical Considerations:** Although IRB approval isn't needed, it might be beneficial to briefly mention adherence to ethical guidelines in AI research, considering the potential societal impact of LLMs and the paper's focus on evaluating aspects like ""Responsibility"" in generated content. This could be a brief statement in the introduction or conclusion, acknowledging awareness of ethical considerations in LLM development and use.
+
+**Suggested Improvement:**
+
+Modify the ""Justification"" to be more specific and include a brief mention of ethical considerations:
+
+> ""This research focuses on evaluating AI models on automatically generated survey papers and does not involve human subjects, hence IRB approval is not applicable. We acknowledge the importance of ethical considerations in AI research and strive to ensure responsible development and application of LLMs."" 
+
+**",1

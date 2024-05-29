@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        position: absolute;
+    }
+    .button-top {
+        top: 10px;
+        right: 20px;
+    }
+    .button-bottom {
+        bottom: 10px;
+        right: 20px;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px; /* Adjust according to button height and margin */
+        padding-bottom: 40px; /* Add padding instead of margin */
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0; /* Remove default margin */
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        /* color: #0033ff; */
+        color: #000;
+    }
+    .answer {
+        /* color: #28a745; */
+        color: #000;
+    }
+    .justification {
+        /* color: #de750b; */
+        color: #000;
+    }
+    .user_input {
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #3a3a3a;
+    }
+    .llm_review {
+        color: #000;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .llm_review-red {
+        background-color: #eacfcf;
+        border: 1px solid #FF0000;
+    }
+    .llm_review-green {
+        background-color: #c6e9c6;
+        border: 1px solid #008000;
+
+    }
+    .llm_review-orange {
+        background-color: #ebdecf;
+        border: 1px solid #FF8C00;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .score-red {
+        background-color: #eacfcf;
+        color: #000;
+        border: 1px solid #FF0000;
+    }
+    .score-orange {
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .score-purple {
+        background-color: #cac4e7;
+        color: #271b5e;
+        border: 1px solid #271b5e;
+    }
+    .scroll-button {
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .scroll-button:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content">
+        <h1>Meta-Album: Multi-domain Meta-Dataset forFew-Shot Image Classification</h1>
+
+        <hr>
+
+        <h2>Scores</h2>
+        <table>
+            <tr>
+                <td><strong>Paper Quality Score:</strong></td>
+                <td><span class="score-label score-blue">0.13</span></td>
+            </tr>
+            <tr>
+                <td><strong>LLM Accuracy:</strong></td>
+                <td><span class="score-label score-purple">0.1</span></td>
+            </tr>
+        </table>
+
+        <hr>
+
+        <h2>Review Summary</h2>
+        <table>
+            <tr>
+              <th>Question</th>
+              <th></th>
+              <th>Details</th>
+            </tr>
+            
+            <tr id="summary-question-1">
+                <td>1. Claims</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-1" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-2">
+                <td>2. Limitations</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-2" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-3">
+                <td>3. Theoritical assumptions and proofs</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-3" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-4">
+                <td>4. Experiments reproducibility</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-4" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-5">
+                <td>5. Code and data accessibility</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-5" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-6">
+                <td>6. Experimental settings/details</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-6" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-7">
+                <td>7. Error bars</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-7" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-8">
+                <td>8. Compute resources</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-8" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-9">
+                <td>9. NeurIPS code of ethics</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-9" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-10">
+                <td>10. Impacts</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-10" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-11">
+                <td>11. Safeguards</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-11" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-12">
+                <td>12. Credits</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-12" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-13">
+                <td>13. Documentation</td>
+                <td>
+                    <span class="score-label score-orange">
+                    
+                    Can be improved
+                    
+                    </span>
+                </td>
+                <td><a href="#question-13" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-14">
+                <td>14. Human subjects</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-14" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-15">
+                <td>15. Risks</td>
+                <td>
+                    <span class="score-label score-red">
+                    
+                    Needs attention
+                    
+                    </span>
+                </td>
+                <td><a href="#question-15" class="scroll-button">Detailed Review</a></td>
+                </tr>
+            
+        </table>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+        
+        
+        <div class="review" id="question-1">
+            <div class="user_input">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> We haven't mentioned the main claims in the abstract and introduction</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Paper Checklist Answer</h3><b>Discrepancies:</b><ul><li>  The justification states that the main claims are not mentioned in the abstract and introduction. However, the provided paper excerpts demonstrate that the abstract clearly outlines the purpose and key features of Meta-Album, such as its diversity, size, and extensibility. The introduction further delves into the challenges of few-shot learning and positions Meta-Album as a solution.</li></ul><b>Actionable Improvements:</b><ol><li>  <b>Refine Justification:</b> The justification should acknowledge the existing content in the abstract and introduction that addresses the main claims. Instead of stating that the claims are completely absent, it could specify which aspects of the claims need further clarification or emphasis.  For example, the justification could say: "The abstract and introduction already present some of the main claims; however, the contributions and scope can be further clarified by explicitly stating..."</li><li>  <b>Strengthen Claims:</b> While the current claims are present, they can be strengthened by highlighting the unique advantages of Meta-Album. For instance, emphasizing the domain diversity and its impact on cross-domain learning would enhance the paper's appeal. Additionally, mentioning the availability of different versions catering to varying computational resources would benefit potential users.</li><li>  <b>Quantify Impact:</b> The claims could be made more impactful by presenting <b>quantitative</b> evidence of Meta-Album's effectiveness. This could include showcasing performance gains achieved by baseline methods trained and tested on Meta-Album compared to other benchmark datasets.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-1">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-2">
+            <div class="user_input">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have clearly explained the limitations of our work in Section: Discussion and conclusion</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on Limitations Discussion</h3>The paper mentions limitations in the "Discussion and Conclusion" section, but the discussion lacks depth and specificity. Here are some actionable improvements based on the guidelines:<ul><li><b>Strong Assumptions:</b>  The paper should explicitly state any strong assumptions made during the development of Meta-Album (e.g., uniform image size impacting performance, or assumptions about class hierarchies). Discuss how robust the benchmark results would be if these assumptions were violated in practical scenarios.</li><li><b>Scope of Claims:</b> The paper should clearly define the scope of its claims regarding Meta-Album's effectiveness for various tasks. For instance, mention that the current evaluation primarily focuses on few-shot learning and that further investigation is needed for other tasks like continual learning.</li><li><b>Performance Factors:</b> Discuss factors that could influence the performance of models trained on Meta-Album. These could include domain shift challenges, dataset biases, and the impact of image preprocessing on certain domains.</li><li><b>Computational Efficiency:</b>  Analyze the computational demands of training and evaluating models on Meta-Album, particularly for the larger versions and diverse tasks. Discuss how these demands scale with dataset size and task complexity.</li><li><b>Privacy and Fairness:</b>  Though not directly applicable due to the nature of the data, acknowledge the potential limitations and biases inherent in datasets used for image classification tasks. Briefly mention the importance of considering privacy and fairness when applying models trained on Meta-Album to real-world scenarios.</li></ul><b>Consider creating a dedicated "Limitations" section to address these points comprehensively.</b></div>
+            <a class="move-to-top" href="#summary-question-2">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-3">
+            <div class="user_input">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have detailed all the theoretical proofs in the main paper.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Paper's Answer to Theoretical Results Question</h3><b>Discrepancies:</b><ul><li>  The paper focuses on introducing a meta-dataset for few-shot learning and does not present any novel theoretical results.</li><li>  There are no theorems, lemmas, proofs, or explicitly stated assumptions within the paper.</li></ul><b>Actionable Feedback:</b><ul><li>  Change the answer to "NA" (Not Applicable) as the paper does not include theoretical results.</li><li>  Remove the justification as it is no longer relevant.</li><li>  Consider including a theoretical analysis of the proposed meta-dataset in future work or extensions of the paper.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-3">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-4">
+            <div class="user_input">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> Our work is proprietary and we are not making the code and data available for public</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Reproducibility</h3>The authors' proposed answer of "No" with the justification "Our work is proprietary and we are not making the code and data available for public" indicates a critical issue with the paper's reproducibility. While proprietary methods are understandable, NeurIPS requires at least some avenue for reproducing or verifying the results.Here's how to improve the paper's score regarding reproducibility:<ul><li><b>Provide detailed instructions for replicating the results</b>: This could involve specifying the exact training process, hyperparameters, data preprocessing steps, and evaluation metrics.</li><li><b>Release a model checkpoint</b>: Sharing a trained model allows other researchers to reproduce the experiments and verify the claims.</li><li><b>Offer access to a hosted model</b>: This could be through a web interface or API, with potentially limited access (e.g., for registered users).</li><li><b>Describe the proprietary limitations</b>: Explain why the code and data cannot be fully released and explore alternative ways to address reproducibility concerns.</li><li><b>Focus on the methodological novelty</b>: If the core contribution lies in the methodology rather than specific results, emphasize the algorithm or architecture's details to allow for its independent implementation and evaluation.</li></ul>By addressing these points, the authors can significantly improve the paper's reproducibility and increase its chances of being well-received by reviewers.</div>
+            <a class="move-to-top" href="#summary-question-4">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-5">
+            <div class="user_input">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> Our work is proprietary and we are not making the code and data available for public</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors' proposed answer of "No" with the justification "Our work is proprietary and we are not making the code and data available for public" is <b>acceptable</b> according to the guidelines.  The justification is clear and provides a valid reason for not releasing the code and data.However, considering the paper's focus on benchmarking and encouraging community-driven research, here are some suggestions for improvement:<ul><li>  <b>Consider partial release:</b>  Could the authors release a subset of the data or code to facilitate some level of reproducibility and comparison?  This could be a smaller version of the dataset, specific code modules, or pre-trained models.</li><li>  <b>Highlight alternative contributions:</b>  Since code and data are unavailable, emphasize other aspects of the paper that are valuable to the community.  Focus on the detailed descriptions of the datasets, experimental settings, and analysis of results.  This could encourage further research based on the proposed benchmark design and problem setting.</li><li>  <b>Future release plans:</b>  If there are any plans to release the code and data in the future (e.g., after a certain period or upon achieving specific milestones), mention it in the paper.  This provides transparency and maintains community interest.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-5">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-6">
+            <div class="user_input">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have explained the experimental settings or details in Section 3.2: Experiments.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> Error Occured while processing this question!</div>
+            <a class="move-to-top" href="#summary-question-6">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-7">
+            <div class="user_input">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have reported error bars in Section 3.2: Experiments.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Error Bar Reporting</h3>The paper claims to report error bars in Section 3.2: Experiments, but upon reviewing the section and the provided information, several issues need to be addressed for proper error bar reporting:<ul><li><b>Missing Error Bars</b>: While the paper mentions the use of confidence intervals, it does not explicitly state whether error bars in the plots represent standard deviations, standard errors, or confidence intervals.</li><li><b>Unclear Calculation Method</b>: The paper lacks a clear explanation of how error bars were calculated.  Mentioning the specific method (e.g., formula, library function, bootstrap) is crucial for reproducibility and understanding the results.</li><li><b>Missing Assumptions</b>: The paper does not state any assumptions made during the error bar calculation, such as the distribution of errors (e.g., normality assumption).</li><li><b>Asymmetric Distributions</b>: The paper needs to clarify how error bars are handled for potentially asymmetric distributions to avoid misleading visualizations with symmetric error bars.</li></ul><h3>Recommendations for Improvement</h3><ul><li><b>Explicitly define error bars</b>: State clearly whether the error bars represent standard deviations, standard errors, or confidence intervals.</li><li><b>Explain the calculation method</b>: Describe the specific method used to calculate the error bars, including any relevant formulas or library functions.</li><li><b>State assumptions</b>:  Clearly outline any assumptions made during the error bar calculation, particularly regarding the distribution of errors.</li><li><b>Address asymmetric distributions</b>: Explain how error bars are visualized for asymmetric distributions to avoid misleading representations.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-7">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-8">
+            <div class="user_input">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have provided details about compute resources used in Section 3.2: Experiments, Appendix E: Within Domain Few-shot learning, and Appendix F: Cross-Domain Few-shot learning</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Paper Checklist Answer</h3>The authors' proposed answer of "Yes" and the justification seem inaccurate based on the provided paper excerpt and guidelines. While the paper does mention compute resources, it falls short of the required details for full reproducibility.Here's the key missing information:<ul><li><b>Type of compute workers</b>: The paper does not specify whether CPUs or GPUs were used, nor does it mention the specific model (e.g., NVIDIA A100)</li><li><b>Memory and storage</b>: While Appendix E and F mention execution times, they do not provide details about the memory or storage requirements for each experiment.</li><li><b>Total compute</b>:  The paper lacks an estimate of the total compute resources used for the entire research project, including preliminary or failed experiments.</li></ul><h3>Recommendations for Improvement</h3><ol><li> <b>Specify compute worker details</b>: Clearly state the type of compute workers (CPUs/GPUs), including the model and number used for each experiment.</li><li> <b>Report memory and storage requirements</b>: Include the memory and storage demands for each experiment, particularly in Appendices E and F.</li><li> <b>Estimate total compute usage</b>: Provide an approximation of the total compute resources used throughout the research project, including any unreported experiments.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-8">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-9">
+            <div class="user_input">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Author's answer:</strong> No</p>
+                <p><strong class="justification">Author's justification:</strong> We are not bound to follow the NeurIPS code of ethics</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Ethics Question</h3>The proposed answer and justification raise several issues according to the guidelines:<ul><li><b>Unacceptable Justification:</b> Stating that you are not bound to follow the NeurIPS Code of Ethics is not a valid justification and reflects poorly on the submission.</li><li><b>Missing Explanation:</b>  The guidelines require explaining the specific circumstances for deviating from the Code of Ethics, while ensuring anonymity. This explanation is missing.</li></ul><h3>Recommendations</h3><ul><li><b>Change Answer to Yes:</b>  Make a good faith effort to comply with the NeurIPS Code of Ethics.</li><li><b>Point to Relevant Sections:</b> If certain aspects are not applicable, explain why and point to sections demonstrating adherence to other relevant aspects (e.g., data licensing, authorship, societal impact).</li><li><b>Anonymity:</b> If there are legitimate reasons for deviating from specific parts of the Code, explain them while maintaining anonymity.</li></ul><h3>**</h3></div>
+            <a class="move-to-top" href="#summary-question-9">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-10">
+            <div class="user_input">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have detailed potential impacts and recommended use in Section 1.3</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Societal Impact Discussion</h3>The paper mentions potential positive impacts in Section 1.3, focusing on facilitating research in few-shot learning, transfer learning, and meta-learning. However, there is no discussion of potential negative societal impacts.<b>Actionable improvements:</b><ul><li>  <b>Discuss potential negative impacts:</b>  Consider harms arising from intended use (e.g., bias amplification, privacy concerns with personal data), unintended use (e.g., misuse for generating misleading synthetic data), and incorrect results.  Even if the dataset itself poses minimal risk, consider downstream applications of the research facilitated by the dataset.</li><li>  <b>Consider mitigation strategies:</b>  If negative impacts are identified, propose potential mitigation strategies, such as careful data curation, documentation of limitations and biases, and promoting responsible use guidelines.</li></ul></div>
+            <a class="move-to-top" href="#summary-question-10">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-11">
+            <div class="user_input">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Indeed, we are releasing our datasets with proper license and terms of use. We have also provided recommended usage of these datasets.</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on Authors' Proposed Answer:</h3>The proposed answer and justification have some discrepancies with the paper's content and the guidelines:<ul><li><b>Justification Mismatch</b>: The justification mentions releasing datasets with proper licenses and recommended usage. While important, this doesn't directly address safeguards against misuse of data or models, as the question specifies.</li><li><b>Missing Safeguards</b>: The paper focuses on creating a diverse and accessible meta-dataset but doesn't explicitly discuss potential misuse risks or implemented safeguards.</li><li><b>Scraped Datasets</b>: The paper mentions sourcing datasets from various internet searches. It needs clarification on whether scraping was involved and, if so, how the release of unsafe images was prevented.</li></ul><h3>Actionable Feedback:</h3><ol><li> <b>Revise Answer and Justification</b>: Consider changing the answer to "No" or "NA" depending on the actual situation.</li></ol>* If no scraping was performed and the authors believe there's no significant risk of misuse, "NA" can be used with a justification explaining the low-risk nature of the data.* If scraping was involved, or potential misuse risks exist, change the answer to "No" and provide a justification explaining why safeguards weren't implemented (e.g., due to the challenges involved).<ol><li> <b>Address Potential Misuse</b>:  Incorporate a section (even if brief) discussing potential misuse risks associated with the datasets and/or models. This demonstrates awareness of responsible AI practices.</li><li> <b>Clarify Scraping Methodology</b>:  If scraping was used to collect data, describe the methodology and the steps taken to ensure the exclusion of unsafe images.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-11">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-12">
+            <div class="user_input">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We are releasing our datasets with proper license, we are also mentioning the original licenses for the original datasets in Appendix B: License information of Meta-Album datasets</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> Error Occured while processing this question!</div>
+            <a class="move-to-top" href="#summary-question-12">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-13">
+            <div class="user_input">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have properly documented our new datasets using meta-data files and datasheets for datasets (provided in the appendices).</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Paper Checklist Answer</h3>The proposed answer and justification have some discrepancies with the paper content and guidelines:<ul><li><b>Missing Section Reference:</b> While the justification mentions documenting datasets using metadata and datasheets, it fails to specify the exact appendix section(s) where this information is located.</li><li><b>License and Consent Information:</b> The guidelines stress discussing license acquisition and consent from individuals whose assets are used. The paper and justification do not mention addressing these aspects.</li><li><b>Anonymization:</b>  The guidelines recommend anonymizing assets at submission.  However, the  justification doesn’t mention whether the provided  datasheets and metadata are anonymized.</li></ul><h3>Actionable Feedback</h3><ul><li><b>Specify Appendix Section(s):</b> Clearly state the appendix section(s) containing the metadata and datasheets for the new datasets. For instance, "See Appendix A for detailed datasheets and Appendix B for metadata files of each dataset."</li><li><b>Address Licensing and Consent:</b> Discuss how licenses for the new datasets were obtained and whether consent was acquired from individuals whose data is included. If consent was not applicable, explain why.</li><li><b>Clarify Anonymization:</b>  Explicitly state if the provided metadata and datasheets are anonymized for the submission. If not, explain the rationale or consider anonymizing the assets.</li></ul><h3>Score</h3></div>
+            <a class="move-to-top" href="#summary-question-13">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-14">
+            <div class="user_input">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have mentioned all the crowdsourcing details in the main paper</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Paper Checklist Answer</h3>The authors claim to have included "all the crowdsourcing details in the main paper". However, upon reviewing the provided paper excerpt, there is no mention of:<ul><li>  <b>Instructions given to participants:</b>  The paper does not detail the specific instructions or tasks given to participants during data collection or annotation. This information is crucial for understanding the context of the data and potential biases introduced by the instructions.</li><li>  <b>Screenshots (if applicable):</b> If any interfaces or platforms were used for interaction with human subjects, screenshots would be helpful to understand the environment and process.</li><li>  <b>Compensation details:</b> The paper does not mention whether participants were compensated for their contributions. According to the NeurIPS Code of Ethics, fair compensation is essential, especially considering data collection and annotation often involve significant effort.</li></ul><h3>Actionable Feedback</h3><ol><li>  <b>Include the full text of instructions given to participants</b> in the main paper or the supplementary material. This will allow readers to understand the exact tasks performed and evaluate potential biases.</li><li>  If applicable, <b>add screenshots of the interfaces or platforms</b> used for interaction with human subjects. This provides visual context and enhances transparency.</li><li>  <b>Clearly state whether participants were compensated</b> and if so, provide details about the compensation structure. Ensure compliance with the NeurIPS Code of Ethics regarding fair compensation.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-14">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-15">
+            <div class="user_input">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We have received approvals from IRB and have mentioned in the main paper</p>
+            </div>
+            
+            <div class="llm_review llm_review-red "><strong>LLM Review:</strong><br> <h3>Feedback on NeurIPS Checklist Answer</h3>The authors claim to have IRB approval and mention it in the paper. However, a thorough examination of the provided paper excerpt reveals no mention of IRB approval or any discussion of potential risks to study participants.Therefore, there is a discrepancy between the proposed answer and the actual paper content.<h3>Suggested Improvements:</h3><ol><li> <b>Clearly state IRB approval:</b> Add a statement explicitly mentioning that the research obtained IRB approval (or equivalent) and adheres to the NeurIPS Code of Ethics. This can be placed in the introduction or a dedicated ethics section.</li><li> <b>Address potential risks (if applicable):</b> If the research involves any potential risks to participants, even if minimal, describe them and explain how they were mitigated or disclosed.</li></ol></div>
+            <a class="move-to-top" href="#summary-question-15">↑ Back to summary</a>
+        </div>
+        
+        
+    </div>
+</div>
+
+</body>
+</html>

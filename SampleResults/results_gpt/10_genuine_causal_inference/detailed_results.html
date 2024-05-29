@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        margin: 20px auto;
+        padding: 0 20px;
+        position: relative;
+    }
+    .button {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        background-color: #f93361;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .button:hover {
+        background-color: #bc0530;
+    }
+    .content {
+        padding-top: 60px;
+        padding-bottom: 40px;
+        margin-bottom: 20px;
+    }
+    h1 {
+        margin-top: 0;
+        margin-bottom: 30px;
+    }
+    hr {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .review {
+        margin-bottom: 30px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .review h2 {
+        margin-top: 0;
+    }
+    .review p {
+        margin: 10px 0;
+    }
+    .question {
+        /* color: #0033ff; */
+        color: #000;
+    }
+    .answer {
+        /* color: #28a745; */
+        color: #000;
+    }
+    .justification {
+        /* color: #de750b; */
+        color: #000;
+    }
+    .user_input {
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #3a3a3a;
+    }
+    .llm_review {
+        color: #000;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .llm_review-red {
+        background-color: #eacfcf;
+        border: 1px solid #FF0000;
+    }
+    .llm_review-green {
+        background-color: #c6e9c6;
+        border: 1px solid #008000;
+
+    }
+    .llm_review-orange {
+        background-color: #ebdecf;
+        border: 1px solid #FF8C00;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .score-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .score-green {
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .score-red {
+        background-color: #eacfcf;
+        color: #000;
+        border: 1px solid #FF0000;
+    }
+    .score-orange {
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .score-blue {
+        background-color: #c8d8e6;
+        color: #1b455e;
+        border: 1px solid #1b455e;
+    }
+    .score-purple {
+        background-color: #cac4e7;
+        color: #271b5e;
+        border: 1px solid #271b5e;
+    }
+    .scroll-button {
+        padding: 5px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: 3px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .button-green{
+        background-color: #c6e9c6;
+        color: #000;
+        border: 1px solid #008000;
+    }
+    .button-orange{
+        background-color: #ebdecf;
+        color: #000;
+        border: 1px solid #FF8C00;
+    }
+    .button-orange:hover {
+        background-color: #623600;
+        color: #fff;
+        border: none;
+    }
+    .button-green:hover {
+        background-color: #015f01;
+        color: #fff;
+        border: none;
+    }
+    .move-to-top {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #212121;
+        border: 1px solid #212121;
+        border-radius: 3px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .move-to-top:hover {
+        background-color: #212121;
+        color: #fff;
+    }
+    .legend{
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content">
+        <h1>Counterfactual Evaluation ofPeer-Review Assignment Policies</h1>
+
+        <hr>
+
+        <!-- <h2>Scores</h2>
+        <table>
+            <tr>
+                <td><strong>Paper Quality Score:</strong></td>
+                <td><span class="score-label score-blue">0.6</span></td>
+            </tr>
+            <tr>
+                <td><strong>LLM Accuracy:</strong></td>
+                <td><span class="score-label score-purple">0.23</span></td>
+            </tr>
+        </table>
+
+        <hr> -->
+
+        <h2>Review Summary</h2>
+        <div>
+            <span class="legend score-label score-green">&nbsp; &nbsp;</span> The LLM found no significant concern
+            <br>
+            <span class="legend score-label score-orange">&nbsp; &nbsp;</span> The LLM proposes possible improvements
+        </div>
+        <table>
+            <tr>
+              <th>Question</th>
+              <th></th>
+            </tr>
+            
+            <tr id="summary-question-1">
+                <td>1. Claims</td>
+                <td><a href="#question-1" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-2">
+                <td>2. Limitations</td>
+                <td><a href="#question-2" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-3">
+                <td>3. Theoritical assumptions and proofs</td>
+                <td><a href="#question-3" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-4">
+                <td>4. Experiments reproducibility</td>
+                <td><a href="#question-4" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-5">
+                <td>5. Code and data accessibility</td>
+                <td><a href="#question-5" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-6">
+                <td>6. Experimental settings/details</td>
+                <td><a href="#question-6" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-7">
+                <td>7. Error bars</td>
+                <td><a href="#question-7" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-8">
+                <td>8. Compute resources</td>
+                <td><a href="#question-8" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-9">
+                <td>9. NeurIPS code of ethics</td>
+                <td><a href="#question-9" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-10">
+                <td>10. Impacts</td>
+                <td><a href="#question-10" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-11">
+                <td>11. Safeguards</td>
+                <td><a href="#question-11" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-12">
+                <td>12. Credits</td>
+                <td><a href="#question-12" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-13">
+                <td>13. Documentation</td>
+                <td><a href="#question-13" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-14">
+                <td>14. Human subjects</td>
+                <td><a href="#question-14" class="scroll-button button-green">Detailed Review</a></td>
+                </tr>
+            
+            <tr id="summary-question-15">
+                <td>15. Risks</td>
+                <td><a href="#question-15" class="scroll-button button-orange">Detailed Review</a></td>
+                </tr>
+            
+        </table>
+
+        <!-- Survey -->
+        <div>
+            <p>After reading through the LLM’s response below, <strong>please complete the following survey about your experience:</strong></p>
+            <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891=Q291bnRlcmZhY3R1YWwgRXZhbHVhdGlvbiBvZlBlZXItUmV2aWV3IEFzc2lnbm1lbnQgUG9saWNpZXM=" target="_blank">Click to submit post submission survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+
+        <hr>
+
+        <h2>Detailed Review</h2>
+        
+        
+        <div class="review" id="question-1">
+            <div class="user_input">
+                <p><strong class="question">Question # 1:</strong> Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> They do!</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The authors' proposed answer and justification to the checklist question regarding whether the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope partially adhere to the guidelines but lack detailed reference to specific sections that support their claims. The justification given, "They do!", is too brief and does not point to specific sections of the paper as required by the guidelines.<br>To improve the paper quality based on the guidelines provided:<br><ol><li> <b>Detail Specific Sections:</b> Revise the authors' justification to include specific section references where the main claims are discussed and substantiated. This will provide clarity and ease the validation process for claims made in the abstract and introduction.</li><br><li> <b>Clarity of Contributions:</b> Ensure that the contributions mentioned in the abstract and introduction are clearly articulated within the designated sections of the paper. This includes any theoretical contributions, empirical findings, or significant advances over prior work.</li><br><li> <b>Scope Description:</b> The scope mentioned in the abstract and introduction should be elaborated upon in the paper, particularly in sections where research methodologies and limitations are discussed. This will help readers understand the contexts in which the paper's contributions are valid.</li><br><li> <b>Consistency Check:</b> Review the paper to ensure that there is a consistent narrative from the abstract and introduction through to the conclusion, particularly focusing on the claims regarding peer-review assignment policies' evaluation, the introduction of novel methods for partial identification, and findings on the impact of review assignment randomness.</li><br><li> <b>Limitations and Assumptions:</b> Strengthen the sections covering assumptions and limitations related to the study, ensuring that any aspirational goals mentioned in the introduction are clearly delineated from achieved results, per the guidelines.</li><br><li> <b>Address NA Connotation:</b> Modify the answer to explicitly state the sections if the answer is technically "Yes" but was overly simplified by stating "They do!" This might mislead into interpreting it as not thoroughly checked against paper content.</li><br></ol></div>
+            <a class="move-to-top" href="#summary-question-1">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-2">
+            <div class="user_input">
+                <p><strong class="question">Question # 2:</strong> Does the paper discuss the limitations of the work performed by the authors?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Yes in Section 6</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> The provided Answer is "Yes" and the Justification mentions that the limitations of the work are discussed in Section 6 of the paper. The paper's abstract and sections give a detailed account of the methodologies, experiments, and findings regarding the evaluation of counterfactual peer-review assignment policies. The paper outlines the approach, data used, results found, and the methodologies applied for evaluating peer-review assignments in a detailed and structured manner. However, without direct access to Section 6 as mentioned in the justification, an exact assessment of the thoroughness and depth of the limitations discussed cannot be made here.<br>Feedback to improve paper quality:<ol><li> Ensure Transparency: Clearly outline any assumptions made during the study and the potential impact on the findings if these assumptions were violated. Including a discussion on the limits of applicability of your methodology can help readers understand where your findings may or may not apply.</li><li> Detail Limitations: Discuss not only the limitations related to the methodology and data but also consider broader implications such as scalability, generalizability across domains, and potential biases in the algorithm or data.</li><li> Specific Examples: Provide specific examples or scenarios where the proposed methods may not perform as expected. This will help in understanding the boundaries within which your findings hold true.</li><li> Countermeasures: For each limitation mentioned, suggest potential countermeasures, further research, or improvements that could help mitigate these limitations in future work.</li><li> Broader Impact: Reflect on the broader impact of these limitations not just on the validity of the research but also on the practical application of the findings within peer-review systems.</li><li> Highlight Uncertainties: Clearly articulate any uncertainties in your findings or methodologies used. Discuss how these uncertainties could potentially affect the interpretation of results and the subsequent implications.</li><li> Encourage Future Work: Use the limitations section as a platform to encourage future work, proposing areas where further research could provide additional insights or overcome current limitations.</li><br></ol>Ensuring that the limitations are thoroughly discussed not only aids in strengthening the paper's integrity but also provides a candid reflection of the research work, fostering transparency and encouraging subsequent research endeavors in the area. The inclusion of a well-articulated limitations section will aid in meeting the NeurIPS guidelines for clarity and completeness in reporting research, thereby enhancing the overall quality and credibility of the paper.<br><br></div>
+            <a class="move-to-top" href="#summary-question-2">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-3">
+            <div class="user_input">
+                <p><strong class="question">Question # 3:</strong> For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> There is no theory in the paper.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <b>Feedback for Improvement:</b><br><ol><li> <b>Clarify Theoretical Assumptions for Empirical Methods:</b></li></ol>- The document describes novel methods assuming monotonicity and Lipschitz smoothness for counterfactual evaluation. Ensure the paper explicitly states these assumptions where the methodology is introduced. Reference specific sections for clarity.<br><ol><li> <b>Proofs or Solid Justifications for Methodological Claims:</b></li></ol>- Provide detailed proofs or robust justifications for the claims made about the effectiveness of the proposed methods for counterfactual evaluation. If these proofs are too lengthy for the main document, include them in the supplementary material and reference this in the relevant sections.<br><ol><li> <b>Discuss Limitations and Assumptions:</b></li></ol>- Expand the discussion on limitations to address potential biases introduced by model imputation and assumptions, such as monotonicity and Lipschitz smoothness. Clarify the impact these assumptions have on the conclusions drawn from the data.<br><ol><li> <b>Enhance Reviewer Matching System Description:</b></li></ol>- The system for matching papers to reviewers based on bids, text similarity, and reviewer-paper covariates is central to the paper. Provide a more detailed explanation of how these components are weighted and combined. Offer rationale for the specific choice of weights and how they influence the matching quality.<br><ol><li> <b>Statistical Validity of Analysis:</b></li></ol>- Strengthen the statistical analysis section by discussing the statistical power of your analyses, especially in the context of detecting significant differences in review quality across different policy adjustments. This will improve readers' confidence in the robustness of your findings.<br><ol><li> <b>Comparison with Existing Methods:</b></li></ol>- Offer a direct comparison with existing off-policy evaluation methods to highlight the novel contributions of your methodology. This comparison should include both theoretical differences and empirical performance on real-world or synthetic datasets.<br><ol><li> <b>Replicability and Open Source Contribution:</b></li></ol>- Ensure all code used for analyses is well-documented and openly available, and that datasets used are accessible or sufficiently described for replicability. This fosters transparency and allows the community to build upon your work.<br><ol><li> <b>Broader Impacts and Ethical Considerations:</b></li></ol>- Broaden the discussion on the ethical implications of your proposed matching system, including potential for bias and fairness concerns. Provide recommendations for ethically deploying such systems in academic peer review processes.<br><ol><li> <b>Interdisciplinary Applications:</b></li></ol>- Explore the applicability of your off-policy evaluation methods beyond peer review systems, such as in recommendation systems or online advertising, to demonstrate the versatility of your contributions.<br><ol><li> <b>Future Work and Improvements:</b></li></ol>- Clearly outline potential improvements and future directions for research, particularly focusing on overcoming the identified limitations and exploring alternative assumptions for counterfactual evaluation.<br></div>
+            <a class="move-to-top" href="#summary-question-3">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-4">
+            <div class="user_input">
+                <p><strong class="question">Question # 4:</strong> Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Yes in Section 5</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> Itemized, actionable feedback to improve paper quality:<br><ol><li> <b>Clarity on Estimation Methods</b>:</li></ol>- Elaborate on how the estimator \(b\mu_B(Y_{Impute})\) is computed in practical terms, including any software or computational tools used.- Provide additional information on the Monte Carlo methods used for estimating covariance terms. This could include details on the simulation parameters, the distribution of outcomes considered, and how the estimated covariances are incorporated into the variance computation of the estimator.<br><ol><li> <b>Robustness Checks for Assumptions</b>:</li></ol>- The paper should include a section that discusses the robustness of the findings to the key assumptions made (e.g., monotonicity and Lipschitz smoothness). This could involve sensitivity analyses showing how the main results change with different values of the Lipschitz constant \(L\) or under different assumptions about the distribution of unobserved outcomes.- Clearly address any limitations arising from the assumptions made for missing data imputation. Discuss alternative imputation strategies and how they might affect the results.<br><ol><li> <b>Exploration of Alternative Models</b>:</li></ol>- Expand the model comparison section to include discussion on the choice of models for imputation (for both the expertise and confidence outcomes). Explain why certain models were preferred over others based on their performance metrics, with a more detailed exploration of the trade-offs involved.- Considering the performance of different models, particularly in the AAAI dataset where collaborative filtering models performed worse, discuss the potential reasons behind these findings and explore whether incorporating additional covariates or using more complex models could improve imputation accuracy.<br><ol><li> <b>Transparency on Data Preprocessing</b>:</li></ol>- Provide a more detailed description of the preprocessing steps for covariates, especially how missing values were handled in the AAAI similarity scores computation. Discuss any potential biases this might introduce and how they were mitigated.<br><ol><li> <b>Tie-Breaking Mechanism Specification</b>:</li></ol>- The methodology for setting an arbitrary tie-breaking behavior requires clarification. Specifically, describe how the perturbations were chosen in a way that ensures the solution replicates the on-policy assignment probabilities as closely as possible. Additionally, provide justifications for the choice of these perturbation values and discuss the impact of different tie-breaking methods on the overall results.<br><ol><li> <b>Detailed Discussion on Implications</b>:</li></ol>- The broader implications section could be expanded to consider the implications of the findings for the design of peer-review assignment policies beyond the specific conferences analyzed. Discuss how the methodology could be applied to other peer review settings and what considerations might differ.- Include a discussion on ethical considerations, especially regarding fairness in paper assignment and reviewer workload distribution.<br><ol><li> <b>Open Questions and Future Work</b>:</li></ol>- Conclude with a section that outlines open questions that were not addressed in the current study and suggest directions for future research. This could include the exploration of more sophisticated models for estimating review quality, the application of the proposed methodology to other domains of peer-reviewed output, and the development of tools to automate these analyses for conference organizers.<br><br></div>
+            <a class="move-to-top" href="#summary-question-4">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-5">
+            <div class="user_input">
+                <p><strong class="question">Question # 5:</strong> Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> github link is provided</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The proposed author's answer cites the provision of a GitHub link as sufficient evidence for affirming that the paper provides open access to the data and code necessary for reproducing the main experimental results. However, this claim lacks specificity regarding where within the paper's sections this supporting material can be found, as stipulated by the guidelines for answering the checklist question. To conform fully to the guidelines' requirements, the authors need to point out the exact section(s) of the paper where readers are directed to the supplemental material, including the GitHub link, and potentially where instructions for replicating the experiments are detailed.<br><h3>Feedback for Improvement:</h3><br><ol><li> <b>Explicitly Mention Supplemental Material in the Paper:</b> Ensure there is a distinct section or mention within the paper where the GitHub link is provided. This should include detailed guidance on accessing both the data and the code. The reference should be precise, mentioning the section number or title within the paper.</li><br><li> <b>Provide Detailed Reproduction Instructions:</b> Supplement the GitHub repository with a comprehensive `README.md` file or equivalent documentation. This should include step-by-step instructions on how to set up the environment, install any necessary dependencies, execute the code, and interpret the results. Mention the existence and location of this documentation within the paper.</li><br><li> <b>Clarify Data Access and Licensing:</b> If data used in the experiments are included or accessible via the provided GitHub link, clarify within the paper how users can access and use the data. This includes mentioning any licensing information or restrictions related to the data.</li><br><li> <b>Detail the Experimental Setup:</b> In the paper's method or supplemental material section, clearly outline the experimental setup, including hardware and software configurations. This level of detail ensures that attempts to reproduce the experiments start from a similar, if not identical, setup.</li><br><li> <b>Enumerate Experimental Conditions and Variations:</b> Clearly describe in the paper or its supplemental materials any experimental conditions, parameters, and variations that are critical for reproducing the experiments. This should cover any configurations or options within the code that can alter the results.</li><br><li> <b>Anonymize for Submission:</b> As the requirement suggests, ensure that any links to data, code, or supplemental materials are anonymized to conform with the double-blind review process. Mention in the paper that this anonymization will be lifted upon acceptance and publication, offering direct links at that later stage.</li><br></ol>This feedback, by addressing the completeness and accessibility of the supplemental materials and instructions for reproducing the experiments, aims to strengthen the paper's compliance with NeurIPS guidelines on open access and replication of results.<br><br></div>
+            <a class="move-to-top" href="#summary-question-5">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-6">
+            <div class="user_input">
+                <p><strong class="question">Question # 6:</strong> Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> There are no training or testing, that is, there is no experiment on given models. There are no data splits etc. It simply employs existing algorithms.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> Based on the provided detailed case scenario and guidelines, the proposed author's answer appears to misalign with the content of the paper. The paper clearly involves a comprehensive analysis and experimentation regarding peer review assignments, leveraging existing algorithms in novel ways for evaluation purposes. Thus, stating that there are "no training or testing" seems to disregard the analytical and evaluative aspects of the work, which involve off-policy evaluation techniques to assess peer-review assignment policies under varying conditions.<br><b>Actionable Feedback:</b><br><ol><li> <b>Clarify Experimentation Details</b>: Even though the paper does not involve conventional machine learning model training, it engages in a form of testing existing algorithms under novel conditions. The authors should clearly state this aspect, emphasizing the evaluation of counterfactual scenarios using off-policy evaluation methods. Specifically, clarification around the use of existing peer-review assignment algorithms and how these are "tested" through simulation or counterfactual analysis should be made.</li><br><li> <b>Detail on Policy Evaluation</b>: The methodological specifics around how randomized assignments are utilized to explore the impact on review quality should be outlined as part of the "testing" details. Include a section or paragraph that discusses how these assessments are made, including any simulation parameters, the choice of off-policy evaluation techniques, and the rationale behind them.</li><br><li> <b>Explicit Mention of Data Utilization</b>: Even if direct training is not performed, the paper leverages peer-review data for analysis. Clarification on how this data is used to model and evaluate assignment policies should be outlined. This includes detailing the role of data in establishing baselines, assessing the effectiveness of randomization, and exploring the influence of different weighting on text similarity and reviewer bids.</li><br><li> <b>Supplemental Material Reference</b>: Since the paper appears to involve complex methodologies and assumptions (e.g., monotonicity, Lipschitz smoothness), reference any supplemental materials or Appendices that provide the requisite background or justification for these choices. This is crucial for readers to understand the basis of the policy evaluations and the validity of the results presented.</li><br><li> <b>Justification for NA Answer</b>: If retaining an "NA" answer about training and test details due to the specific nature of the study, provide a more nuanced explanation. This should elaborate on why conventional notions of "training" and "testing" do not directly apply, while also acknowledging the analytical rigor and evaluative frameworks employed within the study.</li><br></ol>By addressing these areas, the paper would more accurately reflect its content and methodologies, aligning the authors' responses with the actual work done. This enhances clarity, allowing readers and reviewers to better appreciate the novel contributions and the analytical depth of the study, even in the absence of traditional experimental setups.<br></div>
+            <a class="move-to-top" href="#summary-question-6">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-7">
+            <div class="user_input">
+                <p><strong class="question">Question # 7:</strong> Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> All figures have error bars and the types of error bars are specified alongside.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> The proposed answer and justification appear to be aligned with the actual content of the paper. The paper elaborates on the use of statistical significance and error bars which are adequately reported, supporting the main claims around peer review assignment policies and their counterfactual evaluation. Specifically, the methods for partial identification, leveraging monotonicity, and Lipschitz smoothness assumptions for statistical analysis are mentioned, and these serve as a basis for reporting statistical significance in their experimental results.<br>To improve the paper quality based on the provided "Guidelines" for reporting statistical significance:<br><ol><li> <b>Section Referencing</b>: Ensure that the section(s) where statistical analyses, including error bars and statistical significance tests, are clearly referenced in the Author's Proposed Justification. This helps readers navigate directly to the relevant methodologies and results supporting the statistical claims.</li></ol><ol><li> <b>Explanation of Error Bars</b>: Though the paper mentions the use of error bars, a more detailed explanation of how these error bars were computed (e.g., using standard deviation, standard error, confidence intervals, etc.) would enhance clarity. Specify the exact method used for computing the error bars directly in the section where they are first introduced.</li><br><li> <b>Address Factors of Variability</b>: Explicitly address the factors of variability captured by the error bars (e.g., due to initialization, model selection, data splitting, etc.). This explanation can be included in the methodology section where the statistical approaches are described.</li><br><li> <b>Clarification on Assumptions</b>: Given that the methods rely on assumptions about monotonicity and Lipschitz smoothness, it’s crucial to discuss the assumptions made about the distributions underlying the experimental data. This is particularly important if the assumptions significantly impact the interpretation of the error bars and statistical significance.</li><br><li> <b>Reporting Confidence</b>: If the error bars correspond to a confidence interval, specify the confidence level (e.g., 95%) and justify the choice. This can be part of the statistical analysis section.</li><br><li> <b>Discussion on Symmetry of Error Bars</b>: For asymmetric distributions, ensure that the interpretation of error bars in figures and tables does not misleadingly imply symmetry. If necessary, adjust the presentation of error bars to reflect the actual distribution shapes.</li><br><li> <b>Improved Visual Representation</b>: In figures where error bars are presented, ensure that they are clearly visible and distinguishable for each data point. This may involve adjusting figure aesthetics or splitting dense plots for clarity.</li><br><li> <b>Statistical Tests and Significance Levels</b>: If statistical tests are used to determine the significance of the results, explicitly state the tests used and the rationale for their selection. Additionally, report the significance levels (p-values) alongside the results to provide a clear basis for the claims of statistical significance.</li><br></ol>Incorporating these recommendations will strengthen the reliability and clarity of the statistical analysis reported in the paper, thereby enhancing its contribution to the field.<br><br></div>
+            <a class="move-to-top" href="#summary-question-7">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-8">
+            <div class="user_input">
+                <p><strong class="question">Question # 8:</strong> For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> The paper's entire focus is on an observational study of the data, and not the computational aspects. The paper makes no claims of computational efficiency.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <h3>Feedback</h3><br><ol><li> <b>Clarity on Experimental Setup</b>: The abstract and introduction provide a detailed context for the work, highlighting the motivation behind exploring counterfactual evaluation in peer-review assignment policies. However, the answer to the checklist question regarding the disclosure of computational resources leans on an assumption that the observational study negates the necessity for such disclosures. Given the computational nature of the methods applied (off-policy evaluations, linear programming for assignment policies, etc.), this assumption seems misaligned.</li><br></ol><b>Actionable Feedback:</b>- Clearly specify in Section 3 or the methodology section that, although the primary focus is on observational data analysis, computational experiments involving off-policy evaluation, linear programming, and simulations were conducted to validate the proposed methods. Include details on the computational resources involved in these simulations to adhere fully to the guidelines for transparency and reproducibility.<br><ol><li> <b>Reporting of Computational Resources</b>: The justification provided suggests that computational details are not relevant due to the study's observational nature. This overlooks the significant computational efforts required for simulations and analyses in your proposed methods (e.g., solving linear programs, running Monte Carlo simulations for covariance estimates).</li><br></ol><b>Actionable Feedback:</b>- Revise the section discussing the methods (Section 3, Section A in Supplementary, and wherever applicable) to include details about the computational resources used, such as the type of CPUs/GPUs, memory requirements, execution time, and any use of specific software or libraries.<br><ol><li> <b>Clarification on Data Analysis and Simulation</b>: The paper includes extensive data analysis and simulations to evaluate counterfactual scenarios under different peer-review assignment policies. These analyses likely require non-trivial computational resources.</li><br></ol><b>Actionable Feedback:</b>- Acknowledge the computational aspect of the simulations involved in evaluating counterfactual scenarios in the methodology section. Provide specifics on the scale of simulations, including the number of Monte Carlo iterations, the size of data used for training predictive models (if any), and the type of optimization solvers for linear programming.<br><ol><li> <b>Specification of Software and Tools Used</b>: While the computational resources necessary for observational studies might be minimal, the tools and software used for data analysis, linear programming solutions, and simulations should be mentioned explicitly.</li><br></ol><b>Actionable Feedback:</b>- Add a subsection under methodologies or as part of the supplementary material to list the software tools, programming languages, and libraries (e.g., Python, R, specific LP solvers) used in the study. Include version numbers where appropriate to enhance reproducibility.<br><ol><li> <b>Transparency in Methodological Choices</b>: The paper demonstrates methodological rigor in its approach to counterfactual evaluation. However, the lack of explicit mention of computational effort might unintentionally obscure the underlying complexity and potential barriers to replication.</li><br></ol><b>Actionable Feedback:</b>- Discuss the selection of parameters for the linear programming models and any computational optimizations used to achieve results within reasonable computational times. This discussion can highlight insights into the complexity of the problem and inform readers about potential computational challenges.<br><h3>Conclusion</h3><br>The paper presents a significant contribution to understanding and improving peer-review assignment policies through observational data analysis and simulations. However, to align with the conference guidelines and enhance the paper's impact, transparency regarding the computational aspects of the research is essential. Implementing the above feedback will not only adhere to the submission guidelines but also bolster the paper's utility for readers aiming to replicate or extend this valuable work.<br></div>
+            <a class="move-to-top" href="#summary-question-8">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-9">
+            <div class="user_input">
+                <p><strong class="question">Question # 9:</strong> Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics https://neurips.cc/public/EthicsGuidelines?</p>
+                <p><strong class="answer">Author's answer:</strong> Not Found</p>
+                <p><strong class="justification">Author's justification:</strong> Not Found</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> After reviewing the provided manuscript excerpts, proposed author's answer, and justification regarding the NeurIPS Code of Ethics, here is the feedback:<br><ol><li> <b>Clarify Code of Ethics Consideration</b>: The manuscript did not explicitly mention the NeurIPS Code of Ethics or how the research adheres to it. To improve adherence to submission guidelines, the authors should include a section or statement explicitly addressing how the research complies with the NeurIPS Code of Ethics. This could be a separate section or included within the discussion or conclusion sections of the paper.</li><br><li> <b>Address Potential Ethical Implications</b>: Given the subject of evaluating peer-review assignment policies, there could be direct implications on the fairness, bias, and transparency of the peer review process. The authors should discuss any potential ethical implications their findings or proposed methods might have on these aspects. This discussion should specifically consider how their work might impact different stakeholders (e.g., authors, reviewers, conference organizers) and any measures taken to mitigate potential negative impacts.</li><br><li> <b>Dataset Ethics</b>: For studies using datasets (in this case, peer-review data from two venues), it is crucial to explicitly state the ethical considerations for using this data. This includes how the data was collected, any consent obtained from individuals whose data was used (if applicable), and measures taken to anonymize the data and protect individual privacy. If this is not applicable because the data was already anonymized and publicly available, that should be explicitly mentioned.</li><br><li> <b>Open Source Code</b>: While the manuscript mentions that the code is available, ensuring that it is released under an appropriate open-source license is important for ethical open science practices. The authors should clarify the licensing under which their code and any datasets are released, to ensure it aligns with open-source and ethical guidelines.</li><br><li> <b>Reproducibility and Transparency</b>: Reproducibility is a key aspect of ethical research. The paper mentions that the code is available, but it should also ensure that all necessary details for reproducing the results are provided, including any dependencies, parameter settings, or specific computational resources required. This promotes transparency and allows other researchers to validate and build upon the work ethically.</li><br></ol>Itemized actionable feedback:<br><ul><li>Add a dedicated section or statement on adherence to the NeurIPS Code of Ethics, detailing how the research aligns with these guidelines.</li><li>Include a thorough discussion on the potential ethical implications of the research on the peer review process, addressing fairness, bias, and transparency.</li><li>Clarify the ethical considerations around dataset use, data collection, consent, and privacy measures.</li><li>Ensure the open-source code is released under a clear license, and mention this license within the paper.</li><li>Provide comprehensive details to ensure reproducibility and transparency in the research methodology and computational experiments.</li><br><br></ul></div>
+            <a class="move-to-top" href="#summary-question-9">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-10">
+            <div class="user_input">
+                <p><strong class="question">Question # 10:</strong> Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Section 6 and Appendix K</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> Itemized, actionable feedback for the authors:<br><ol><li> Clarify Assumptions: Ensure that the assumptions underlying the evaluation methodology, particularly those regarding monotonicity and Lipschitz smoothness, are clearly articulated and justified with respect to the application area (peer-review matching). It is critical to discuss any limitations these assumptions may introduce and how they might affect the interpretation of the results. Additionally, include a sensitivity analysis to show how the results change under different assumptions.</li><br><li> Missing Data Handling: More thoroughly detail the strategies for handling missing data, especially the imputation methods used for missing reviews and absent reviewers. Include justification for the chosen methods and discuss their potential impact on the study's results. If possible, compare the employed methods with alternative approaches to substantiate the robustness of your findings.</li><br><li> Expanding Model Validation: The section on model implementation and validation can be enhanced by including additional metrics beyond Mean Absolute Error (MAE), such as the Root Mean Square Error (RMSE) or area under the ROC curve for classification tasks. This broader evaluation could help validate the performance and appropriateness of the models used for imputation and analysis.</li><br><li> Broader Impact and Ethical Considerations: The discussion on the broader impact should be expanded to include a consideration of how the proposed evaluation framework and any subsequent changes to the peer-review assignment policies might affect different groups within the academic community differently. Discuss potential biases that could arise from the implementation of your findings and propose strategies for mitigating these effects.</li><br><li> Future Work: While the paper suggests future directions, it would be beneficial to offer a more detailed roadmap for addressing the identified gaps, such as examining different heuristic approaches for reviewer-paper matching or exploring alternative assumptions for partial identification. Include a discussion on the feasibility, potential challenges, and expected milestones for these future research endeavors.</li><br><li> Reproducibility and Open Research: If not already done, ensure that all data and code used in the analysis are publicly available, abiding by privacy and ethical guidelines. This includes scripts for preprocessing, analysis, model training, and evaluation, as well as any utilities for generating synthetic datasets for method validation. Clearly document the repository structure and include a README file with instructions for replicating the study's findings.</li><br><li> Accessibility and Inclusivity: Make sure the paper uses language and presentation styles accessible to a broad audience. This includes avoiding jargon when possible, clearly defining terms, and providing sufficient background information for readers unfamiliar with the specific domain or methodology.</li><br><br></ol></div>
+            <a class="move-to-top" href="#summary-question-10">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-11">
+            <div class="user_input">
+                <p><strong class="question">Question # 11:</strong> Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> No data or models are released. This is an analysis paper.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> Based on the information provided in the initial query and the extensive details furnished throughout the various sections, the key discrepancy between the proposed authors' answer ("NA") to the checklist question on safeguards for responsible release and the actual content of the paper lies in the unacknowledged potential for model and data misuse.<br>While the authors claim that the paper does not release any data or models and categorizes it as an analysis paper, therefore marking the question as "Not Applicable," a more nuanced consideration is warranted based on the guidelines provided. The analysis and methodologies described, specifically the off-policy evaluation techniques and the discussions surrounding reviewer-paper matching algorithms, present potential dual-use concerns, especially in terms of fairness and bias in automated decision-making systems like peer review assignment.<br><b>Itemized, actionable feedback to improve the quality of the paper includes:</b><br><ol><li> <b>Clarification on not releasing data or models:</b> While direct release might not occur, the paper should discuss the implications of implementing the proposed algorithms or systems in practical settings. Any system that has the potential to influence the peer review process entails ethical considerations, especially those related to bias, fairness, and transparency.</li><br><li> <b>Safeguards and ethical considerations discussion:</b> The authors should include a section that discusses the potential for misuse of their proposed methods in evaluating and designing peer review assignment policies. This should cover not only direct negative uses but also unintended consequences, such as systemic biases being reinforced by algorithmic assignments.</li><br><li> <b>Detailed guidelines for implementation:</b> Even if the paper remains focused on analysis, presenting guidelines for ethical implementation could mitigate possible misuses. This includes recommendations on transparency regarding the algorithm's decision-making process, avenues for appeal or feedback by users (reviewers and authors), and ensuring that any deployment of such systems is accompanied by rigorous oversight.</li><br><li> <b>Broader impacts statement expansion:</b> The paper already discusses broader impacts, which can be expanded to specifically address dual-use concerns and elaborately propose safeguards or responsible use principles that future implementers of the technology should follow.</li><br><li> <b>Engagement with related literature:</b> Augmenting the discussion by engaging with existing literature on ethics, fairness, and transparency in AI, particularly those focusing on academic workflows, can provide context to the study's potential dual use. It can also serve as a foundation for proposing safeguards.</li><br></ol>Conclusively, the authors should reconsider the "NA" answer to the checklist question about safeguards for responsible released data or models, as the potential for misuse extends beyond the direct release of datasets or software artifacts. Discussing the ethical implications, even hypothetically, would strengthen the paper.<br></div>
+            <a class="move-to-top" href="#summary-question-11">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-12">
+            <div class="user_input">
+                <p><strong class="question">Question # 12:</strong> Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> It uses some existing data and code, and provides citations to each of them. However, those datasets and code themselves don't have any licence terms so we cannot specify them here.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> The proposed author's answer states that they provide citations to the existing data and code used but mention that these datasets and codes do not have any license terms specified, which is why they cannot mention them. However, this justification may not fully align with the guidelines which clearly state that the name of the license should be included for each asset, if available, and efforts should be made to determine or reach out to creators if licensing information is not readily available.<br><b>Actionable Feedback:</b><br><ol><li> <b>Clarify Licensing Information:</b> The authors should make explicit efforts to find licensing information for the datasets and code they have used. This includes reaching out to the creators if the license is not explicitly mentioned in the repositories or associated documentation. Any correspondence or attempt to determine the license should be documented, even if unsuccessful.</li></ol><ol><li> <b>Document Efforts in the Paper:</b> If after genuine efforts, the licensing information cannot be determined, this should be clearly documented in the paper, including the steps taken to try to locate the licensing information. This will demonstrate due diligence in attempting to respect intellectual property rights.</li><br><li> <b>Use Available Resources:</b> Utilize resources such as paperswithcode.com/datasets to look up licenses for the datasets. If similar efforts exist for code, they should also be leveraged.</li><br><li> <b>Mention in Paper:</b> Even if licenses were not found, the paper should specify this explicitly, i.e., “Attempts to locate the licensing information of X dataset and Y codebase were made, including reaching out to the creators, but were unsuccessful. Thus, licensing information cannot be provided.”</li><br><li> <b>Review Legal Implications:</b> Carefully consider if using and citing datasets and code without clear licensing could have legal implications, potentially consulting with legal advisors. If any component cannot be legally used due to unknown licensing, consider removing it from the research or replacing it with an alternative where licensing is clear.</li><br><li> <b>Archive Correspondence:</b> In cases where the authors attempt to contact dataset or code authors for licensing clarification, keep archived copies of the correspondence as part of the research record. It may provide necessary documentation of the good-faith effort to identify and respect licensing requirements.</li><br></ol></div>
+            <a class="move-to-top" href="#summary-question-12">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-13">
+            <div class="user_input">
+                <p><strong class="question">Question # 13:</strong> Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> Code on github has documentation</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> <b>Feedback on the Authors' Proposed Answer and Justification</b><br>Given the comprehensive nature of the paper and the requirements outlined in the NeurIPS checklist question related to documentation of new assets, there are several key areas where the authors’ justification can be significantly improved to align with the content and data provided within the paper:<br><ol><li> <b>Specific Section Reference Missing</b>: The authors’ justification is vague, stating only "Code on github has documentation" without directing readers to a specific section in the paper where these assets and their documentation are mentioned. For a question concerning documentation and accompanying assets, it's crucial to provide a clear reference or description within the paper itself that acknowledges where and how these assets can be accessed and used. This should include a detailed explanation in the paper body about the GitHub repository, its contents, how to navigate the documentation, and any dependencies or prerequisites required for using the code.</li><br><li> <b>Dataset License, Training, and Limitations Discussion Absent</b>: The guidelines emphasize addressing license, training, and limitations of datasets or models released with the paper. The paper abstract mentions leveraging peer-review data from two computer science venues, making it necessary to discuss the consent obtained for using this data, the dataset's licensing, any limitations inherent to the data, and how these factors influence the study's reproducibility and ethical considerations.</li><br><li> <b>Anonymization Details Not Provided</b>: Considering that for submission, the assets should be anonymized if applicable, the paper should provide explicit details on the steps taken to ensure anonymization or justify why such a measure is not applicable or necessary for the assets in question. This is important to uphold the integrity and ethical considerations of the research, especially when dealing with peer-review data which might contain personal information or biases.</li><br></ol>Based on these observations, several improvements are required:<br><ul><li><b>Clarify Asset Documentation Location</b>: Amend the paper to include a direct reference to the section or appendix that discusses the GitHub code repository, its structure, documentation, and any relevant information on how to use the released assets.</li><br><li><b>Discuss Dataset Details</b>: Add a section that explicitly addresses the dataset's provenance, consent for use, licensing information, any data limitations, and their potential impact on the study's results and future research.</li><br><li><b>Detail Anonymization Process</b>: If personal data from peer reviews are involved, the paper must detail the data anonymization process or state clearly why anonymization is not applicable or required. This should include measures taken to eliminate or mitigate any potential biases or ethical concerns raised by the data utilized in the research.</li><br><li><b>Enhance Repository Documentation</b>: Ensure that the GitHub repository not only contains code but also thorough documentation on running the code, expected outcomes, and troubleshooting. This should include a README file with detailed instructions, requirements.txt for Python dependencies (if applicable), and any additional guidance that would help in replicating the study's results.</li><br></ul>By addressing these points, the paper will meet the NeurIPS submission checklist requirements more thoroughly, making it easier for readers and reviewers to understand the availability, usability, and limitations of the introduced assets.<br></div>
+            <a class="move-to-top" href="#summary-question-13">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-14">
+            <div class="user_input">
+                <p><strong class="question">Question # 14:</strong> For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?</p>
+                <p><strong class="answer">Author's answer:</strong> NA</p>
+                <p><strong class="justification">Author's justification:</strong> There is no crowdsourcing study.</p>
+            </div>
+            
+            <div class="llm_review llm_review-green "><strong>LLM Review:</strong><br> Upon careful examination of the provided "Paper" and the "Question" from the checklist about crowdsourcing experiments and research with human subjects, it's apparent that the primary methodological approach in this paper does not involve human subjects in a manner that would necessitate the provision of participant instructions, screenshots, or compensation details. The research revolves around the evaluation of peer-review assignment policies through analytical and computational means, particularly focusing on leveraging data from computer science conferences without directly involving human subjects in a traditional crowdsourced or experimental format. Hence, the authors’ response of "NA" under the guidelines provided is consistent with the content and methodology described in the paper.<br>However, for the sake of thoroughness and considering the broad scope of engagements with human data, it’s crucial to ensure that any interpreted or indirectly involved human data - such as reviewer assignments, bids, and feedback - adheres to ethical considerations, including consent for use of such data in research, even though direct interactions with human subjects might not be present. This aspect remains a broader consideration outside the immediate scope of the checklist question but is essential for maintaining ethical research standards.<br>Given these observations:<br><ol><li> <b>Clarification on Data Usage</b>: It's advisable for the authors to explicitly mention any ethical considerations or approvals related to the secondary use of data (reviews and assignments) from the conferences mentioned. In case the data was collected with consent for such research purposes, a brief mention of this would strengthen the ethical positioning of the paper.</li><br><li> <b>Transparency on Data Handling and Privacy</b>: While not directly related to the checklist question, affirming that the identities of reviewers and authors were anonymized or handled in a manner that respects privacy can be an important aspect of research integrity, especially when using data from peer-review processes.</li><br><li> <b>Inclusion of Data Source Acknowledgment</b>: If not already present, including an acknowledgment or a statement regarding the source of the data (in this case, the TPDP'21 workshop and the AAAI'22 conference) along with any permissions obtained for its use would be considered good practice.</li><br></ol>Considering the diligence in aligning the methodology and paper content with the ethical guidelines and the checklist question's scope:<br><br></div>
+            <a class="move-to-top" href="#summary-question-14">↑ Back to summary</a>
+        </div>
+        
+        <div class="review" id="question-15">
+            <div class="user_input">
+                <p><strong class="question">Question # 15:</strong> Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?</p>
+                <p><strong class="answer">Author's answer:</strong> Yes</p>
+                <p><strong class="justification">Author's justification:</strong> We did obtain an IRB approval. We mention this in the section on experiments.</p>
+            </div>
+            
+            <div class="llm_review llm_review-orange "><strong>LLM Review:</strong><br> Based on the detailed examination of the provided comprehensive supplement, including various methodologies, experimental analyses, and discussions on broader impacts, here are the actionable itemized feedback points aimed to improve the paper quality:<br><ol><li> <b>Clarification of Assumptions for Monotonicity and Lipschitz Conditions</b>:</li></ol>- The paper should clarify the empirical basis for choosing the specific values of L in the Lipschitz smoothness assumption, given the CCDF plots provided in the supplementary material. Providing a more detailed rationale on the selection criteria of L values based on observed outcomes will enhance the robustness of the analysis.- A clearer explanation regarding how the monotonicity assumption was verified against the observed data, along with concrete examples or case studies where this assumption holds or fails within the dataset, would be insightful.<br><ol><li> <b>Enhanced Discussion on Impact of Tie-Breaking Behavior</b>:</li></ol>- Experimentation results and implications of the arbitrary tie-breaking behavior (as discussed in the supplemental material) on the overall analysis outcomes, especially in terms of assignment policy optimization, should be detailed in the main document. This addition can significantly contribute to understanding the robustness of the proposed methods against variations in tie-breaking mechanisms.<br><ol><li> <b>Broader Impact and Ethical Considerations Discussion</b>:</li></ol>- The paper briefly mentions the potential negative impacts of the methodology. This section should be expanded to include a more detailed discussion on how biases in self-reported expertise and confidence scores could affect the off-policy evaluations. Suggestions or strategies to mitigate these biases would be valuable to readers and future research in this direction.- The discussion should also encompass considerations for diversity and inclusion, especially how the recommended adjustments in the review assignment algorithms might impact the representation and participation of underrepresented groups within the peer-review process.<br><ol><li> <b>Additional Validation for Model Imputation</b>:</li></ol>- Incorporating cross-validation results or other forms of model validation to illustrate the predictive performance and reliability of the models used for outcome imputation. A comparative analysis between different model performances, including potential overfitting indicators, would strengthen the credibility of the imputation methods applied in the study.<br><ol><li> <b>Improved Transparency on Dataset Characteristics and Limitations</b>:</li></ol>- While there's detailed exposition in the supplementary material on handling different datasets (TPDP and AAAI), the primary document should better reflect the dataset's limitations, especially in relation to data completeness, reliability of self-reported scores, and potential non-response biases. This will help contextualize the research findings more accurately.<br><ol><li> <b>Explicit Guidelines for Privacy and Anonymity in Data Handling</b>:</li></ol>- Given the sensitivity involved in peer-review data, the paper should clearly outline the measures taken to ensure reviewer and author anonymity, especially when discussing manipulations or adjustments in the datasets for analysis. Mention of any ethical review or oversight (beyond IRB approval) would be informative.<br>By addressing these points, the paper would not only align more closely with the NeurIPS guidelines but also contribute more robustly to the scholarly discussions around optimizing peer-review assignment policies.<br><br></div>
+            <a class="move-to-top" href="#summary-question-15">↑ Back to summary</a>
+        </div>
+        
+
+        <!-- Survey -->
+        <div>
+            <p>Please complete the following survey about your experience:</p>
+            <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLScr4fjvUGhtiTzBfsqm5CCVvAGafp3sLSSB_Txz2YHhnLiiyw/viewform?usp=pp_url&entry.1830873891=Q291bnRlcmZhY3R1YWwgRXZhbHVhdGlvbiBvZlBlZXItUmV2aWV3IEFzc2lnbm1lbnQgUG9saWNpZXM=" target="_blank">Click to submit post submission survey</a>
+            <p>Your feedback is critical to evaluate the effectiveness of this LLM checklist assistant!</p>
+        </div>
+        
+    </div>
+</div>
+
+</body>
+</html>
